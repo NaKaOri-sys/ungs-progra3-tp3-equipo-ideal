@@ -1,16 +1,36 @@
-# Compiled class file
+# ==========================================
+# Compilados de Java y Salidas de IDEs
+# ==========================================
 *.class
-
-# Log file
 *.log
 
-# BlueJ files
-*.ctxt
+# Carpetas donde Eclipse/Maven guardan los binarios compilados localmente
+bin/
+target/
+out/
 
-# Mobile Tools for Java (J2ME)
+# ==========================================
+# Configuraciones específicas de Eclipse (¡MUY IMPORTANTE!)
+# ==========================================
+.metadata/
+.settings/
+.project
+.classpath
+
+# Si alguien en el grupo usa IntelliJ por error o VS Code
+.idea/
+*.iml
+.vscode/
+
+# ==========================================
+# Otros entornos (BlueJ, Mobile, etc.)
+# ==========================================
+*.ctxt
 .mtj.tmp/
 
-# Package Files #
+# ==========================================
+# Archivos empaquetados y pesados
+# ==========================================
 *.jar
 *.war
 *.nar
@@ -19,6 +39,6 @@
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+# Logs de error catastróficos de la máquina virtual de Java
 hs_err_pid*
 replay_pid*
