@@ -1,4 +1,4 @@
-package view.dialogs;
+package equipoideal.view.dialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

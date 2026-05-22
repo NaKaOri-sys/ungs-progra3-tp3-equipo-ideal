@@ -2,9 +2,9 @@ package equipoideal.model;
 
 import java.util.ArrayList;
 
+import equipoideal.model.event.PersonasObserver;
+import equipoideal.model.repository.PersonaRepository;
 import equipoideal.util.Observable;
-import model.repository.PersonaRepository;
-import view.dialog.event.PersonasObserver;
 
 public class PersonaDialogModel extends Observable<PersonasObserver>{
 	private ArrayList<Persona> listaPersonas;

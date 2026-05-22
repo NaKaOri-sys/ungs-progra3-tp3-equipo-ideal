@@ -1,4 +1,4 @@
-package view.dialog.event;
+package equipoideal.model.event;
 
 import java.util.ArrayList;
 import equipoideal.model.Persona;

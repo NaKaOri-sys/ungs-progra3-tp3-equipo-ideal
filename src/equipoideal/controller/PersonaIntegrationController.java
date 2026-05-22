@@ -4,8 +4,9 @@ import java.util.ArrayList;
 
 import equipoideal.model.Persona;
 import equipoideal.model.PersonaDialogModel;
-import view.dialog.event.PersonasObserver;
-import view.dialogs.PersonasDialog;
+import equipoideal.model.event.PersonasObserver;
+import equipoideal.view.dialogs.PersonasDialog;
+
 
 public class PersonaIntegrationController implements PersonasObserver {
 	private PersonasDialog vista;
@@ -24,6 +25,7 @@ public class PersonaIntegrationController implements PersonasObserver {
         vista.actualizarTablaPersonas(datosTabla);
     }
     
+	//TODO ver de crear un DTO para no usar Object -> es mala practica porque es muy generico Objects
     private Object[][] transformarMatriz(ArrayList<Persona> lista) {
         // Lógica para pasar de List<Persona> a Object[][] para la JTable
         Object[][] matriz = new Object[lista.size()][4];

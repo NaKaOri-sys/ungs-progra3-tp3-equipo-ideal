@@ -1,4 +1,4 @@
-package view.dialog.event;
+package equipoideal.model.listener;
 
 public interface PersonasListener {
     /**

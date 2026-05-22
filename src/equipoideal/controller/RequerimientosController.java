@@ -1,6 +1,6 @@
 package equipoideal.controller;
 
-import view.dialog.event.RequerimientosListener;
+import equipoideal.model.listener.RequerimientosListener;
 
 public class RequerimientosController implements RequerimientosListener {
 

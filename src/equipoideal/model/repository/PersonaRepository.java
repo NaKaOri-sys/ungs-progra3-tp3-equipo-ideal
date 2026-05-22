@@ -1,4 +1,4 @@
-package model.repository;
+package equipoideal.model.repository;
 
 import java.util.ArrayList;
 

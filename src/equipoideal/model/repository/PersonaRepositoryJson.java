@@ -1,9 +1,9 @@
-package model.repository;
+package equipoideal.model.repository;
 
 import java.util.ArrayList;
 
 import equipoideal.model.Persona;
-import equipoideal.model.PersonaArchivo;
+import equipoideal.model.dao.PersonaArchivo;
 
 public class PersonaRepositoryJson implements PersonaRepository{
 	private String archivo;

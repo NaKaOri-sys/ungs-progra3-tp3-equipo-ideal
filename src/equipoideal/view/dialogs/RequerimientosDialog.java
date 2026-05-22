@@ -1,4 +1,4 @@
-package view.dialogs;
+package equipoideal.view.dialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -16,7 +16,8 @@ import javax.swing.JTable;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.table.DefaultTableModel;
 
-import view.dialog.event.RequerimientosListener;
+import equipoideal.model.listener.RequerimientosListener;
+
 
 public class RequerimientosDialog extends DialogPadre{
 	
@@ -82,6 +83,7 @@ public class RequerimientosDialog extends DialogPadre{
 		return fila;
 	}
 	
+	//TODO aprovechar el listener
 	@Override
 	public void accionesBoton() {
 		btnAceptar.addActionListener(new ActionListener() {

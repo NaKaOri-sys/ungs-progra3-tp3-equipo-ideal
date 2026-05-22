@@ -1,10 +1,12 @@
-package equipoideal.model;
+package equipoideal.model.dao;
 
 import java.io.FileWriter;
 import java.util.ArrayList;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import equipoideal.model.Persona;
 
 public class PersonaArchivo {
 

@@ -1,4 +1,4 @@
-package view.dialogs;
+package equipoideal.view.dialogs;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -15,7 +15,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import view.dialog.event.PersonasListener;
+import equipoideal.model.listener.PersonasListener;
+
 
 
 public class PersonasDialog extends DialogPadre{
@@ -103,6 +104,7 @@ public class PersonasDialog extends DialogPadre{
 		
 	}
 	
+	//TODO acá se puede aprovechar el liostener
 	@Override
 	public void accionesBoton() {
 		btnAceptar.addActionListener(new ActionListener() {
