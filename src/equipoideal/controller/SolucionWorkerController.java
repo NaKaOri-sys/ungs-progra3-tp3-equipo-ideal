@@ -1,6 +1,5 @@
 package equipoideal.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.SwingWorker;
 import equipoideal.model.CalculadorBacktracking;
@@ -8,8 +7,8 @@ import equipoideal.model.dto.ProgresoEventoDto;
 import equipoideal.model.event.IObserverBacktracking;
 import equipoideal.view.LoadingSolutionPanel;
 
-//TODO este swingWorker va a retornar el listado de equipos resultantes obtenidos en el worker
-public class SolucionWorkerController extends SwingWorker<List<Void>, ProgresoEventoDto> implements IObserverBacktracking {
+//TODO este swingWorker va a retornar el equipo resultante obtenido en el worker
+public class SolucionWorkerController extends SwingWorker<Void, ProgresoEventoDto> implements IObserverBacktracking {
     
     private CalculadorBacktracking modelo;
     private LoadingSolutionPanel viewPanel;
@@ -22,10 +21,10 @@ public class SolucionWorkerController extends SwingWorker<List<Void>, ProgresoEv
     }
 
     @Override
-    protected List<Void> doInBackground() throws Exception {
+    protected Void doInBackground() throws Exception {
         // Acá va el algoritmo de backtracking que corre en segundo hilo
 //        return modelo.calcularEquipoIdeal();
-        return new ArrayList<Void>();
+    	return null;
     }
 
     @Override
@@ -44,7 +43,7 @@ public class SolucionWorkerController extends SwingWorker<List<Void>, ProgresoEv
     @Override
     protected void done() {
         try {
-            //TODO hay que llevar a la siguiente vista los equipos obtenidos
+            //TODO hay que llevar a la siguiente vista el equipo obtenido
             viewPanel.finalizarCarga();
         } catch (Exception e) {
             e.printStackTrace();

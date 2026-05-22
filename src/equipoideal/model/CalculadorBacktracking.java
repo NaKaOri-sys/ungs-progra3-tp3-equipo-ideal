@@ -1,117 +1,123 @@
 package equipoideal.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import equipoideal.model.dto.ProgresoEventoDto;
 import equipoideal.model.event.IObserverBacktracking;
 import equipoideal.util.Observable;
 
 public class CalculadorBacktracking extends Observable<IObserverBacktracking> {
-	// Configuración del Top N
-    private static final int MAX_TOP_EQUIPOS = 3; // Guardaremos las 3 mejores opciones
+	private List<Persona> listaPersonas;
+	private Map<String, Integer> requerimientosRoles;
+	private boolean[][] matrizIncompatibilidades;
+	private long ultimoTiempoNotificado = 0;
+	
+	private Equipo mejorEquipo;
+	private int contadorCasosBase;
+	private int contadorPodas;
 
-//    private Map<String, Persona> personas;
-    
-//    private List<Equipo> topMejoresEquipos;
-    
-    private int contadorCasosBase;
-    private int contadorPodas;
-    
-//    public CalculadorBacktracking(Map<String, Persona> personas) {
-//        this.personas = personas;
-//        this.topMejoresEquipos = new ArrayList<>();
-//        this.contadorCasosBase = 0;
-//        this.contadorPodas = 0;
-//    }
+	public CalculadorBacktracking(List<Persona> personas, Map<String, Integer> requerimientosRoles,
+			boolean[][] matrizIncompatibilidades) {
+		this.listaPersonas = new ArrayList<>(personas);
+		this.requerimientosRoles = requerimientosRoles;
+		this.matrizIncompatibilidades = matrizIncompatibilidades;
+		this.mejorEquipo = new Equipo();
+		this.contadorCasosBase = 0;
+		this.contadorPodas = 0;
+	}
 
-    /**
-     * Metodo que va a llamar el doInBackground() del SwingWorker.
-     */
-//    public List<Equipo> calcularMejoresEquipos() {
-//        // Limpiamos estados por si se ejecuta más de una vez
-//        topMejoresEquipos.clear();
-//        contadorCasosBase = 0;
-//        contadorPodas = 0;
-//        Equipo solucionParcialInicial = new Equipo(); // Equipo vacío inicial
-//        ejecutarBacktracking(0, solucionParcialInicial);
-//        
-//        return topMejoresEquipos;
-//    }
+	public Equipo calcularMejoresEquipos() {
+		this.contadorCasosBase = 0;
+		this.contadorPodas = 0;
 
-//    private void ejecutarBacktracking(int indice, Equipo solucionParcial) {
-//        if (debePodar(solucionParcial, indice)) {
-//            contadorPodas++;
-//            notificarProgreso();
-//            return;
-//        }
-//        if (indice == personas.size()) {
-//            contadorCasosBase++;
-//            
-//            if (esEquipoValido(solucionParcial)) {
-//                evaluarYAgregarAlTop(solucionParcial);
-//            }
-//            
-//            notificarProgreso();
-//            return;
-//        }
-//        Persona personaActual = personas.get(indice);
-//        solucionParcial.agregarJugador(personaActual);
-//        ejecutarBacktracking(indice + 1, solucionParcial);
-//        solucionParcial.remueveJugador(personaActual);
-//        ejecutarBacktracking(indice + 1, solucionParcial);
-//    }
+		Equipo solucionParcialInicial = new Equipo();
+		ejecutarBacktracking(0, solucionParcialInicial);
 
-//    private void evaluarYAgregarAlTop(Equipo solucionParcial) {
-//        int puntajeNuevo = solucionParcial.getCalificacionTotal();
-//        int i = 0;
-//        while (i < topMejoresEquipos.size() && topMejoresEquipos.get(i).getCalificacionTotal() >= puntajeNuevo) {
-//            i++;
-//        }
-//        if (i >= MAX_TOP_EQUIPOS) {
-//            return; 
-//        }
-//        topMejoresEquipos.add(i, new Equipo(solucionParcial));
-//
-//        if (topMejoresEquipos.size() > MAX_TOP_EQUIPOS) {
-//            topMejoresEquipos.remove(MAX_TOP_EQUIPOS);
-//        }
-//    }
+		return this.mejorEquipo;
+	}
 
-//    private boolean debePodar(Equipo solucionParcial, int indice) {
-//        if (topMejoresEquipos.size() < MAX_TOP_EQUIPOS) {
-//            return false;
-//        }
-//
-//        int puntajeMinimoASuperar = topMejoresEquipos.get(topMejoresEquipos.size() - 1).getCalificacionTotal();        
-//        // Calculamos lo máximo que teóricamente podría sumar este camino
-//        int loMaximoQuePuedeSumar = calcularRemanenteMaximo(indice);
-//        if (solucionParcial.getCalificacionTotal() + loMaximoQuePuedeSumar <= puntajeMinimoASuperar) {
-//            return true;
-//        }
-//
-//        return false;
-//    }
+	private void ejecutarBacktracking(int indice, Equipo solucionParcial) {
+		if (debePodar(solucionParcial, indice)) {
+			contadorPodas++;
+			notificarProgreso();
+			return;
+		}
+		if (indice == listaPersonas.size()) {
+			contadorCasosBase++;
+			if (cumpleExactamenteConLosRoles(solucionParcial) && (solucionParcial.getCalificacionTotal() > this.mejorEquipo.getCalificacionTotal())) {
+				this.mejorEquipo = new Equipo(solucionParcial);
+			}
+			notificarProgreso();
+			return;
+		}
 
-//    private int calcularRemanenteMaximo(int indice) {
-//        int suma = 0;
-//        for (int i = indice; i < personas.size(); i++) {
-//			suma += personas.get(i).getCalificacion();
-//		}
-//        return suma;
-//    }
+		Persona personaActual = listaPersonas.get(indice);
+		if (esPosibleAgregar(indice, personaActual, solucionParcial)) {
+			solucionParcial.agregarJugador(personaActual);
+			ejecutarBacktracking(indice + 1, solucionParcial);
+			solucionParcial.remueveJugador(personaActual);
+		}
+		ejecutarBacktracking(indice + 1, solucionParcial);
+	}
 
-//    private boolean esEquipoValido(Equipo equipo) {
-//        // Agregar validaciones
-//    	if (equipo == null)
-//    		return false;
-//    	//TODO hacer validación que en el equipo se encuentren todos los roles
-//    	
-//        return true; 
-//    }
+	private boolean esPosibleAgregar(int indicePersona, Persona persona, Equipo solucionParcial) {
+		int maximoPermitido = requerimientosRoles.getOrDefault(persona.getRol(), 0);
+		int cantidadActual = solucionParcial.getCantidadPorRol(persona.getRol());
+		if (cantidadActual >= maximoPermitido) {
+			return false;
+		}
 
-//    private void notificarProgreso() {
-//        if (contadorCasosBase % 1000 == 0 || contadorPodas % 1000 == 0) {
-//            int mejorPuntajeActual = topMejoresEquipos.isEmpty() ? 0 : topMejoresEquipos.get(0).getCalificacionTotal();
-//            ProgresoEventoDto evento = new ProgresoEventoDto(contadorCasosBase, mejorPuntajeActual, contadorPodas);
-//            notifyObservers(o -> o.alCambiarProgreso(evento));
-//        }
-//    }
+		if (esIncompatibleConEquipo(indicePersona, solucionParcial)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean esIncompatibleConEquipo(int indicePersona, Equipo solucionMomentanea) {
+		boolean esIncompatible = false;
+		for (Persona integrante : solucionMomentanea.getIntegrantes()) {
+			int indiceIntegrante = integrante.getIndice();
+			esIncompatible = esIncompatible || matrizIncompatibilidades[indicePersona][indiceIntegrante] == true;
+		}
+		return esIncompatible;
+	}
+
+	private boolean cumpleExactamenteConLosRoles(Equipo equipo) {
+		for (String rol : requerimientosRoles.keySet()) {
+			int requerido = requerimientosRoles.get(rol);
+			if (equipo.getCantidadPorRol(rol) != requerido) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean debePodar(Equipo solucionParcial, int indice) {
+		int puntajePosible = solucionParcial.getCalificacionTotal() + calcularRemanenteMaximo(indice);
+	    if (puntajePosible <= mejorEquipo.getCalificacionTotal()) {
+	        return true;
+	    }
+		return false;
+	}
+
+	private int calcularRemanenteMaximo(int indice) {
+		int suma = 0;
+		for (int i = indice; i < listaPersonas.size(); i++) {
+			suma += listaPersonas.get(i).getCalificacion();
+		}
+		return suma;
+	}
+
+	private void notificarProgreso() {
+		long tiempoActual = System.currentTimeMillis();
+		if (tiempoActual - ultimoTiempoNotificado > 100) { 
+	        ultimoTiempoNotificado = tiempoActual;
+			int mejorPuntajeActual = this.mejorEquipo == null ? 0 : this.mejorEquipo.getCalificacionTotal();
+			ProgresoEventoDto evento = new ProgresoEventoDto(contadorCasosBase, mejorPuntajeActual, contadorPodas);
+			notifyObservers(o -> o.alCambiarProgreso(evento));
+		}
+	}
 }
