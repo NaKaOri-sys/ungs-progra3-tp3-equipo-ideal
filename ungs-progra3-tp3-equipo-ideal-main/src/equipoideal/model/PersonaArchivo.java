@@ -1,6 +1,5 @@
 package equipoideal.model;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 
@@ -18,10 +17,6 @@ public class PersonaArchivo {
 			
 		    try (FileWriter writer =new FileWriter(archivo)) {
 		    	writer.write(json);
-		    	System.out.print("Prueba");
-		    	System.out.println(
-		    		    new File(archivo).getAbsolutePath()
-		    		);
 		    } catch (Exception e) {
 		        System.err.println( "Error al generar JSON: " + e.getMessage());
 

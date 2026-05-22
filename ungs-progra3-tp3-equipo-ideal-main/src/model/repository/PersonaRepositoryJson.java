@@ -20,7 +20,6 @@ public class PersonaRepositoryJson implements PersonaRepository{
 
 	@Override
 	public void saveAll(ArrayList<Persona> personas) {
-		System.out.print("hola");
 		PersonaArchivo.generarJsonPersona(archivo, personas);
 		
 	}

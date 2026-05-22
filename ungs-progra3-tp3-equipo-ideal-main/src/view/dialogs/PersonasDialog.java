@@ -125,7 +125,7 @@ public class PersonasDialog extends DialogPadre{
 	public void actualizarTablaPersonas(Object[][] datosTabla) {
 	   
 	    DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
-	  
+	    modelo.setRowCount(0);
 	    if (datosTabla != null) {
 	        for (Object[] fila : datosTabla) {
 	            modelo.addRow(fila);

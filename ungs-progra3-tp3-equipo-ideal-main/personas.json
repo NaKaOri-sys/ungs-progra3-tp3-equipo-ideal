@@ -1,0 +1,14 @@
+[
+  {
+    "nombre": "a",
+    "apellido": "a",
+    "puntos": 3,
+    "rol": "a"
+  },
+  {
+    "nombre": "b",
+    "apellido": "b",
+    "puntos": 3,
+    "rol": "a"
+  }
+]
