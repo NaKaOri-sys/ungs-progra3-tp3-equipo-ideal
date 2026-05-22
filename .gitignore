@@ -42,3 +42,6 @@ out/
 # Logs de error catastróficos de la máquina virtual de Java
 hs_err_pid*
 replay_pid*
+
+
+*.json
