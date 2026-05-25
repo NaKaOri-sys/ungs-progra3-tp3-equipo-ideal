@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import equipoideal.model.CalculadorBacktracking;
+import equipoideal.model.Persona;
 
 public class CalculadorBacktrackingTest {
 
@@ -28,10 +29,10 @@ public class CalculadorBacktrackingTest {
 		listaPersonas = new ArrayList<>();
 		requerimientosRoles = new HashMap<>();
 
-		messi = new Persona("Messi", "Lider Técnico", 5);
-		ronaldo = new Persona("Ronaldo", "Desarrollador", 4);
-		mbappe = new Persona("Mbappe", "Tester", 4);
-		maguire = new Persona("Maguire", "Desarrollador", 2);
+		messi = new Persona("Leo", "Messi", 5, "Lider Técnico");
+		ronaldo = new Persona("Cristiano", "Ronaldo", 4, "Desarrollador");
+		mbappe = new Persona("Kylian", "Mbappe", 3, "Tester");
+		maguire = new Persona("Harry", "Maguire", 2, "Desarrollador");
 
 		listaPersonas.add(messi);
 		listaPersonas.add(ronaldo);

@@ -28,7 +28,7 @@ public class CalculadorBacktracking extends Observable<IObserverBacktracking> {
 		this.contadorPodas = 0;
 	}
 
-	public Equipo calcularMejoresEquipos() {
+	public Equipo calcularMejorEquipo() {
 		this.contadorCasosBase = 0;
 		this.contadorPodas = 0;
 
@@ -106,7 +106,7 @@ public class CalculadorBacktracking extends Observable<IObserverBacktracking> {
 	private int calcularRemanenteMaximo(int indice) {
 		int suma = 0;
 		for (int i = indice; i < listaPersonas.size(); i++) {
-			suma += listaPersonas.get(i).getCalificacion();
+			suma += listaPersonas.get(i).getPuntos();
 		}
 		return suma;
 	}

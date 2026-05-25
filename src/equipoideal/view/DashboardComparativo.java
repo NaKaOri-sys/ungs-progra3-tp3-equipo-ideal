@@ -9,23 +9,25 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import equipoideal.model.dto.ResultadoComparativoDto;
-import equipoideal.model.listener.IListenerWorkerResult;
+import equipoideal.model.listener.IListenerDashboardComparativo;
 import equipoideal.util.Observable;
 import equipoideal.view.components.PanelResultadoEquipo;
 
 public class DashboardComparativo extends JPanel {
 	private static final long serialVersionUID = 1L;
-	private Observable<IListenerWorkerResult> listener;
+	private Observable<IListenerDashboardComparativo> listener;
 	private JButton btnMenuPrincipal;
 	private PanelResultadoEquipo panelBacktracking;
 	private PanelResultadoEquipo panelHeuristica;
 
 	public DashboardComparativo() {
+		listener = new Observable<IListenerDashboardComparativo>();
 		setLayout(new BorderLayout());
 		JPanel panelSuperior = new JPanel(new BorderLayout());
 		panelSuperior.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
 		btnMenuPrincipal = new JButton("← Volver al Menú Principal");
+		btnMenuPrincipal.addActionListener(e -> listener.notifyObservers(o -> o.onMenuPrincipalPress()));
 		btnMenuPrincipal.setFont(new Font("Arial", Font.BOLD, 12));
 		btnMenuPrincipal.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		panelSuperior.add(btnMenuPrincipal, BorderLayout.WEST);
@@ -43,5 +45,9 @@ public class DashboardComparativo extends JPanel {
 	public void renderizarResultados(ResultadoComparativoDto res) {
 		panelBacktracking.actualizar(res.getEquipoBacktracking(), res.getStatsBacktracking());
 		panelHeuristica.actualizar(res.getEquipoHeuristica(), res.getStatsHeuristica());
+	}
+	
+	public Observable<IListenerDashboardComparativo> getListener(){
+		return this.listener;
 	}
 }

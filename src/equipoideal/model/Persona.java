@@ -5,7 +5,7 @@ public class Persona {
 	private String apellido;
 	private int puntos;
 	private String rol;
-	
+	//TODO ver si puntos deberia ser calificación ya q es un nro entre 1 y 5
 	public Persona(String nombre, String apellido, int puntos, String rol) {
 		this.nombre = nombre;
 		this.apellido = apellido;
@@ -14,12 +14,10 @@ public class Persona {
 	}
 
 	public String getNombre() {
-		// TODO Auto-generated method stub
 		return nombre;
 	}
 
 	public String getApellido() {
-		// TODO Auto-generated method stub
 		return apellido;
 	}
 
@@ -27,6 +25,7 @@ public class Persona {
 		return rol;
 	}
 
+	//TODO ver si esto no seria getCalificacion
 	public int getPuntos() {
 		return puntos;
 	}

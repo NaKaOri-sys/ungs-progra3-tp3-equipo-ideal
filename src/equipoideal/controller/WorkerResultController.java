@@ -1,15 +1,22 @@
 package equipoideal.controller;
 
-import equipoideal.model.WorkerResultModel;
-import equipoideal.model.event.IObserverWorkerResult;
-import equipoideal.view.WorkerResultPanel;
+import equipoideal.model.Navigation;
+import equipoideal.model.listener.IListenerDashboardComparativo;
+import equipoideal.util.VentanaEnum;
+import equipoideal.view.DashboardComparativo;
 
-public class WorkerResultController implements IObserverWorkerResult {
-	private WorkerResultPanel view;
-	private WorkerResultModel model;
+public class WorkerResultController implements IListenerDashboardComparativo {
+	private Navigation navigation;
+	private DashboardComparativo view;
 	
-	public WorkerResultController(WorkerResultPanel view, WorkerResultModel model) {
+	public WorkerResultController(DashboardComparativo view, Navigation navigation) {
+		this.navigation = navigation;
 		this.view = view;
-		this.model = model;
+		this.view.getListener().addObserver(this);
+	}
+
+	@Override
+	public void onMenuPrincipalPress() {
+		this.navigation.updateView(VentanaEnum.MENU);
 	}
 }
