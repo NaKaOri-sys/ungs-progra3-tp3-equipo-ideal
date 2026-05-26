@@ -1,64 +1,112 @@
 package tests;
 
 import static org.junit.Assert.*;
+
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import equipoideal.model.CalculadorBacktracking;
+import equipoideal.model.Persona;
 
 public class CalculadorBacktrackingTest {
 
-	private Map<String, Persona> personas;
+	private List<Persona> listaPersonas;
+	private Map<String, Integer> requerimientosRoles;
+	private boolean[][] matrizIncompatibilidades;
 	private CalculadorBacktracking calculador;
-	private List<Equipo> resultadoTop;
+
+	private Persona messi;
+	private Persona ronaldo;
+	private Persona mbappe;
+	private Persona maguire;
 
 	@Before
 	public void setUp() {
-		personas = new LinkedHashMap<>();
-		personas.put("1233531", new Persona("Messi", 99, "Lider Técnico", 100));
-		personas.put("1111111", new Persona("Ronaldo", 90, "Desarrollador", 90));
-		personas.put("1222222", new Persona("Mbappe", 85, "Tester", 80));
-		personas.put("2222222", new Persona("Maguire", 40, "Desarrollador", 50));
+		listaPersonas = new ArrayList<>();
+		requerimientosRoles = new HashMap<>();
 
-		calculador = new CalculadorBacktracking(personas);
-		resultadoTop = calculador.calcularMejoresEquipos();
+		messi = new Persona("Leo", "Messi", 5, "Lider Técnico");
+		ronaldo = new Persona("Cristiano", "Ronaldo", 4, "Desarrollador");
+		mbappe = new Persona("Kylian", "Mbappe", 3, "Tester");
+		maguire = new Persona("Harry", "Maguire", 2, "Desarrollador");
+
+		listaPersonas.add(messi);
+		listaPersonas.add(ronaldo);
+		listaPersonas.add(mbappe);
+		listaPersonas.add(maguire);
+
+		matrizIncompatibilidades = new boolean[listaPersonas.size()][listaPersonas.size()];
+	}
+
+	private void prepararEscenarioCasoFeliz() {
+		requerimientosRoles.put("Lider Técnico", 1);
+		requerimientosRoles.put("Desarrollador", 1);
+		requerimientosRoles.put("Tester", 1);
+		calculador = new CalculadorBacktracking(listaPersonas, requerimientosRoles, matrizIncompatibilidades);
 	}
 
 	@Test
-	public void testPodioNoExcedeElMaximoDeTresElementos() {
-		assertEquals("El podio debe tener exactamente 3 equipos", 3, resultadoTop.size());
+	public void testCasoFeliz_EncuentraSoluciones() {
+		prepararEscenarioCasoFeliz();
+		List<Equipo> resultadoTop = calculador.calcularMejoresEquipos();
+
+		assertFalse("El podio no debería estar vacío al haber candidatos válidos", resultadoTop.isEmpty());
 	}
 
 	@Test
-	public void testPrimerPuestoEsElOptimoAbsoluto() {
+	public void testCasoFeliz_PuntajeMaximoEsOptimo() {
+		prepararEscenarioCasoFeliz();
+		List<Equipo> resultadoTop = calculador.calcularMejoresEquipos();
+
+		Equipo primerPuesto = resultadoTop.get(0);
+		assertEquals("El primer puesto debe sumar la calificación ideal (5+4+4=13)", 13,
+				primerPuesto.getCalificacionTotal());
+	}
+
+	private void prepararEscenarioIncompatibilidad() {
+		requerimientosRoles.put("Lider Técnico", 1);
+		requerimientosRoles.put("Desarrollador", 1);
+
+		// Messi (0) y Ronaldo (1) no pueden coexistir
+		matrizIncompatibilidades[0][1] = true;
+		matrizIncompatibilidades[1][0] = true;
+
+		calculador = new CalculadorBacktracking(listaPersonas, requerimientosRoles, matrizIncompatibilidades);
+	}
+
+	@Test
+	public void testIncompatibilidad_BajaElPuntajeMaximo() {
+		prepararEscenarioIncompatibilidad();
+		List<Equipo> resultadoTop = calculador.calcularMejoresEquipos();
+
 		int puntajePrimero = resultadoTop.get(0).getCalificacionTotal();
-		assertEquals("El primer puesto debe ser el óptimo absoluto (189 pts)", 189, puntajePrimero);
+		assertEquals("El puntaje ideal debe caer a 7 (Messi + Maguire) por la restricción", 7, puntajePrimero);
 	}
 
 	@Test
-	public void testSegundoPuestoTieneElPuntajeEsperado() {
-		int puntajeSegundo = resultadoTop.get(1).getCalificacionTotal();
-		assertEquals("El segundo puesto debe tener 184 pts", 184, puntajeSegundo);
+	public void testIncompatibilidad_NoCoexistenPersonasIncompatibles() {
+		prepararEscenarioIncompatibilidad();
+		List<Equipo> resultadoTop = calculador.calcularMejoresEquipos();
+		List<Persona> integrantesGanadores = resultadoTop.get(0).getIntegrantes();
+
+		boolean tienenAmbos = integrantesGanadores.contains(messi) && integrantesGanadores.contains(ronaldo);
+		assertFalse("El equipo ganador no puede contener simultáneamente a dos personas marcadas como incompatibles",
+				tienenAmbos);
 	}
 
 	@Test
-	public void testTercerPuestoTieneElPuntajeEsperado() {
-		int puntajeTercero = resultadoTop.get(2).getCalificacionTotal();
-		assertEquals("El tercer puesto debe tener 175 pts", 175, puntajeTercero);
-	}
+	public void testSinSolucion_PodioVacioPorFaltaDeRoles() {
+		// Pedimos 2 Testers, pero sólo cargamos 1 (Mbappe)
+		requerimientosRoles.put("Tester", 2);
 
-	@Test
-	public void testElPodioMantieneOrdenDescendienteEstricto() {
-		int puntajePrimero = resultadoTop.get(0).getCalificacionTotal();
-		int puntajeSegundo = resultadoTop.get(1).getCalificacionTotal();
-		int puntajeTercero = resultadoTop.get(2).getCalificacionTotal();
+		calculador = new CalculadorBacktracking(listaPersonas, requerimientosRoles, matrizIncompatibilidades);
+		List<Equipo> resultadoTop = calculador.calcularMejoresEquipos();
 
-		assertTrue("El orden debe ser estrictamente descendiente",
-				puntajePrimero >= puntajeSegundo && puntajeSegundo >= puntajeTercero);
+		assertTrue("Si los requerimientos mínimos de roles exceden el personal disponible, el resultado debe ser vacío",
+				resultadoTop.isEmpty());
 	}
 }
