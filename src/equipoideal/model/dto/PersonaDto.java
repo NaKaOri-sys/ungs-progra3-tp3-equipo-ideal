@@ -1,24 +1,35 @@
 package equipoideal.model.dto;
 
 public class PersonaDto {
-	
-	
+	private String nombre;
+	private String apellido;
+	private int calificacion;
+	private String rol;
+
+	public PersonaDto(String nombre, String apellido, int calificacion, String rol) {
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.calificacion = calificacion;
+		this.rol = rol;
+	}
+
 	public String getRutaFoto() {
 		return null;
 	}
 
 	public String getNombre() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.nombre;
+	}
+	
+	public String getApellido() {
+		return this.apellido;
 	}
 
 	public String getRol() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.rol;
 	}
 
-	public String getCalificacion() {
-		// TODO Auto-generated method stub
-		return null;
+	public int getCalificacion() {
+		return this.calificacion;
 	}
 }

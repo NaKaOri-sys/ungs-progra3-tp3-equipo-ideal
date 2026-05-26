@@ -4,50 +4,57 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import equipoideal.model.dto.EquipoDto;
 import equipoideal.model.dto.ProgresoEventoDto;
 import equipoideal.model.event.IObserverBacktracking;
+import equipoideal.util.IndexCache;
 import equipoideal.util.Observable;
+import equipoideal.util.RestriccionesPoda;
+import equipoideal.util.SolutionValidator;
 
 public class CalculadorBacktracking extends Observable<IObserverBacktracking> {
 	private List<Persona> listaPersonas;
 	private Map<String, Integer> requerimientosRoles;
 	private boolean[][] matrizIncompatibilidades;
 	private long ultimoTiempoNotificado = 0;
-	
+
 	private Equipo mejorEquipo;
 	private int contadorCasosBase;
 	private int contadorPodas;
+	private IndexCache cacheIndice;
 
 	public CalculadorBacktracking(List<Persona> personas, Map<String, Integer> requerimientosRoles,
 			boolean[][] matrizIncompatibilidades) {
+		SolutionValidator.solutionValidator(personas, requerimientosRoles, matrizIncompatibilidades);
 		this.listaPersonas = new ArrayList<>(personas);
 		this.requerimientosRoles = requerimientosRoles;
 		this.matrizIncompatibilidades = matrizIncompatibilidades;
-		this.mejorEquipo = new Equipo();
+		this.mejorEquipo = new Equipo(new ArrayList<Persona>());
 		this.contadorCasosBase = 0;
 		this.contadorPodas = 0;
+		this.cacheIndice = new IndexCache(this.listaPersonas);
 	}
 
-	public Equipo calcularMejorEquipo() {
+	public EquipoDto calcularMejorEquipo() {
 		this.contadorCasosBase = 0;
 		this.contadorPodas = 0;
-
-		Equipo solucionParcialInicial = new Equipo();
+		
+		Equipo solucionParcialInicial = new Equipo(new ArrayList<Persona>());
 		ejecutarBacktracking(0, solucionParcialInicial);
-
-		return this.mejorEquipo;
+		return this.mejorEquipo.toDto();
 	}
 
 	private void ejecutarBacktracking(int indice, Equipo solucionParcial) {
-		if (debePodar(solucionParcial, indice)) {
+		if (RestriccionesPoda.debePodar(solucionParcial, indice, mejorEquipo, listaPersonas)) {
 			contadorPodas++;
 			notificarProgreso();
 			return;
 		}
 		if (indice == listaPersonas.size()) {
 			contadorCasosBase++;
-			if (cumpleExactamenteConLosRoles(solucionParcial) && (solucionParcial.getCalificacionTotal() > this.mejorEquipo.getCalificacionTotal())) {
-				this.mejorEquipo = new Equipo(solucionParcial);
+			if (cumpleExactamenteConLosRoles(solucionParcial)
+					&& (solucionParcial.getCalificacionTotal() > this.mejorEquipo.getCalificacionTotal())) {
+				this.mejorEquipo = new Equipo(new ArrayList<>(solucionParcial.obtenerIntegrantes()));
 			}
 			notificarProgreso();
 			return;
@@ -55,9 +62,9 @@ public class CalculadorBacktracking extends Observable<IObserverBacktracking> {
 
 		Persona personaActual = listaPersonas.get(indice);
 		if (esPosibleAgregar(indice, personaActual, solucionParcial)) {
-			solucionParcial.agregarJugador(personaActual);
+			solucionParcial.obtenerIntegrantes().add(personaActual);
 			ejecutarBacktracking(indice + 1, solucionParcial);
-			solucionParcial.remueveJugador(personaActual);
+			solucionParcial.obtenerIntegrantes().remove(personaActual);
 		}
 		ejecutarBacktracking(indice + 1, solucionParcial);
 	}
@@ -69,20 +76,11 @@ public class CalculadorBacktracking extends Observable<IObserverBacktracking> {
 			return false;
 		}
 
-		if (esIncompatibleConEquipo(indicePersona, solucionParcial)) {
+		if (RestriccionesPoda.esIncompatibleConEquipo(indicePersona, solucionParcial, listaPersonas, matrizIncompatibilidades, this.cacheIndice.obtenerIndiceCache())) {
 			return false;
 		}
 
 		return true;
-	}
-
-	private boolean esIncompatibleConEquipo(int indicePersona, Equipo solucionMomentanea) {
-		boolean esIncompatible = false;
-		for (Persona integrante : solucionMomentanea.getIntegrantes()) {
-			int indiceIntegrante = integrante.getIndice();
-			esIncompatible = esIncompatible || matrizIncompatibilidades[indicePersona][indiceIntegrante] == true;
-		}
-		return esIncompatible;
 	}
 
 	private boolean cumpleExactamenteConLosRoles(Equipo equipo) {
@@ -95,28 +93,12 @@ public class CalculadorBacktracking extends Observable<IObserverBacktracking> {
 		return true;
 	}
 
-	private boolean debePodar(Equipo solucionParcial, int indice) {
-		int puntajePosible = solucionParcial.getCalificacionTotal() + calcularRemanenteMaximo(indice);
-	    if (puntajePosible <= mejorEquipo.getCalificacionTotal()) {
-	        return true;
-	    }
-		return false;
-	}
-
-	private int calcularRemanenteMaximo(int indice) {
-		int suma = 0;
-		for (int i = indice; i < listaPersonas.size(); i++) {
-			suma += listaPersonas.get(i).getPuntos();
-		}
-		return suma;
-	}
-
 	private void notificarProgreso() {
 		long tiempoActual = System.currentTimeMillis();
-		if (tiempoActual - ultimoTiempoNotificado > 100) { 
-	        ultimoTiempoNotificado = tiempoActual;
-			int mejorPuntajeActual = this.mejorEquipo == null ? 0 : this.mejorEquipo.getCalificacionTotal();
-			ProgresoEventoDto evento = new ProgresoEventoDto(contadorCasosBase, mejorPuntajeActual, contadorPodas);
+		if (tiempoActual - ultimoTiempoNotificado > 100) {
+			ultimoTiempoNotificado = tiempoActual;
+			// TODO: Pasar el tiempo transcurrido desde el inicio, no el timestamp actual (ultimoTiempoNotificado es timestamp)
+			ProgresoEventoDto evento = new ProgresoEventoDto(contadorCasosBase, ultimoTiempoNotificado, contadorPodas);
 			notifyObservers(o -> o.alCambiarProgreso(evento));
 		}
 	}

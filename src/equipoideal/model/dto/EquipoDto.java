@@ -1,10 +1,16 @@
 package equipoideal.model.dto;
 
-public class EquipoDto {
+import java.util.List;
 
-	public PersonaDto[] getIntegrantes() {
-		// TODO Auto-generated method stub
-		return null;
+public class EquipoDto {
+	private List<PersonaDto> integrantes;
+	
+	public EquipoDto(List<PersonaDto> integrantes) {
+		this.integrantes = integrantes;
+	}
+	
+	public List<PersonaDto> getIntegrantes() {
+		return this.integrantes;
 	}
 
 }

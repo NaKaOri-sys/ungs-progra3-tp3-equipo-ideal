@@ -3,14 +3,14 @@ package equipoideal.model.dto;
 public class ResultadoComparativoDto {
 	private EquipoDto equipoBacktracking;
 	private EquipoDto equipoHeuristica;
-	private StatsDto statsBacktracking;
-	private StatsDto statsHeuristica;
+	private ProgresoEventoDto statsBacktracking;
+	private ProgresoEventoDto statsHeuristica;
 
 	public EquipoDto getEquipoBacktracking() {
 		return this.equipoBacktracking;
 	}
 
-	public StatsDto getStatsBacktracking() {
+	public ProgresoEventoDto getStatsBacktracking() {
 		return this.statsBacktracking;
 	}
 
@@ -18,7 +18,7 @@ public class ResultadoComparativoDto {
 		this.equipoBacktracking = equipoBacktracking;
 	}
 
-	public void setStatsBacktracking(StatsDto statsBacktracking) {
+	public void setStatsBacktracking(ProgresoEventoDto statsBacktracking) {
 		this.statsBacktracking = statsBacktracking;
 	}
 
@@ -26,7 +26,7 @@ public class ResultadoComparativoDto {
 		return this.equipoHeuristica;
 	}
 
-	public StatsDto getStatsHeuristica() {
+	public ProgresoEventoDto getStatsHeuristica() {
 		return this.statsHeuristica;
 	}
 
@@ -34,7 +34,7 @@ public class ResultadoComparativoDto {
 		this.equipoHeuristica = equipoHeuristica;
 	}
 
-	public void setStatsHeuristica(StatsDto statsHeuristica) {
+	public void setStatsHeuristica(ProgresoEventoDto statsHeuristica) {
 		this.statsHeuristica = statsHeuristica;
 	}
 

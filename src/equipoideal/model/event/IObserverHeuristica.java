@@ -1,5 +1,8 @@
 package equipoideal.model.event;
 
+import equipoideal.model.dto.EquipoDto;
+
 public interface IObserverHeuristica {
-	//TODO implementar cuando se pueda termianr el model de heuristica
+	void onHeuristicaSolved(EquipoDto equipo);
+	void onError(String errMessage);
 }
