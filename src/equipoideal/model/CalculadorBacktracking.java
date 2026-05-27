@@ -17,7 +17,6 @@ public class CalculadorBacktracking extends Observable<IObserverBacktracking> {
 	private Map<String, Integer> requerimientosRoles;
 	private boolean[][] matrizIncompatibilidades;
 	private long ultimoTiempoNotificado = 0;
-
 	private Equipo mejorEquipo;
 	private int contadorCasosBase;
 	private int contadorPodas;
@@ -25,7 +24,12 @@ public class CalculadorBacktracking extends Observable<IObserverBacktracking> {
 
 	public CalculadorBacktracking(List<Persona> personas, Map<String, Integer> requerimientosRoles,
 			boolean[][] matrizIncompatibilidades) {
-		SolutionValidator.solutionValidator(personas, requerimientosRoles, matrizIncompatibilidades);
+		try {
+			SolutionValidator.solutionValidator(personas, requerimientosRoles, matrizIncompatibilidades);
+		} catch (IllegalArgumentException e) {
+			System.err.println(e.getMessage());
+			throw new IllegalArgumentException(e.getMessage());
+		}
 		this.listaPersonas = new ArrayList<>(personas);
 		this.requerimientosRoles = requerimientosRoles;
 		this.matrizIncompatibilidades = matrizIncompatibilidades;
@@ -38,7 +42,7 @@ public class CalculadorBacktracking extends Observable<IObserverBacktracking> {
 	public EquipoDto calcularMejorEquipo() {
 		this.contadorCasosBase = 0;
 		this.contadorPodas = 0;
-		
+		notificarProgreso();
 		Equipo solucionParcialInicial = new Equipo(new ArrayList<Persona>());
 		ejecutarBacktracking(0, solucionParcialInicial);
 		return this.mejorEquipo.toDto();
@@ -72,15 +76,8 @@ public class CalculadorBacktracking extends Observable<IObserverBacktracking> {
 	private boolean esPosibleAgregar(int indicePersona, Persona persona, Equipo solucionParcial) {
 		int maximoPermitido = requerimientosRoles.getOrDefault(persona.getRol(), 0);
 		int cantidadActual = solucionParcial.getCantidadPorRol(persona.getRol());
-		if (cantidadActual >= maximoPermitido) {
-			return false;
-		}
-
-		if (RestriccionesPoda.esIncompatibleConEquipo(indicePersona, solucionParcial, listaPersonas, matrizIncompatibilidades, this.cacheIndice.obtenerIndiceCache())) {
-			return false;
-		}
-
-		return true;
+		return !(cantidadActual >= maximoPermitido) && !RestriccionesPoda.esIncompatibleConEquipo(indicePersona,
+				solucionParcial, listaPersonas, matrizIncompatibilidades, this.cacheIndice.obtenerIndiceCache());
 	}
 
 	private boolean cumpleExactamenteConLosRoles(Equipo equipo) {
@@ -97,8 +94,8 @@ public class CalculadorBacktracking extends Observable<IObserverBacktracking> {
 		long tiempoActual = System.currentTimeMillis();
 		if (tiempoActual - ultimoTiempoNotificado > 100) {
 			ultimoTiempoNotificado = tiempoActual;
-			// TODO: Pasar el tiempo transcurrido desde el inicio, no el timestamp actual (ultimoTiempoNotificado es timestamp)
-			ProgresoEventoDto evento = new ProgresoEventoDto(contadorCasosBase, ultimoTiempoNotificado, contadorPodas);
+			ProgresoEventoDto evento = new ProgresoEventoDto(contadorCasosBase, tiempoActual - ultimoTiempoNotificado,
+					contadorPodas);
 			notifyObservers(o -> o.alCambiarProgreso(evento));
 		}
 	}

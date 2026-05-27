@@ -5,6 +5,7 @@ import javax.swing.UIManager;
 import equipoideal.controller.NavigationController;
 import equipoideal.model.Navigation;
 import equipoideal.model.PersonaDialogModel;
+import equipoideal.model.dto.ResultadoComparativoDto;
 import equipoideal.model.repository.PersonaRepository;
 import equipoideal.model.repository.PersonaRepositoryJson;
 import equipoideal.view.MainView;
@@ -22,7 +23,6 @@ public class Main {
 		Navigation navigation = new Navigation();
 		PersonaRepository repository = new PersonaRepositoryJson(FILE_PATH);
 		PersonaDialogModel modeloPer = new PersonaDialogModel(repository);
-
 		//TODO ver como hacer q navigation muestre u oculte los dialog (quizas estos deban ir en otro lado inicializados
 //		IncompatibleDialog vistaPer = new IncompatibleDialog(frame, "IncompatibleDialog");       //Para visualizar la ventana
 //		RequerimientosDialog vistaPer = new RequerimientosDialog(frame, "RequerimientosDialog");

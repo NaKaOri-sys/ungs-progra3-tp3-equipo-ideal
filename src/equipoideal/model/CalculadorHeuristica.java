@@ -1,5 +1,6 @@
 package equipoideal.model;
 
+import equipoideal.model.dto.EquipoDto;
 import equipoideal.model.event.IObserverHeuristica;
 import equipoideal.util.IndexCache;
 import equipoideal.util.Observable;
@@ -10,7 +11,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class CalculadorHeuristica extends Observable<IObserverHeuristica> {
+import javax.management.RuntimeErrorException;
+
+public class CalculadorHeuristica {
 
 	private List<Persona> listaPersonas;
 	private Map<String, Integer> requerimientos;
@@ -23,20 +26,19 @@ public class CalculadorHeuristica extends Observable<IObserverHeuristica> {
 		try {
 			SolutionValidator.solutionValidator(listaPersonas, requerimientos, matrizIncompatibilidades);
 		} catch (IllegalArgumentException e) {
-			notifyObservers(o -> o.onError(e.getMessage()));
+			System.err.println("Hubo un error al inicializar la heuristica: "+e.getMessage());
 			return;
 		}
 		this.listaPersonas = new ArrayList<>(listaPersonas);
 		this.listaOrdenadaPersonas = new ArrayList<>(listaPersonas);
 		this.requerimientos = requerimientos;
 		this.matrizIncompatibilidades = matrizIncompatibilidades;
-		this.cacheIndice = new IndexCache(listaPersonas);
 	}
 
-	public void ejecutarHeuristica() {
+	public EquipoDto ejecutarHeuristica() {
+		this.cacheIndice = new IndexCache(listaPersonas);
 		Equipo equipoResultante = new Equipo(new ArrayList<Persona>());
-		// TODO: Verificar que el sort es DESCENDENTE (mayores calificaciones primero). Revisar si necesita Collections.reverseOrder()
-		Collections.sort(listaOrdenadaPersonas, (persona, personaAComparar) -> {return persona.compareTo(personaAComparar);});
+		Collections.sort(listaOrdenadaPersonas, (p1, p2) -> p2.compareTo(p1));
 		try {
 			for (Persona personaActual : listaOrdenadaPersonas) {
 				if (esPosibleAgregar(personaActual, equipoResultante))
@@ -45,9 +47,10 @@ public class CalculadorHeuristica extends Observable<IObserverHeuristica> {
 					break;
 				}
 			}
-			notifyObservers(o -> o.onHeuristicaSolved(equipoResultante.toDto()));
+			
+			return equipoResultante.toDto();
 		} catch (Exception e) {
-			notifyObservers(o -> o.onError(e.getMessage()));
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 
@@ -56,11 +59,11 @@ public class CalculadorHeuristica extends Observable<IObserverHeuristica> {
 		int cantidadActualDelRol = equipoParcial.getCantidadPorRol(rol);
 		int maximoRequerido = requerimientos.getOrDefault(rol, 0);
 
-		return cantidadActualDelRol >= maximoRequerido || esIncompatibleConEquipo(persona, equipoParcial);
+		return !(cantidadActualDelRol >= maximoRequerido) && !(esIncompatibleConEquipo(persona, equipoParcial));
 	}
 
 	private boolean esIncompatibleConEquipo(Persona personaActual, Equipo equipoParcial) {
-		int idxActual = listaPersonas.indexOf(personaActual);
+		int idxActual = this.cacheIndice.obtenerIndiceCache().get(personaActual);
 		boolean algunoIncompatible = false;
 		for (Persona integrante : equipoParcial.obtenerIntegrantes()) {
 			int idxIntegrante = this.cacheIndice.obtenerIndiceCache().get(integrante);

@@ -11,7 +11,7 @@ import javax.swing.JScrollPane;
 
 import equipoideal.model.dto.EquipoDto;
 import equipoideal.model.dto.PersonaDto;
-import equipoideal.model.dto.StatsDto;
+import equipoideal.model.dto.ProgresoEventoDto;
 
 public class PanelResultadoEquipo extends JPanel {
     private JPanel listaIntegrantes;
@@ -31,13 +31,13 @@ public class PanelResultadoEquipo extends JPanel {
         add(lblStats, BorderLayout.SOUTH);
     }
 
-    public void actualizar(EquipoDto equipo, StatsDto stats) {
+    public void actualizar(EquipoDto equipo, ProgresoEventoDto stats) {
         listaIntegrantes.removeAll();
         for (PersonaDto p : equipo.getIntegrantes()) {
             listaIntegrantes.add(new FichaIntegrante(p));
         }
         lblStats.setText("<html>Tiempo: " + stats.getTiempo() + "ms | " + 
-                         "Casos Base: " + stats.getCasosBase() + "</html>");
+                         "Casos Base: " + stats.getCasosBaseProcesados() + "</html>");
         revalidate();
         repaint();
     }

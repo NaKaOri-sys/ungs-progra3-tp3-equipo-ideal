@@ -1,43 +1,49 @@
 package equipoideal.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.SwingWorker;
 import equipoideal.model.CalculadorBacktracking;
+import equipoideal.model.CalculadorHeuristica;
 import equipoideal.model.Navigation;
-import equipoideal.model.dto.EquipoDto;
 import equipoideal.model.dto.ProgresoEventoDto;
 import equipoideal.model.dto.ResultadoComparativoDto;
 import equipoideal.model.event.IObserverBacktracking;
 import equipoideal.util.VentanaEnum;
-import equipoideal.view.DashboardComparativo;
 import equipoideal.view.LoadingSolutionPanel;
 
-public class SolucionWorkerController extends SwingWorker<EquipoDto, ProgresoEventoDto>
+public class SolucionWorkerController extends SwingWorker<ResultadoComparativoDto, ProgresoEventoDto>
 		implements IObserverBacktracking {
 
-	private CalculadorBacktracking model;
+	private CalculadorBacktracking backtracking;
 	private LoadingSolutionPanel viewPanel;
 	private Navigation navigation;
 	private ResultadoComparativoDto resultado;
+	private CalculadorHeuristica heuristica;
 
-	public SolucionWorkerController(CalculadorBacktracking modelo, LoadingSolutionPanel viewPanel, Navigation nav, ResultadoComparativoDto resultado) {
-		this.model = modelo;
+	public SolucionWorkerController(CalculadorBacktracking backtracking, CalculadorHeuristica heuristica,
+			LoadingSolutionPanel viewPanel, Navigation nav, ResultadoComparativoDto resultado) {
+		this.backtracking = backtracking;
+		this.heuristica = heuristica;
 		this.viewPanel = viewPanel;
 		this.navigation = nav;
 		this.resultado = resultado;
 
-		this.model.addObserver(this);
+		this.backtracking.addObserver(this);
 	}
 
 	@Override
-	protected EquipoDto doInBackground() throws Exception {
+	protected ResultadoComparativoDto doInBackground() throws Exception {
 		try {
-			return model.calcularMejorEquipo();
+			ResultadoComparativoDto res = new ResultadoComparativoDto();
+			res.setEquipoBacktracking(this.backtracking.calcularMejorEquipo());
+			res.setEquipoHeuristica(this.heuristica.ejecutarHeuristica());
+
+			return res;
 		} catch (Exception e) {
 			System.err.println("Hubo un error al procesar el worker, error: " + e.getMessage());
-			return new EquipoDto(new ArrayList<>());
+			e.printStackTrace();
+			throw e;
 		}
 	}
 
@@ -48,8 +54,11 @@ public class SolucionWorkerController extends SwingWorker<EquipoDto, ProgresoEve
 
 	@Override
 	protected void process(List<ProgresoEventoDto> chunks) {
+		if (chunks == null || chunks.isEmpty())
+			return;
 		ProgresoEventoDto ultimoProgreso = chunks.get(chunks.size() - 1);
-		// TODO: Validar que ultimoProgreso no sea null antes de usar
+		if (ultimoProgreso == null)
+			return;
 		this.resultado.setStatsBacktracking(ultimoProgreso);
 		viewPanel.actualizarEstadisticas(ultimoProgreso.getCasosBaseProcesados());
 		viewPanel.actualizarMensaje("Tiempo transcurrido: " + ultimoProgreso.getTiempo());
@@ -57,11 +66,16 @@ public class SolucionWorkerController extends SwingWorker<EquipoDto, ProgresoEve
 
 	@Override
 	protected void done() {
-		model.removeObserver(this);
+		this.backtracking.removeObserver(this);
 		try {
-			EquipoDto equipoResultante = get();
+			ResultadoComparativoDto resultadoDto = get();
+			if (resultadoDto == null) {
+				this.viewPanel.mostrarError("El equipo resultante no es valido, vuelva a intentarlo");
+				this.navigation.updateView(VentanaEnum.MENU);
+				return;
+			}
 			viewPanel.finalizarCarga();
-			this.resultado.setEquipoBacktracking(equipoResultante);
+			this.resultado = resultadoDto;
 			this.navigation.updateView(VentanaEnum.RESULTADO);
 		} catch (Exception e) {
 			this.viewPanel.mostrarError("Hubo un error al procesar el worker, error: " + e.getMessage());
