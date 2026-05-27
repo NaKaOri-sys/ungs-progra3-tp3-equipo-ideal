@@ -81,18 +81,6 @@ public class MenuView extends JPanel {
 		add(btnBusqueda);
 	}
 	
-	public JButton getBtnCargarPersona() {
-		return btnCargarPersona;
-	}
-	public JButton getBtnRequerimiento() {
-		return btnRequerimiento;
-	}
-	public JButton getBtnIncompatibilidad() {
-		return btnIncompatibilidad;
-	}
-	public JButton getBtnBusqueda() {
-		return btnBusqueda;
-	}
 	public Observable<IMenuListener> obtenerObserver() {
 		return this.observable;
 	}

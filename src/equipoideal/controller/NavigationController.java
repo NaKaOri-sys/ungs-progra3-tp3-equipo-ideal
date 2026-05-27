@@ -2,23 +2,31 @@ package equipoideal.controller;
 
 import equipoideal.model.CalculadorBacktracking;
 import equipoideal.model.Navigation;
-import equipoideal.model.PersonaDialogModel;
 import equipoideal.model.event.IObserverNavigation;
 import equipoideal.util.VentanaEnum;
 import equipoideal.view.MainView;
+import equipoideal.view.dialogs.IncompatibleDialog;
+import equipoideal.view.dialogs.PersonasDialog;
+import equipoideal.view.dialogs.RequerimientosDialog;
 
 public class NavigationController implements IObserverNavigation {
 	private MainView mainView;
 	private Navigation navigation;
-	private PersonaDialogModel personaDialogModel;
+	
+	private PersonasDialog personasDialog;
+	private RequerimientosDialog requerimientosDialog;
+	private IncompatibleDialog incompatibleDialog;
 	
 	private MenuController menuController;
 	private SolucionWorkerController solucionWorkerController;
 	
-	public NavigationController(MainView mainView, Navigation navigation, PersonaDialogModel personaDialogModel) {
+	public NavigationController(MainView mainView, Navigation navigation, PersonasDialog personasDialog,
+			RequerimientosDialog requerimientosDialog, IncompatibleDialog incompatibleDialog) {
 		this.mainView = mainView;
 		this.navigation = navigation;
-		this.personaDialogModel = personaDialogModel;
+		this.personasDialog = personasDialog;
+		this.requerimientosDialog = requerimientosDialog;
+		this.incompatibleDialog = incompatibleDialog;
 		
 		this.navigation.addObserver(this);
 	}
@@ -36,7 +44,7 @@ public class NavigationController implements IObserverNavigation {
 				this.menuController.dispose();
 				this.menuController = null;
 			}
-			this.menuController = new MenuController(this, this.mainView.getPanelMenu(),this.personaDialogModel);
+			this.menuController = new MenuController(this, this.mainView.getPanelMenu(),this.personasDialog,this.requerimientosDialog,this.incompatibleDialog);
 			break;
 		case BUSQUEDA:
 			if (this.solucionWorkerController != null) {

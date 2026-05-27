@@ -3,12 +3,18 @@ package equipoideal;
 import javax.swing.UIManager;
 
 import equipoideal.controller.NavigationController;
+import equipoideal.controller.PersonaIntegrationController;
+import equipoideal.controller.PersonasController;
+import equipoideal.controller.RequerimientosController;
 import equipoideal.model.Navigation;
 import equipoideal.model.PersonaDialogModel;
 import equipoideal.model.repository.PersonaRepository;
 import equipoideal.model.repository.PersonaRepositoryJson;
 import equipoideal.util.VentanaEnum;
 import equipoideal.view.MainView;
+import equipoideal.view.dialogs.IncompatibleDialog;
+import equipoideal.view.dialogs.PersonasDialog;
+import equipoideal.view.dialogs.RequerimientosDialog;
 
 public class Main {
 	private static final String FILE_PATH = "personas.json";
@@ -21,12 +27,28 @@ public class Main {
 		}
 		MainView mainView = new MainView();
 		Navigation navigation = new Navigation();
+		
 		PersonaRepository repository = new PersonaRepositoryJson(FILE_PATH);
 		PersonaDialogModel personaDialogModel = new PersonaDialogModel(repository);
-
-		//TODO Faltaria los models de los otros dialogs, pero por ahora solo el de personas puse en navigationController
 		
-		new NavigationController(mainView, navigation,personaDialogModel);
+		// PERSONAS
+		PersonasDialog personasDialog = new PersonasDialog(null,"PersonasDialog");
+		personasDialog.crearInputs();
+		PersonasController personaController = new PersonasController(personasDialog, personaDialogModel);
+		PersonaIntegrationController personaIntegrationController = new PersonaIntegrationController(personasDialog, personaDialogModel);
+		
+		// REQUERIMIENTOS
+		RequerimientosDialog requerimientosDialog = new RequerimientosDialog(null,"RequerimientosDialog");
+		requerimientosDialog.crearInputs();
+		RequerimientosController requerimientosController = new RequerimientosController();
+		// TODO Falta crear el model de requerimientos si es necesario
+		
+		// INCOMPATIBILIDAD
+		IncompatibleDialog incompatibleDialog = new IncompatibleDialog(null,"IncompatibleDialog");
+		incompatibleDialog.crearInputs();
+		//TODO Falta crear el controller de incompatibilidad y el modelo de incompatibilidad
+		
+		new NavigationController(mainView, navigation,personasDialog,requerimientosDialog,incompatibleDialog);
 		navigation.updateView(VentanaEnum.MENU);
 
 		mainView.setVisible(true);
