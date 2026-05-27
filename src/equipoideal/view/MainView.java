@@ -10,10 +10,7 @@ public class MainView extends JFrame {
 	private JPanel contenedorPrincipal;
 
 	private MenuView panelMenu;
-//	private FormularioView panelFormulario;
-//	private IncompatibilidadView panelIncompatibilidad;
-//	private RequerimientoView panelRequerimiento;
-//	private BusquedaView panelBusqueda;
+	private LoadingSolutionPanel panelBusqueda;
 
 	public MainView() {
 		setTitle("Equipo Ideal");
@@ -25,16 +22,10 @@ public class MainView extends JFrame {
 		contenedorPrincipal = new JPanel(cardLayout);
 
 		panelMenu = new MenuView();
-//		panelFormulario = new FormularioView();
-//		panelIncompatibilidad = new IncompatibilidadView();
-//		panelRequerimiento = new RequerimientoView();
-//		panelBusqueda = new BusquedaView();
+		panelBusqueda = new LoadingSolutionPanel();
 
 		contenedorPrincipal.add(panelMenu, VentanaEnum.MENU.toString());
-//		contenedorPrincipal.add(panelFormulario, VentanaEnum.FORMULARIO.toString());
-//		contenedorPrincipal.add(panelIncompatibilidad, VentanaEnum.INCOMPATIBILIDAD.toString());
-//		contenedorPrincipal.add(panelRequerimiento, VentanaEnum.REQUERIMIENTO.toString());
-//		contenedorPrincipal.add(panelBusqueda, VentanaEnum.BUSQUEDA.toString());
+		contenedorPrincipal.add(panelBusqueda, VentanaEnum.BUSQUEDA.toString());
 
 		getContentPane().add(contenedorPrincipal, BorderLayout.CENTER);
 
@@ -51,20 +42,8 @@ public class MainView extends JFrame {
 		return panelMenu;
 	}
 	
-//	public FormularioView getPanelFormulario() {
-//		return panelFormulario;
-//	}
-	
-//	public IncompatibilidadView getPanelIncompatibilidad() {
-//		return panelIncompatibilidad;
-//	}
-	
-//	public RequerimientoView getPanelRequerimiento() {
-//		return panelRequerimiento;
-//	}
-	
-//	public BusquedaView getPanelBusqueda() {
-//		return panelBusqueda;
-//	}
-	
+	public LoadingSolutionPanel getPanelBusqueda() {
+		return panelBusqueda;
+	}
+
 }

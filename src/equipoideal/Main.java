@@ -7,6 +7,7 @@ import equipoideal.model.Navigation;
 import equipoideal.model.PersonaDialogModel;
 import equipoideal.model.repository.PersonaRepository;
 import equipoideal.model.repository.PersonaRepositoryJson;
+import equipoideal.util.VentanaEnum;
 import equipoideal.view.MainView;
 
 public class Main {
@@ -21,18 +22,12 @@ public class Main {
 		MainView mainView = new MainView();
 		Navigation navigation = new Navigation();
 		PersonaRepository repository = new PersonaRepositoryJson(FILE_PATH);
-		PersonaDialogModel modeloPer = new PersonaDialogModel(repository);
+		PersonaDialogModel personaDialogModel = new PersonaDialogModel(repository);
 
-		//TODO ver como hacer q navigation muestre u oculte los dialog (quizas estos deban ir en otro lado inicializados
-//		IncompatibleDialog vistaPer = new IncompatibleDialog(frame, "IncompatibleDialog");       //Para visualizar la ventana
-//		RequerimientosDialog vistaPer = new RequerimientosDialog(frame, "RequerimientosDialog");
-//		PersonasDialog vistaPer = new PersonasDialog(frame, "PersonasDialog");
-//		vistaPer.crearInputs();
-
-		new NavigationController(mainView, navigation);
-		//TODO eliseo pls revisate esto
-//		PersonasController controlPer = new PersonasController(vistaPer, modeloPer);
-//		PersonaIntegrationController controlInte = new PersonaIntegrationController(vistaPer, modeloPer);
+		//TODO Faltaria los models de los otros dialogs, pero por ahora solo el de personas puse en navigationController
+		
+		new NavigationController(mainView, navigation,personaDialogModel);
+		navigation.updateView(VentanaEnum.MENU);
 
 		mainView.setVisible(true);
 	}
