@@ -64,16 +64,7 @@ public class IncompatibleDialog extends DialogPadre{
 
 		panelBotones.add(filaInferior);
 
-		
-		String[] columnas = {"Persona 1", "Persona 2", "Estado/Compatibilidad"};
-        DefaultTableModel modeloVacio = new DefaultTableModel(columnas, 0);
-
-        tabla = new JTable(modeloVacio);
-        scrollPane = new JScrollPane(tabla);
-        
-        panelLista.setLayout(new BorderLayout());
-        panelLista.add(scrollPane, BorderLayout.CENTER);
-		
+		crearTabla();
 		
 	}
 

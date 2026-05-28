@@ -1,16 +1,13 @@
 package equipoideal.controller;
 
-import java.util.ArrayList;
+import java.io.File;
 
-import equipoideal.model.Persona;
 import equipoideal.model.PersonaDialogModel;
-import equipoideal.model.event.PersonasObserver;
 import equipoideal.model.listener.PersonasListener;
 import equipoideal.view.dialogs.PersonasDialog;
 
-//TODO si personaController tiene que escuchar dos interfaces, quiere decir que tenemos que dividir en 2 este controller,
-//uno q escuche al listener y otro q solo escuche al observer
-public class PersonasController implements PersonasListener, PersonasObserver {
+
+public class PersonasController implements PersonasListener {
 
 	private PersonasDialog vista;
 	private PersonaDialogModel modelo;
@@ -19,17 +16,29 @@ public class PersonasController implements PersonasListener, PersonasObserver {
 		this.vista = vista;
 		this.modelo = modelo;
 		this.vista.setPersonasListener(this);
-		this.modelo.addObserver(this);
 	}
 
 	@Override
-	public void onPersonaAgregada(String nombre, String apellido, int puntos, String rol) {
-		modelo.agregarPersona(nombre, apellido, puntos, rol);
+	public void onPersonaAgregada() {
+	    String nombre = vista.getNombre();
+	    String apellido = vista.getApellido();
+	    int puntos = Integer.parseInt(vista.getPuntos());
+	    String rol = vista.getRol();
+	    String ruta = vista.getRutaFoto();
+	    
+		modelo.agregarPersona(nombre, apellido, puntos, rol, ruta);
 	}
 
 	@Override
-	public void onListaPersonasModificada(ArrayList<Persona> nuevaLista) {
-		modelo.guardarPersonaEnJSON();
+	public void onCargaDesdeJson(String ruta) {
+	    modelo.cargarDesdeJSON(ruta);
+	}
+
+	@Override
+	public void onFotoSeleccionada(File imagen) {
+		String ruta = modelo.guardarFoto(imagen);
+
+		vista.mostrarImagen(ruta);
 	}
 
 }
