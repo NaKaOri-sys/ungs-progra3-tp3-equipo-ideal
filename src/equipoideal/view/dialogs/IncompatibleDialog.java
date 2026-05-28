@@ -64,7 +64,7 @@ public class IncompatibleDialog extends DialogPadre{
 
 		panelBotones.add(filaInferior);
 
-		
+		crearTabla();
 		
 	}
 

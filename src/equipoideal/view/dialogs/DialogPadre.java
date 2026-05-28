@@ -86,7 +86,7 @@ public abstract class DialogPadre extends JDialog {
 //        panelBotones.add(btnCargarDesde);
 	}
 	protected void crearTabla() {
-		String[] columnas = {"Nombre", "Apellido", "Puesto", "Puntos"};
+		String[] columnas = {"Nombre", "Apellido", "Puesto", "Puntos", "Incompatible con.."};
         
         DefaultTableModel modeloVacio = new DefaultTableModel(columnas, 0) {
             @Override

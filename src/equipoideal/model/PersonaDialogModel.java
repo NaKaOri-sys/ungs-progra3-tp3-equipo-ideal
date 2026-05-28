@@ -58,6 +58,10 @@ public class PersonaDialogModel extends Observable<PersonasObserver>{
 	        throw new RuntimeException(e);
 	    }
 	}
+	
+	public ArrayList<Persona> getListaPersonas() {
+	    return new ArrayList<>(listaPersonas);
+	}
 }
 		
 		

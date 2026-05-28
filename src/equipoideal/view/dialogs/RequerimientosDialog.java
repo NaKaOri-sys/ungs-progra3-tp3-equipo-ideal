@@ -3,19 +3,17 @@ package equipoideal.view.dialogs;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
-import javax.swing.JTable;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.table.DefaultTableModel;
 
+import equipoideal.model.dto.PersonaDto;
 import equipoideal.model.listener.RequerimientosListener;
 
 
@@ -98,6 +96,34 @@ public class RequerimientosDialog extends DialogPadre{
 
 	public int getCantTester() {
 	    return (int) spinnerTester.getValue();
+	}
+
+	public void actualizarTablaPersonas(ArrayList<PersonaDto> personas) {
+
+	    DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+
+	    modelo.setRowCount(0);
+
+	    for (PersonaDto p : personas) {
+
+	        modelo.addRow(new String[] {
+	            p.getNombre(),
+	            p.getApellido(),
+	            p.getRol(),
+	            String.valueOf(p.getCalificacion())
+	        });
+	    }
+	}
+
+	public void limpiarInputs() {
+
+	    spinnerLider.setValue(0);
+
+	    spinnerArquitecto.setValue(0);
+
+	    spinnerProgramador.setValue(0);
+
+	    spinnerTester.setValue(0);
 	}
 		
 	

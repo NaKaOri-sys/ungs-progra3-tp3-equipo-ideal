@@ -1,11 +1,8 @@
 package equipoideal.controller;
 
 import java.io.File;
-import java.util.ArrayList;
 
-import equipoideal.model.Persona;
 import equipoideal.model.PersonaDialogModel;
-import equipoideal.model.event.PersonasObserver;
 import equipoideal.model.listener.PersonasListener;
 import equipoideal.view.dialogs.PersonasDialog;
 

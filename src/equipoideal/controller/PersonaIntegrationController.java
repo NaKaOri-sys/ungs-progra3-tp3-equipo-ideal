@@ -21,7 +21,7 @@ public class PersonaIntegrationController implements PersonasObserver {
 	
     @Override
     public void onListaPersonasModificada(ArrayList<Persona> nuevaLista) {
-    	//Tal vez crear una clase solo para guardar en JSON
+    	
     	modelo.guardarPersonaEnJSON();
     	
         ArrayList<PersonaDto> personasDTO = transformarDTO(nuevaLista);
