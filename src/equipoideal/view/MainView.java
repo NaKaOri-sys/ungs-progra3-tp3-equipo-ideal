@@ -11,6 +11,7 @@ public class MainView extends JFrame {
 
 	private MenuView panelMenu;
 	private LoadingSolutionPanel panelBusqueda;
+	private DashboardComparativo panelResultado;
 
 	public MainView() {
 		setTitle("Equipo Ideal");
@@ -23,9 +24,11 @@ public class MainView extends JFrame {
 
 		panelMenu = new MenuView();
 		panelBusqueda = new LoadingSolutionPanel();
+		panelResultado = new DashboardComparativo();
 
 		contenedorPrincipal.add(panelMenu, VentanaEnum.MENU.toString());
 		contenedorPrincipal.add(panelBusqueda, VentanaEnum.BUSQUEDA.toString());
+		contenedorPrincipal.add(panelResultado, VentanaEnum.RESULTADO.toString());
 
 		getContentPane().add(contenedorPrincipal, BorderLayout.CENTER);
 
@@ -44,6 +47,10 @@ public class MainView extends JFrame {
 	
 	public LoadingSolutionPanel getPanelBusqueda() {
 		return panelBusqueda;
+	}
+	
+	public DashboardComparativo getPanelResultado() {
+		return panelResultado;
 	}
 
 }

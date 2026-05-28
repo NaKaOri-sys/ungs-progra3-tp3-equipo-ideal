@@ -2,5 +2,6 @@ package equipoideal.util;
 
 public enum VentanaEnum {
 	MENU,
-	BUSQUEDA
+	BUSQUEDA,
+	RESULTADO,
 }
