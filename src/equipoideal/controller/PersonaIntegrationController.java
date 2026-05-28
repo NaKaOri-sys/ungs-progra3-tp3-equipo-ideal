@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import equipoideal.model.Persona;
 import equipoideal.model.PersonaDialogModel;
+import equipoideal.model.dto.PersonaDto;
 import equipoideal.model.event.PersonasObserver;
 import equipoideal.view.dialogs.PersonasDialog;
 
@@ -18,26 +19,24 @@ public class PersonaIntegrationController implements PersonasObserver {
         this.modelo.addObserver(this);
     }
 	
-	@Override
+    @Override
     public void onListaPersonasModificada(ArrayList<Persona> nuevaLista) {
-        
-        Object[][] datosTabla = transformarMatriz(nuevaLista);
-        vista.actualizarTablaPersonas(datosTabla);
+    	//Tal vez crear una clase solo para guardar en JSON
+    	modelo.guardarPersonaEnJSON();
+    	
+        ArrayList<PersonaDto> personasDTO = transformarDTO(nuevaLista);
+
+        vista.actualizarTablaPersonas(personasDTO);
     }
     
-	//TODO ver de crear un DTO para no usar Object -> es mala practica porque es muy generico Objects
-    private Object[][] transformarMatriz(ArrayList<Persona> lista) {
-        // Lógica para pasar de List<Persona> a Object[][] para la JTable
-        Object[][] matriz = new Object[lista.size()][4];
-        for (int i = 0; i < lista.size(); i++) {
-            Persona p = lista.get(i);
-            matriz[i][0] = p.getNombre();
-            matriz[i][1] = p.getApellido();
-            matriz[i][2] = p.getRol();
-            matriz[i][3] = p.getPuntos();
-        }
-        return matriz;
-    }
+    private ArrayList<PersonaDto> transformarDTO(ArrayList<Persona> lista) {
 
-	
+        ArrayList<PersonaDto> dto = new ArrayList<>();
+
+        for (Persona p : lista) {
+            dto.add(new PersonaDto(p.getNombre(), p.getApellido(), p.getCalificacion(), p.getRol()));
+        }
+
+        return dto;
+    }
 }

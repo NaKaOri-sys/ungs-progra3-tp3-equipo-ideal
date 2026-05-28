@@ -2,12 +2,12 @@ package equipoideal.model.dto;
 
 public class ProgresoEventoDto {
 	private final int casosBaseProcesados;
-    private final int mejorCalificacionActual;
+    private final long tiempo;
     private final int nodosPodados;
 
-    public ProgresoEventoDto(int casosBaseProcesados, int mejorCalificacionActual, int nodosPodados) {
+    public ProgresoEventoDto(int casosBaseProcesados, long tiempo, int nodosPodados) {
         this.casosBaseProcesados = casosBaseProcesados;
-        this.mejorCalificacionActual = mejorCalificacionActual;
+        this.tiempo = tiempo;
         this.nodosPodados = nodosPodados;
     }
     
@@ -15,11 +15,11 @@ public class ProgresoEventoDto {
         return casosBaseProcesados;
     }
 
-    public int getMejorCalificacionActual() {
-        return mejorCalificacionActual;
-    }
-
     public int getNodosPodados() {
         return nodosPodados;
+    }
+    
+    public long getTiempo() {
+    	return tiempo;
     }
 }

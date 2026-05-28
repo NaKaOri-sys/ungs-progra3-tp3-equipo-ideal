@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 public abstract class DialogPadre extends JDialog {
 
@@ -83,6 +84,24 @@ public abstract class DialogPadre extends JDialog {
 
 //        btnCargarDesde = new JButton("Cargar Desde JSON");
 //        panelBotones.add(btnCargarDesde);
+	}
+	protected void crearTabla() {
+		String[] columnas = {"Nombre", "Apellido", "Puesto", "Puntos"};
+        
+        DefaultTableModel modeloVacio = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        tabla = new JTable(modeloVacio);
+        scrollPane = new JScrollPane(tabla);
+        
+        panelLista.setLayout(new BorderLayout());
+        panelLista.add(scrollPane, BorderLayout.CENTER);
+        panelLista.setBorder(BorderFactory.createEmptyBorder(10, 40, 20, 40));
+		
 	}
 	
 	public abstract void crearInputs();

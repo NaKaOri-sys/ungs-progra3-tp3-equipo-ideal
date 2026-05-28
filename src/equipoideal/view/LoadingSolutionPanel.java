@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
@@ -35,7 +36,11 @@ public class LoadingSolutionPanel extends JPanel {
 		lblStat.setFont(new Font("SansSerif", Font.BOLD, 18));
 		add(lblStat);
 	}
-
+	
+	public void mostrarError(String message) {
+		JOptionPane.showMessageDialog(this, message, "Error al procesar solución", JOptionPane.ERROR_MESSAGE);
+	}
+	
 	public void actualizarMensaje(String nuevoMensaje) {
 		lblProgress.setText(nuevoMensaje);
 	}

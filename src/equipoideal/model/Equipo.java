@@ -20,7 +20,7 @@ public class Equipo {
 	public int getCalificacionTotal() {
 		int suma = 0;
 		for (Persona persona : integrantes) {
-			suma += persona.getPuntos();
+			suma += persona.getCalificacion();
 		}
 		return suma;
 	}
@@ -39,7 +39,7 @@ public class Equipo {
 	public EquipoDto toDto() {
 		EquipoDto dto = new EquipoDto(new ArrayList<PersonaDto>());
 		for (Persona persona : integrantes) {
-			PersonaDto integrante = new PersonaDto(persona.getNombre(), persona.getApellido(), persona.getPuntos(), persona.getRol());
+			PersonaDto integrante = new PersonaDto(persona.getNombre(), persona.getApellido(), persona.getCalificacion(), persona.getRol());
 			dto.getIntegrantes().add(integrante);
 		}
 		return dto;

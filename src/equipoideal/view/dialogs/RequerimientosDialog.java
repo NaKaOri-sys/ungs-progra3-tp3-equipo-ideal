@@ -55,18 +55,9 @@ public class RequerimientosDialog extends DialogPadre{
         
         accionesBoton();
         
-
 		panelInputs.setBorder(BorderFactory.createEmptyBorder(20,200,20,200));
-        
-        String[] columnas = {"Nombre", "Apellido", "Puesto", "Puntos"};
-        DefaultTableModel modeloVacio = new DefaultTableModel(columnas, 0);
-
-        tabla = new JTable(modeloVacio);
-        scrollPane = new JScrollPane(tabla);
-        
-        panelLista.setLayout(new BorderLayout());
-        panelLista.add(scrollPane, BorderLayout.CENTER);
-        panelLista.setBorder(BorderFactory.createEmptyBorder(10, 40, 20, 40));
+		
+		crearTabla();
     }
 		
 	private JPanel crearFila(String nombre, JSpinner spinnerFila) {
@@ -86,25 +77,28 @@ public class RequerimientosDialog extends DialogPadre{
 	//TODO aprovechar el listener
 	@Override
 	public void accionesBoton() {
-		btnAceptar.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				int lideres = (int) spinnerLider.getValue();
-				int arquitectos = (int) spinnerArquitecto.getValue();
-				int programadores = (int) spinnerProgramador.getValue();
-				int testers = (int) spinnerTester.getValue();
-				
-				
-				if (listener != null) {
-					
-					listener.onRequerimientosAgregados(lideres, arquitectos, programadores, testers);
-				}
+		btnAceptar.addActionListener(e -> {
+			if (listener != null) {
+				listener.onRequerimientosAgregados();
 			}
 		});
 	}
 		
-		
+	public int getCantLider() {
+	    return (int) spinnerLider.getValue();
+	}
+
+	public int getCantArquitecto() {
+	    return (int) spinnerArquitecto.getValue();
+	}
+
+	public int getCantProgramador() {
+	    return (int) spinnerProgramador.getValue();
+	}
+
+	public int getCantTester() {
+	    return (int) spinnerTester.getValue();
+	}
 		
 	
 		
