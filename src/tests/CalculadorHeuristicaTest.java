@@ -31,6 +31,7 @@ public class CalculadorHeuristicaTest {
 	@Test
 	public void testHeuristica_EncuentraSolucionEnCasoFeliz() {
 		requerimientos.put("Lider", 1);
+		requerimientos.put("Dev", 1);
 		
 		var calculador = new CalculadorHeuristica(personas, requerimientos, incompatibilidades);
 		EquipoDto resultado = calculador.ejecutarHeuristica();

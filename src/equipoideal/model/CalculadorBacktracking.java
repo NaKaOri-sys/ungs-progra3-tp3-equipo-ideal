@@ -6,13 +6,14 @@ import java.util.Map;
 
 import equipoideal.model.dto.EquipoDto;
 import equipoideal.model.dto.ProgresoEventoDto;
-import equipoideal.model.event.IObserverBacktracking;
+import equipoideal.model.event.IObserverCalculador;
 import equipoideal.util.IndexCache;
 import equipoideal.util.Observable;
+import equipoideal.util.OrigenCalculadorEnum;
 import equipoideal.util.RestriccionesPoda;
 import equipoideal.util.SolutionValidator;
 
-public class CalculadorBacktracking extends Observable<IObserverBacktracking> {
+public class CalculadorBacktracking extends Observable<IObserverCalculador> {
 	private List<Persona> listaPersonas;
 	private Map<String, Integer> requerimientosRoles;
 	private boolean[][] matrizIncompatibilidades;
@@ -92,10 +93,11 @@ public class CalculadorBacktracking extends Observable<IObserverBacktracking> {
 
 	private void notificarProgreso() {
 		long tiempoActual = System.currentTimeMillis();
-		if (tiempoActual - ultimoTiempoNotificado > 100) {
+		long tiempoTranscurrido = tiempoActual - ultimoTiempoNotificado;
+		if (tiempoTranscurrido > 100) {
 			ultimoTiempoNotificado = tiempoActual;
-			ProgresoEventoDto evento = new ProgresoEventoDto(contadorCasosBase, tiempoActual - ultimoTiempoNotificado,
-					contadorPodas);
+			ProgresoEventoDto evento = new ProgresoEventoDto(contadorCasosBase, tiempoTranscurrido, contadorPodas,
+					OrigenCalculadorEnum.BACKTRACKING);
 			notifyObservers(o -> o.alCambiarProgreso(evento));
 		}
 	}

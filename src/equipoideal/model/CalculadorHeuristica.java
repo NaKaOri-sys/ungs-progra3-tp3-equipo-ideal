@@ -1,9 +1,11 @@
 package equipoideal.model;
 
 import equipoideal.model.dto.EquipoDto;
-import equipoideal.model.event.IObserverHeuristica;
+import equipoideal.model.dto.ProgresoEventoDto;
+import equipoideal.model.event.IObserverCalculador;
 import equipoideal.util.IndexCache;
 import equipoideal.util.Observable;
+import equipoideal.util.OrigenCalculadorEnum;
 import equipoideal.util.SolutionValidator;
 
 import java.util.ArrayList;
@@ -11,22 +13,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import javax.management.RuntimeErrorException;
-
-public class CalculadorHeuristica {
+public class CalculadorHeuristica extends Observable<IObserverCalculador> {
 
 	private List<Persona> listaPersonas;
 	private Map<String, Integer> requerimientos;
 	private boolean[][] matrizIncompatibilidades;
 	private List<Persona> listaOrdenadaPersonas;
 	private IndexCache cacheIndice;
+	private long ultimoTiempoNotificado;
 
 	public CalculadorHeuristica(List<Persona> listaPersonas, Map<String, Integer> requerimientos,
 			boolean[][] matrizIncompatibilidades) {
 		try {
 			SolutionValidator.solutionValidator(listaPersonas, requerimientos, matrizIncompatibilidades);
 		} catch (IllegalArgumentException e) {
-			System.err.println("Hubo un error al inicializar la heuristica: "+e.getMessage());
+			System.err.println("Hubo un error al inicializar la heuristica: " + e.getMessage());
 			return;
 		}
 		this.listaPersonas = new ArrayList<>(listaPersonas);
@@ -37,6 +38,7 @@ public class CalculadorHeuristica {
 
 	public EquipoDto ejecutarHeuristica() {
 		this.cacheIndice = new IndexCache(listaPersonas);
+		notificarProgreso();
 		Equipo equipoResultante = new Equipo(new ArrayList<Persona>());
 		Collections.sort(listaOrdenadaPersonas, (p1, p2) -> p2.compareTo(p1));
 		try {
@@ -47,7 +49,7 @@ public class CalculadorHeuristica {
 					break;
 				}
 			}
-			
+			notificarProgreso();
 			return equipoResultante.toDto();
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
@@ -81,5 +83,15 @@ public class CalculadorHeuristica {
 			}
 		}
 		return true;
+	}
+
+	private void notificarProgreso() {
+		long tiempoActual = System.currentTimeMillis();
+		long tiempoTranscurrido = tiempoActual - ultimoTiempoNotificado;
+		if (tiempoTranscurrido > 100) {
+			ultimoTiempoNotificado = tiempoActual;
+			ProgresoEventoDto evento = new ProgresoEventoDto(0, tiempoTranscurrido, 0, OrigenCalculadorEnum.HEURISTICA);
+			notifyObservers(o -> o.alCambiarProgreso(evento));
+		}
 	}
 }

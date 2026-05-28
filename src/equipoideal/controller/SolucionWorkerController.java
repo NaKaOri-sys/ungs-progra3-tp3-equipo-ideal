@@ -3,43 +3,36 @@ package equipoideal.controller;
 import java.util.List;
 
 import javax.swing.SwingWorker;
-import equipoideal.model.CalculadorBacktracking;
-import equipoideal.model.CalculadorHeuristica;
+import equipoideal.model.CalculadorSolucion;
 import equipoideal.model.Navigation;
 import equipoideal.model.dto.ProgresoEventoDto;
+import equipoideal.util.OrigenCalculadorEnum;
 import equipoideal.model.dto.ResultadoComparativoDto;
-import equipoideal.model.event.IObserverBacktracking;
+import equipoideal.model.event.IObserverCalculador;
 import equipoideal.util.VentanaEnum;
 import equipoideal.view.LoadingSolutionPanel;
 
 public class SolucionWorkerController extends SwingWorker<ResultadoComparativoDto, ProgresoEventoDto>
-		implements IObserverBacktracking {
+		implements IObserverCalculador {
 
-	private CalculadorBacktracking backtracking;
 	private LoadingSolutionPanel viewPanel;
 	private Navigation navigation;
 	private ResultadoComparativoDto resultado;
-	private CalculadorHeuristica heuristica;
+	private CalculadorSolucion facade;
 
-	public SolucionWorkerController(CalculadorBacktracking backtracking, CalculadorHeuristica heuristica,
+	public SolucionWorkerController(CalculadorSolucion facade,
 			LoadingSolutionPanel viewPanel, Navigation nav, ResultadoComparativoDto resultado) {
-		this.backtracking = backtracking;
-		this.heuristica = heuristica;
 		this.viewPanel = viewPanel;
 		this.navigation = nav;
 		this.resultado = resultado;
-
-		this.backtracking.addObserver(this);
+		this.facade = facade;
+		this.facade.addObserver(this);
 	}
 
 	@Override
 	protected ResultadoComparativoDto doInBackground() throws Exception {
 		try {
-			ResultadoComparativoDto res = new ResultadoComparativoDto();
-			res.setEquipoBacktracking(this.backtracking.calcularMejorEquipo());
-			res.setEquipoHeuristica(this.heuristica.ejecutarHeuristica());
-
-			return res;
+			return this.facade.calcularSolucionGlobal();
 		} catch (Exception e) {
 			System.err.println("Hubo un error al procesar el worker, error: " + e.getMessage());
 			e.printStackTrace();
@@ -59,14 +52,20 @@ public class SolucionWorkerController extends SwingWorker<ResultadoComparativoDt
 		ProgresoEventoDto ultimoProgreso = chunks.get(chunks.size() - 1);
 		if (ultimoProgreso == null)
 			return;
-		this.resultado.setStatsBacktracking(ultimoProgreso);
-		viewPanel.actualizarEstadisticas(ultimoProgreso.getCasosBaseProcesados());
-		viewPanel.actualizarMensaje("Tiempo transcurrido: " + ultimoProgreso.getTiempo());
+		if (ultimoProgreso.getOrigen() == OrigenCalculadorEnum.BACKTRACKING) {
+			this.resultado.setStatsBacktracking(ultimoProgreso);
+			viewPanel.actualizarEstadisticas(ultimoProgreso.getCasosBaseProcesados());
+			viewPanel.actualizarMensaje("Tiempo transcurrido (backtracking): " + ultimoProgreso.getTiempo());
+		}
+		if (ultimoProgreso.getOrigen() == OrigenCalculadorEnum.HEURISTICA) {
+			this.resultado.setStatsHeuristica(ultimoProgreso);
+			viewPanel.actualizarMensaje("Tiempo transcurrido (heurística): " + ultimoProgreso.getTiempo());
+		}
 	}
 
 	@Override
 	protected void done() {
-		this.backtracking.removeObserver(this);
+		this.facade.removeObserver(this);
 		try {
 			ResultadoComparativoDto resultadoDto = get();
 			if (resultadoDto == null) {

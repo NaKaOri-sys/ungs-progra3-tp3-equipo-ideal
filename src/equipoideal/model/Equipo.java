@@ -15,7 +15,7 @@ public class Equipo {
 	}
 
 	public List<Persona> obtenerIntegrantes() {
-		return new ArrayList<>(this.integrantes);
+		return this.integrantes;
 	}
 
 	public int getCalificacionTotal() {
