@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import equipoideal.model.Persona;
 
 public interface PersonaRepository {
-	ArrayList<Persona> loadAll();
+	ArrayList<Persona> loadAll(String archivo);
     void saveAll(ArrayList<Persona> personas);
     void cleanAll();
 }

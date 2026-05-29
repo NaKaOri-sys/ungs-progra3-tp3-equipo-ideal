@@ -13,9 +13,8 @@ public class PersonaRepositoryJson implements PersonaRepository{
 	}
 
 	@Override
-	public ArrayList<Persona> loadAll() {
-		// TODO Auto-generated method stub
-		return null;
+	public ArrayList<Persona> loadAll(String archivo1) {
+	    return PersonaArchivo.cargarJSON(archivo1);
 	}
 
 	@Override
@@ -26,8 +25,7 @@ public class PersonaRepositoryJson implements PersonaRepository{
 
 	@Override
 	public void cleanAll() {
-		// TODO Auto-generated method stub
-		
+		PersonaArchivo.limpiarArchivoJson(archivo);
 	}
 
 }
