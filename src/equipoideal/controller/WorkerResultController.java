@@ -19,4 +19,8 @@ public class WorkerResultController implements IListenerDashboardComparativo {
 	public void onMenuPrincipalPress() {
 		this.navigation.updateView(VentanaEnum.MENU);
 	}
+
+	public void dispose() {
+		this.view.getListener().removeObserver(this);
+	}
 }

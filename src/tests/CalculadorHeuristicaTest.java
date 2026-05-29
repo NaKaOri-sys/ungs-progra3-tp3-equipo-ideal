@@ -7,16 +7,15 @@ import java.util.HashMap;
 import org.junit.Before;
 import org.junit.Test;
 
-import equipoideal.model.CalculadorBacktracking;
+import equipoideal.model.CalculadorHeuristica;
 import equipoideal.model.Persona;
 import equipoideal.model.dto.EquipoDto;
 
-public class CalculadorBacktrackingTest {
+public class CalculadorHeuristicaTest {
 
 	private ArrayList<Persona> personas;
 	private HashMap<String, Integer> requerimientos;
 	private boolean[][] incompatibilidades;
-	private CalculadorBacktracking calc;
 
 	@Before
 	public void setUp() {
@@ -24,45 +23,32 @@ public class CalculadorBacktrackingTest {
 		personas.add(new Persona("Leo", "Messi", 5, "Lider"));
 		personas.add(new Persona("Cristiano", "Ronaldo", 4, "Dev"));
 		personas.add(new Persona("Kylian", "Mbappe", 3, "Tester"));
-		personas.add(new Persona("Harry", "Maguire", 2, "Dev"));
 		
 		requerimientos = new HashMap<>();
 		incompatibilidades = new boolean[personas.size()][personas.size()];
 	}
 
 	@Test
-	public void testBacktracking_EncuentraSolucion() {
+	public void testHeuristica_EncuentraSolucionEnCasoFeliz() {
 		requerimientos.put("Lider", 1);
 		requerimientos.put("Dev", 1);
 		
-		calc = new CalculadorBacktracking(personas, requerimientos, incompatibilidades);
-		EquipoDto resultado = calc.calcularMejorEquipo();
+		var calculador = new CalculadorHeuristica(personas, requerimientos, incompatibilidades);
+		EquipoDto resultado = calculador.ejecutarHeuristica();
 		
 		assertFalse("Debe encontrar solución", resultado.getIntegrantes().isEmpty());
 	}
 
 	@Test
-	public void testBacktracking_SolucionEsOptima() {
-		requerimientos.put("Lider", 1);
-		requerimientos.put("Dev", 1);
-		
-		calc = new CalculadorBacktracking(personas, requerimientos, incompatibilidades);
-		EquipoDto resultado = calc.calcularMejorEquipo();
-		
-		int total = resultado.getIntegrantes().stream().mapToInt(p -> p.getCalificacion()).sum();
-		assertEquals("Debe sumar 9 (5+4)", 9, total);
-	}
-
-	@Test
-	public void testBacktracking_RespetaIncompatibilidades() {
+	public void testHeuristica_RespetaIncompatibilidades() {
 		incompatibilidades[0][1] = true;
 		incompatibilidades[1][0] = true;
 		
 		requerimientos.put("Lider", 1);
 		requerimientos.put("Dev", 1);
 		
-		calc = new CalculadorBacktracking(personas, requerimientos, incompatibilidades);
-		EquipoDto resultado = calc.calcularMejorEquipo();
+		var calculador = new CalculadorHeuristica(personas, requerimientos, incompatibilidades);
+		EquipoDto resultado = calculador.ejecutarHeuristica();
 		
 		boolean tieneMessi = resultado.getIntegrantes().stream().anyMatch(p -> "Messi".equals(p.getApellido()));
 		boolean tieneRonaldo = resultado.getIntegrantes().stream().anyMatch(p -> "Ronaldo".equals(p.getApellido()));
@@ -71,14 +57,12 @@ public class CalculadorBacktrackingTest {
 	}
 
 	@Test
-	public void testBacktracking_SinSolucion() {
-		requerimientos.put("Lider", 1);
+	public void testHeuristica_SeleccionaPersonaConMayorCalificacion() {
 		requerimientos.put("Dev", 1);
-		requerimientos.put("Tester", 2);  // Solo hay 1 Tester
 		
-		calc = new CalculadorBacktracking(personas, requerimientos, incompatibilidades);
-		EquipoDto resultado = calc.calcularMejorEquipo();
+		var calculador = new CalculadorHeuristica(personas, requerimientos, incompatibilidades);
+		EquipoDto resultado = calculador.ejecutarHeuristica();
 		
-		assertTrue("Debe estar vacío sin solución", resultado.getIntegrantes().isEmpty());
+		assertEquals("Debe elegir al de mayor calificación", 4, resultado.getIntegrantes().get(0).getCalificacion());
 	}
 }
