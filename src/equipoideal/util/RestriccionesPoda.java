@@ -18,7 +18,7 @@ public class RestriccionesPoda {
 	public static int calcularRemanenteMaximo(int indice, List<Persona> listaPersonas) {
 		int suma = 0;
 		for (int i = indice; i < listaPersonas.size(); i++) {
-			suma += listaPersonas.get(i).getPuntos();
+			suma += listaPersonas.get(i).getCalificacion();
 		}
 		return suma;
 	}

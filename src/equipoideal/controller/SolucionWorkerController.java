@@ -82,4 +82,8 @@ public class SolucionWorkerController extends SwingWorker<ResultadoComparativoDt
 			return;
 		}
 	}
+
+	public void dispose() {
+		this.facade.removeObserver(this);
+	}
 }

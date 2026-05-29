@@ -1,9 +1,6 @@
 package equipoideal.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import equipoideal.model.CalculadorBacktracking;
+import equipoideal.model.CalculadorSolucion;
 import equipoideal.model.Navigation;
 import equipoideal.model.dto.ResultadoComparativoDto;
 import equipoideal.model.event.IObserverNavigation;
@@ -27,14 +24,16 @@ public class NavigationController implements IObserverNavigation {
 	private WorkerResultController workerResultController;
 	
 	private ResultadoComparativoDto resultadoComparativoDto;
+	private CalculadorSolucion calculador;
 	
 	public NavigationController(MainView mainView, Navigation navigation, PersonasDialog personasDialog,
-			RequerimientosDialog requerimientosDialog, IncompatibleDialog incompatibleDialog) {
+			RequerimientosDialog requerimientosDialog, IncompatibleDialog incompatibleDialog, CalculadorSolucion calculador) {
 		this.mainView = mainView;
 		this.navigation = navigation;
 		this.personasDialog = personasDialog;
 		this.requerimientosDialog = requerimientosDialog;
 		this.incompatibleDialog = incompatibleDialog;
+		this.calculador = calculador;
 		
 		this.navigation.addObserver(this);
 	}
@@ -57,19 +56,16 @@ public class NavigationController implements IObserverNavigation {
 			
 		case BUSQUEDA:
 			if (this.solucionWorkerController != null) {
-				//this.solucionWorkerController.dispose(); // TODO Nahuel, en el controller del worker va el dispose() ?
+				this.solucionWorkerController.dispose();
 				this.solucionWorkerController = null;
 			}
-			CalculadorBacktracking modelBacktracking = new CalculadorBacktracking(
-					new ArrayList<>(),	// TODO Le paso Colecciones vacias por ahora,
-					new HashMap<>(),	// faltaria tener los modelos restantes y pasarle los datos reales
-					new boolean[0][0]);	// para el algoritmo.
-			this.solucionWorkerController = new SolucionWorkerController(modelBacktracking, this.mainView.getPanelBusqueda(), this.navigation,this.resultadoComparativoDto);
+
+			this.solucionWorkerController = new SolucionWorkerController(this.calculador, this.mainView.getPanelBusqueda(), this.navigation,this.resultadoComparativoDto);
 			break;
 			
 		case RESULTADO:
 			if(this.workerResultController != null) {
-				//this.workerResultController.dispose(); // TODO lo mismo que arriba ?
+				this.workerResultController.dispose();
 				this.workerResultController = null;
 			}
 			this.workerResultController = new WorkerResultController(this.mainView.getPanelResultado(), this.navigation);
