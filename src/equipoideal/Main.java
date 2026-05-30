@@ -5,6 +5,7 @@ import javax.swing.UIManager;
 import equipoideal.controller.NavigationController;
 import equipoideal.controller.PersonaIntegrationController;
 import equipoideal.controller.PersonasController;
+import equipoideal.controller.RequerimientoIntegrationController;
 import equipoideal.controller.RequerimientosController;
 import equipoideal.model.Navigation;
 import equipoideal.model.PersonaDialogModel;
@@ -40,7 +41,9 @@ public class Main {
 		// REQUERIMIENTOS
 		RequerimientosDialog requerimientosDialog = new RequerimientosDialog(null,"RequerimientosDialog");
 		requerimientosDialog.crearInputs();
-		RequerimientosController requerimientosController = new RequerimientosController();
+		RequerimientosController requerimientosController = new RequerimientosController(requerimientosDialog, personaDialogModel);
+		RequerimientoIntegrationController reqIntegrationController = new RequerimientoIntegrationController(requerimientosDialog, personaDialogModel);
+
 		// TODO Falta crear el model de requerimientos si es necesario
 		
 		// INCOMPATIBILIDAD

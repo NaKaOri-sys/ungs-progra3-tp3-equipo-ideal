@@ -30,7 +30,7 @@ public class PanelResultadoEquipo extends JPanel {
         lblStats = new JLabel("Esperando resultados...");
         add(lblStats, BorderLayout.SOUTH);
     }
-
+  
     public void actualizar(EquipoDto equipo, StatsDto stats) {
         listaIntegrantes.removeAll();
         for (PersonaDto p : equipo.getIntegrantes()) {

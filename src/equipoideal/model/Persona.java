@@ -7,7 +7,7 @@ public class Persona implements Comparable<Persona> {
 	private String rol;
 	private String rutaFoto;
 
-	// TODO ver si puntos deberia ser calificación ya q es un nro entre 1 y 5
+	
 	public Persona(String nombre, String apellido, int calificación, String rol) {
 		this.nombre = nombre;
 		this.apellido = apellido;
@@ -27,7 +27,7 @@ public class Persona implements Comparable<Persona> {
 		return rol;
 	}
 
-	// TODO ver si esto no seria getCalificacion
+	
 	public int getCalificacion() {
 		return calificación;
 	}

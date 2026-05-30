@@ -17,36 +17,9 @@ public class RequerimientosController implements RequerimientosListener {
 		this.vista = vista;
 		this.modelo = modelo;
 		this.vista.setRequerimientosListener(this);
-		cargarTablaInicial();
 	}
 	
-	private void cargarTablaInicial() {
-
-	    ArrayList<Persona> personas = modelo.getListaPersonas();
-
-	    ArrayList<PersonaDto> dto = transformar(personas);
-
-	    vista.actualizarTablaPersonas(dto);
-	}
-
-	private ArrayList<PersonaDto> transformar(ArrayList<Persona> lista) {
-
-	    ArrayList<PersonaDto> dto = new ArrayList<>();
-
-	    for (Persona p : lista) {
-
-	        dto.add(new PersonaDto(
-	            p.getNombre(),
-	            p.getApellido(),
-	            p.getCalificacion(),
-	            p.getRol()
-	        ));
-	    }
-
-	    return dto;
-	}
-
-	//TODO: Terminar de pasar los datos
+	
 	@Override
 	public void onRequerimientosAgregados() {
         int cantLideres = vista.getCantLider();
