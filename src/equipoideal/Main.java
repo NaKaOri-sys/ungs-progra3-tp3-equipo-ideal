@@ -5,13 +5,10 @@ import javax.swing.UIManager;
 import equipoideal.controller.NavigationController;
 import equipoideal.controller.PersonaIntegrationController;
 import equipoideal.controller.PersonasController;
+import equipoideal.controller.RequerimientoIntegrationController;
 import equipoideal.controller.RequerimientosController;
-import equipoideal.model.CalculadorBacktracking;
-import equipoideal.model.CalculadorHeuristica;
-import equipoideal.model.CalculadorSolucion;
 import equipoideal.model.Navigation;
 import equipoideal.model.PersonaDialogModel;
-import equipoideal.model.dto.ResultadoComparativoDto;
 import equipoideal.model.repository.PersonaRepository;
 import equipoideal.model.repository.PersonaRepositoryJson;
 import equipoideal.util.VentanaEnum;
@@ -34,32 +31,27 @@ public class Main {
 		
 		PersonaRepository repository = new PersonaRepositoryJson(FILE_PATH);
 		PersonaDialogModel personaDialogModel = new PersonaDialogModel(repository);
+		
 		// PERSONAS
-		//TODO revisar nombres!!
 		PersonasDialog personasDialog = new PersonasDialog(null,"PersonasDialog");
 		personasDialog.crearInputs();
 		PersonasController personaController = new PersonasController(personasDialog, personaDialogModel);
 		PersonaIntegrationController personaIntegrationController = new PersonaIntegrationController(personasDialog, personaDialogModel);
 		
 		// REQUERIMIENTOS
-		//TODO revisar nombres!!
 		RequerimientosDialog requerimientosDialog = new RequerimientosDialog(null,"RequerimientosDialog");
 		requerimientosDialog.crearInputs();
 		RequerimientosController requerimientosController = new RequerimientosController(requerimientosDialog, personaDialogModel);
+		RequerimientoIntegrationController reqIntegrationController = new RequerimientoIntegrationController(requerimientosDialog, personaDialogModel);
+
 		// TODO Falta crear el model de requerimientos si es necesario
 		
-		//TODO desp agregar this.personas, this.requerimientos, this.incompatibilidades
-		CalculadorBacktracking backtracking = new CalculadorBacktracking(null, null, null);
-		CalculadorHeuristica heuristica = new CalculadorHeuristica(null, null, null);
-		
-		CalculadorSolucion calculador = new CalculadorSolucion(backtracking, heuristica);
 		// INCOMPATIBILIDAD
-		//TODO los nombres!!!!
 		IncompatibleDialog incompatibleDialog = new IncompatibleDialog(null,"IncompatibleDialog");
 		incompatibleDialog.crearInputs();
 		//TODO Falta crear el controller de incompatibilidad y el modelo de incompatibilidad
 		
-		new NavigationController(mainView, navigation,personasDialog,requerimientosDialog,incompatibleDialog, calculador);
+		new NavigationController(mainView, navigation,personasDialog,requerimientosDialog,incompatibleDialog);
 		navigation.updateView(VentanaEnum.MENU);
 
 		mainView.setVisible(true);

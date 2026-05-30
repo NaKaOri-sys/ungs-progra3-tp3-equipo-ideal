@@ -73,4 +73,10 @@ public class IncompatibleDialog extends DialogPadre{
 		
 	}
 
+	@Override
+	public void limpiarInputs() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

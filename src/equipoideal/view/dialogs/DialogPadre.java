@@ -27,7 +27,6 @@ public abstract class DialogPadre extends JDialog {
 
     protected JButton btnAceptar;
     protected JButton btnCerrar;
-//    protected JButton btnCargarDesde; 
     
     protected JScrollPane scrollPane;
     protected JTable tabla;
@@ -80,10 +79,6 @@ public abstract class DialogPadre extends JDialog {
         
         btnCerrar.addActionListener(e -> dispose());
         
-        
-
-//        btnCargarDesde = new JButton("Cargar Desde JSON");
-//        panelBotones.add(btnCargarDesde);
 	}
 	protected void crearTabla() {
 		String[] columnas = {"Nombre", "Apellido", "Puesto", "Puntos", "Incompatible con.."};
@@ -107,6 +102,8 @@ public abstract class DialogPadre extends JDialog {
 	public abstract void crearInputs();
 
 	public abstract void accionesBoton();
+	
+	public abstract void limpiarInputs();
 		
 	
 	
