@@ -30,8 +30,8 @@ public class RequerimientosModel extends Observable<IObserverRequerimiento>{
 	    
 	}
 
-//	public  ArrayList<Requerimiento> getRequerimientos(){
-//		return requerimientos;
-//	}
+	public  ArrayList<Requerimiento> getRequerimientos(){
+		return requerimientos;
+	}
 	
 }

@@ -7,9 +7,13 @@ import equipoideal.controller.PersonaIntegrationController;
 import equipoideal.controller.PersonasController;
 import equipoideal.controller.RequerimientoIntegrationController;
 import equipoideal.controller.RequerimientosController;
+import equipoideal.model.CalculadorBacktracking;
+import equipoideal.model.CalculadorHeuristica;
+import equipoideal.model.CalculadorSolucion;
 import equipoideal.model.Navigation;
 import equipoideal.model.PersonaDialogModel;
 import equipoideal.model.RequerimientosModel;
+import equipoideal.model.dto.ResultadoComparativoDto;
 import equipoideal.model.repository.PersonaRepository;
 import equipoideal.model.repository.PersonaRepositoryJson;
 import equipoideal.util.VentanaEnum;
@@ -27,36 +31,42 @@ public class Main {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		MainView mainView = new MainView();
 		Navigation navigation = new Navigation();
 		
 		PersonaRepository repository = new PersonaRepositoryJson(FILE_PATH);
 		PersonaDialogModel personaDialogModel = new PersonaDialogModel(repository);
-		
 		// PERSONAS
+		//TODO revisar nombres!!
 		PersonasDialog personasDialog = new PersonasDialog(null,"PersonasDialog");
 		personasDialog.crearInputs();
 		PersonasController personaController = new PersonasController(personasDialog, personaDialogModel);
 		PersonaIntegrationController personaIntegrationController = new PersonaIntegrationController(personasDialog, personaDialogModel);
 		
 		// REQUERIMIENTOS
+		//TODO revisar nombres!!
 		RequerimientosModel requerimientosModel = new RequerimientosModel();
 		RequerimientosDialog requerimientosDialog = new RequerimientosDialog(null,"RequerimientosDialog");
 		requerimientosDialog.crearInputs();
 		RequerimientosController requerimientosController = new RequerimientosController(requerimientosDialog, requerimientosModel);
 		RequerimientoIntegrationController reqIntegrationController = new RequerimientoIntegrationController(requerimientosDialog, personaDialogModel);
 
-		// TODO Falta crear el model de requerimientos si es necesario
 		
+		//TODO desp agregar this.personas, this.requerimientos, this.incompatibilidades
+		CalculadorBacktracking backtracking = new CalculadorBacktracking(personaDialogModel.getListaPersonas(), requerimientosModel.getRequerimientos(), null);
+		CalculadorHeuristica heuristica = new CalculadorHeuristica(personaDialogModel.getListaPersonas(), requerimientosModel.getRequerimientos(), null);
+		
+		CalculadorSolucion calculador = new CalculadorSolucion(backtracking, heuristica);
 		// INCOMPATIBILIDAD
+		//TODO los nombres!!!!
 		IncompatibleDialog incompatibleDialog = new IncompatibleDialog(null,"IncompatibleDialog");
 		incompatibleDialog.crearInputs();
 		//TODO Falta crear el controller de incompatibilidad y el modelo de incompatibilidad
 		
-		new NavigationController(mainView, navigation,personasDialog,requerimientosDialog,incompatibleDialog);
+		new NavigationController(mainView, navigation,personasDialog,requerimientosDialog,incompatibleDialog, calculador);
 		navigation.updateView(VentanaEnum.MENU);
 
 		mainView.setVisible(true);
 	}
+
 }

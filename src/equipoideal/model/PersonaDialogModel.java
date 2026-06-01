@@ -59,9 +59,9 @@ public class PersonaDialogModel extends Observable<IObserverPersonas>{
 	    }
 	}
 	
-//	public ArrayList<Persona> getListaPersonas() {
-//	    return new ArrayList<>(listaPersonas);
-//	}
+	public ArrayList<Persona> getListaPersonas() {
+	    return new ArrayList<>(listaPersonas);
+	}
 }
 		
 		
