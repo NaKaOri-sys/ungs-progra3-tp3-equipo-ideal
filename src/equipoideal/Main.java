@@ -9,6 +9,7 @@ import equipoideal.controller.RequerimientoIntegrationController;
 import equipoideal.controller.RequerimientosController;
 import equipoideal.model.Navigation;
 import equipoideal.model.PersonaDialogModel;
+import equipoideal.model.RequerimientosModel;
 import equipoideal.model.repository.PersonaRepository;
 import equipoideal.model.repository.PersonaRepositoryJson;
 import equipoideal.util.VentanaEnum;
@@ -26,6 +27,7 @@ public class Main {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		MainView mainView = new MainView();
 		Navigation navigation = new Navigation();
 		
@@ -39,9 +41,10 @@ public class Main {
 		PersonaIntegrationController personaIntegrationController = new PersonaIntegrationController(personasDialog, personaDialogModel);
 		
 		// REQUERIMIENTOS
+		RequerimientosModel requerimientosModel = new RequerimientosModel();
 		RequerimientosDialog requerimientosDialog = new RequerimientosDialog(null,"RequerimientosDialog");
 		requerimientosDialog.crearInputs();
-		RequerimientosController requerimientosController = new RequerimientosController(requerimientosDialog, personaDialogModel);
+		RequerimientosController requerimientosController = new RequerimientosController(requerimientosDialog, requerimientosModel);
 		RequerimientoIntegrationController reqIntegrationController = new RequerimientoIntegrationController(requerimientosDialog, personaDialogModel);
 
 		// TODO Falta crear el model de requerimientos si es necesario
@@ -56,5 +59,4 @@ public class Main {
 
 		mainView.setVisible(true);
 	}
-
 }

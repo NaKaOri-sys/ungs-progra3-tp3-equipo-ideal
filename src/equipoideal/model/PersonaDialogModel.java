@@ -6,16 +6,16 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 
-import equipoideal.model.event.PersonasObserver;
+import equipoideal.model.event.IObserverPersonas;
 import equipoideal.model.repository.PersonaRepository;
 import equipoideal.util.Observable;
 
-public class PersonaDialogModel extends Observable<PersonasObserver>{
+public class PersonaDialogModel extends Observable<IObserverPersonas>{
 	private ArrayList<Persona> listaPersonas;
 	private PersonaRepository repository;
 	
 	public PersonaDialogModel(PersonaRepository repository)  {
-		this.listaPersonas = new ArrayList<>();;
+		this.listaPersonas = new ArrayList<>();
 		this.repository = repository;
 	}
 	
@@ -59,9 +59,9 @@ public class PersonaDialogModel extends Observable<PersonasObserver>{
 	    }
 	}
 	
-	public ArrayList<Persona> getListaPersonas() {
-	    return new ArrayList<>(listaPersonas);
-	}
+//	public ArrayList<Persona> getListaPersonas() {
+//	    return new ArrayList<>(listaPersonas);
+//	}
 }
 		
 		

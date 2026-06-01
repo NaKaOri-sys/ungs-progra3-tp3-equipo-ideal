@@ -5,15 +5,18 @@ import java.util.ArrayList;
 import equipoideal.model.Persona;
 import equipoideal.model.PersonaDialogModel;
 import equipoideal.model.dto.PersonaDto;
-import equipoideal.model.event.PersonasObserver;
+import equipoideal.model.event.IObserverPersonas;
 import equipoideal.view.dialogs.RequerimientosDialog;
 
-public class RequerimientoIntegrationController implements PersonasObserver {
+public class RequerimientoIntegrationController implements IObserverPersonas {
 	
 	private RequerimientosDialog vista;
+	private PersonaDialogModel modelo;
+	
 	
 	public RequerimientoIntegrationController(RequerimientosDialog vista, PersonaDialogModel modelo) {
 		this.vista = vista;
+		this.modelo = modelo;
 		modelo.addObserver(this);
 	}
 	
@@ -27,13 +30,8 @@ public class RequerimientoIntegrationController implements PersonasObserver {
 		ArrayList<PersonaDto> dto = new ArrayList<>();
 		
 		for (Persona p : lista) {
-			dto.add(new PersonaDto(
-            p.getNombre(),
-            p.getApellido(),
-            p.getCalificacion(),
-            p.getRol()
-            ));
-		}
+	        dto.add(p.toDto());
+	    }
 		return dto;
 	}
 }

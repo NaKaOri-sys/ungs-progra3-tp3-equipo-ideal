@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -40,7 +41,7 @@ public class PersonasDialog extends DialogPadre{
 	private String rutaFoto;
 
 
-	public PersonasDialog(JFrame frame, String titulo) {
+	public PersonasDialog(JDialog frame, String titulo) {
 		super(frame, titulo);
 		
 	}
