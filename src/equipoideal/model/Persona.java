@@ -1,17 +1,19 @@
 package equipoideal.model;
 
+import equipoideal.model.dto.PersonaDto;
+
 public class Persona implements Comparable<Persona> {
 	private String nombre;
 	private String apellido;
-	private int calificación;
+	private int calificacion;
 	private String rol;
 	private String rutaFoto;
 
-	// TODO ver si puntos deberia ser calificación ya q es un nro entre 1 y 5
-	public Persona(String nombre, String apellido, int calificación, String rol) {
+	
+	public Persona(String nombre, String apellido, int calificacion, String rol) {
 		this.nombre = nombre;
 		this.apellido = apellido;
-		this.calificación = calificación;
+		this.calificacion = calificacion;
 		this.rol = rol;
 	}
 
@@ -27,9 +29,9 @@ public class Persona implements Comparable<Persona> {
 		return rol;
 	}
 
-	// TODO ver si esto no seria getCalificacion
+	
 	public int getCalificacion() {
-		return calificación;
+		return calificacion;
 	}
 	
 
@@ -48,6 +50,10 @@ public class Persona implements Comparable<Persona> {
 
 	public void setRutaFoto(String rutaFoto) {
 		this.rutaFoto = rutaFoto;
+	}
+	
+	public PersonaDto toDto() {
+	    return new PersonaDto(nombre, apellido, calificacion,rol);
 	}
 
 }

@@ -27,7 +27,6 @@ public abstract class DialogPadre extends JDialog {
 
     protected JButton btnAceptar;
     protected JButton btnCerrar;
-//    protected JButton btnCargarDesde; 
     
     protected JScrollPane scrollPane;
     protected JTable tabla;
@@ -35,7 +34,7 @@ public abstract class DialogPadre extends JDialog {
     protected  Color ColorFondo = Color.gray;
 //    protected  Font Fuente = new Font
 	 
-	public DialogPadre(JFrame frame, String titulo) {
+	public DialogPadre(JDialog frame, String titulo) {
         super(frame, titulo, true);
         
         setSize(800, 600);
@@ -80,10 +79,6 @@ public abstract class DialogPadre extends JDialog {
         
         btnCerrar.addActionListener(e -> dispose());
         
-        
-
-//        btnCargarDesde = new JButton("Cargar Desde JSON");
-//        panelBotones.add(btnCargarDesde);
 	}
 	protected void crearTabla() {
 		String[] columnas = {"Nombre", "Apellido", "Puesto", "Puntos", "Incompatible con.."};
@@ -101,14 +96,11 @@ public abstract class DialogPadre extends JDialog {
         panelLista.setLayout(new BorderLayout());
         panelLista.add(scrollPane, BorderLayout.CENTER);
         panelLista.setBorder(BorderFactory.createEmptyBorder(10, 40, 20, 40));
-		
 	}
 	
 	public abstract void crearInputs();
 
 	public abstract void accionesBoton();
-		
 	
-	
-
+	public abstract void limpiarInputs();
 }

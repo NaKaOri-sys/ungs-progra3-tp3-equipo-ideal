@@ -41,7 +41,6 @@ public class DashboardComparativo extends JPanel {
 
 		this.add(panelCentral, BorderLayout.CENTER);
 	}
-
 	public void renderizarResultados(ResultadoComparativoDto res) {
 		panelBacktracking.actualizar(res.getEquipoBacktracking(), res.getStatsBacktracking());
 		panelHeuristica.actualizar(res.getEquipoHeuristica(), res.getStatsHeuristica());

@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -17,7 +18,7 @@ import javax.swing.table.DefaultTableModel;
 public class IncompatibleDialog extends DialogPadre{
 	private JButton btnCargarDesde;
 
-	public IncompatibleDialog(JFrame frame, String titulo) {
+	public IncompatibleDialog(JDialog frame, String titulo) {
 		super(frame, titulo);
 	}
 
@@ -70,6 +71,12 @@ public class IncompatibleDialog extends DialogPadre{
 
 	@Override
 	public void accionesBoton() {
+		
+	}
+
+	@Override
+	public void limpiarInputs() {
+		// TODO Auto-generated method stub
 		
 	}
 

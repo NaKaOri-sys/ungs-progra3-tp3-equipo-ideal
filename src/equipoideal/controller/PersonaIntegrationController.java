@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import equipoideal.model.Persona;
 import equipoideal.model.PersonaDialogModel;
 import equipoideal.model.dto.PersonaDto;
-import equipoideal.model.event.PersonasObserver;
+import equipoideal.model.event.IObserverPersonas;
 import equipoideal.view.dialogs.PersonasDialog;
 
 
-public class PersonaIntegrationController implements PersonasObserver {
+public class PersonaIntegrationController implements IObserverPersonas {
 	private PersonasDialog vista;
     private PersonaDialogModel modelo;
     
@@ -34,7 +34,7 @@ public class PersonaIntegrationController implements PersonasObserver {
         ArrayList<PersonaDto> dto = new ArrayList<>();
 
         for (Persona p : lista) {
-            dto.add(new PersonaDto(p.getNombre(), p.getApellido(), p.getCalificacion(), p.getRol()));
+            dto.add(p.toDto());
         }
 
         return dto;

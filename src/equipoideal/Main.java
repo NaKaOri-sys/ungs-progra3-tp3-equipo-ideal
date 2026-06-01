@@ -5,12 +5,14 @@ import javax.swing.UIManager;
 import equipoideal.controller.NavigationController;
 import equipoideal.controller.PersonaIntegrationController;
 import equipoideal.controller.PersonasController;
+import equipoideal.controller.RequerimientoIntegrationController;
 import equipoideal.controller.RequerimientosController;
 import equipoideal.model.CalculadorBacktracking;
 import equipoideal.model.CalculadorHeuristica;
 import equipoideal.model.CalculadorSolucion;
 import equipoideal.model.Navigation;
 import equipoideal.model.PersonaDialogModel;
+import equipoideal.model.RequerimientosModel;
 import equipoideal.model.dto.ResultadoComparativoDto;
 import equipoideal.model.repository.PersonaRepository;
 import equipoideal.model.repository.PersonaRepositoryJson;
@@ -43,14 +45,16 @@ public class Main {
 		
 		// REQUERIMIENTOS
 		//TODO revisar nombres!!
+		RequerimientosModel requerimientosModel = new RequerimientosModel();
 		RequerimientosDialog requerimientosDialog = new RequerimientosDialog(null,"RequerimientosDialog");
 		requerimientosDialog.crearInputs();
-		RequerimientosController requerimientosController = new RequerimientosController(requerimientosDialog, personaDialogModel);
-		// TODO Falta crear el model de requerimientos si es necesario
+		RequerimientosController requerimientosController = new RequerimientosController(requerimientosDialog, requerimientosModel);
+		RequerimientoIntegrationController reqIntegrationController = new RequerimientoIntegrationController(requerimientosDialog, personaDialogModel);
+
 		
 		//TODO desp agregar this.personas, this.requerimientos, this.incompatibilidades
-		CalculadorBacktracking backtracking = new CalculadorBacktracking(null, null, null);
-		CalculadorHeuristica heuristica = new CalculadorHeuristica(null, null, null);
+		CalculadorBacktracking backtracking = new CalculadorBacktracking(personaDialogModel.getListaPersonas(), requerimientosModel.getRequerimientos(), null);
+		CalculadorHeuristica heuristica = new CalculadorHeuristica(personaDialogModel.getListaPersonas(), requerimientosModel.getRequerimientos(), null);
 		
 		CalculadorSolucion calculador = new CalculadorSolucion(backtracking, heuristica);
 		// INCOMPATIBILIDAD

@@ -6,7 +6,7 @@ import java.awt.GridLayout;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -14,6 +14,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.table.DefaultTableModel;
 
 import equipoideal.model.dto.PersonaDto;
+import equipoideal.model.dto.RequerimientosDto;
 import equipoideal.model.listener.RequerimientosListener;
 
 
@@ -29,7 +30,7 @@ public class RequerimientosDialog extends DialogPadre{
 	private JSpinner spinnerTester;
 	private RequerimientosListener listener;
 
-	public RequerimientosDialog(JFrame frame, String titulo) {
+	public RequerimientosDialog(JDialog frame, String titulo) {
 		super(frame, titulo);
 	}
 	
@@ -72,7 +73,7 @@ public class RequerimientosDialog extends DialogPadre{
 		return fila;
 	}
 	
-	//TODO aprovechar el listener
+	
 	@Override
 	public void accionesBoton() {
 		btnAceptar.addActionListener(e -> {
@@ -82,20 +83,12 @@ public class RequerimientosDialog extends DialogPadre{
 		});
 	}
 		
-	public int getCantLider() {
-	    return (int) spinnerLider.getValue();
-	}
-
-	public int getCantArquitecto() {
-	    return (int) spinnerArquitecto.getValue();
-	}
-
-	public int getCantProgramador() {
-	    return (int) spinnerProgramador.getValue();
-	}
-
-	public int getCantTester() {
-	    return (int) spinnerTester.getValue();
+	public RequerimientosDto getRequerimientos() {
+	    return new RequerimientosDto(
+	        (int) spinnerLider.getValue(),
+	        (int) spinnerArquitecto.getValue(),
+	        (int) spinnerProgramador.getValue(),
+	        (int) spinnerTester.getValue());
 	}
 
 	public void actualizarTablaPersonas(ArrayList<PersonaDto> personas) {
