@@ -2,20 +2,21 @@ package equipoideal.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import equipoideal.model.dto.EquipoDto;
 import equipoideal.model.dto.ProgresoEventoDto;
 import equipoideal.model.event.IObserverCalculador;
+import equipoideal.util.EquipoCalculadorUtil;
 import equipoideal.util.IndexCache;
 import equipoideal.util.Observable;
 import equipoideal.util.OrigenCalculadorEnum;
 import equipoideal.util.RestriccionesPoda;
+import equipoideal.util.RolEnum;
 import equipoideal.util.SolutionValidator;
 
 public class CalculadorBacktracking extends Observable<IObserverCalculador> {
 	private List<Persona> listaPersonas;
-	private Map<String, Integer> requerimientosRoles;
+	private List<Requerimiento> requerimientos;
 	private boolean[][] matrizIncompatibilidades;
 	private long ultimoTiempoNotificado = 0;
 	private Equipo mejorEquipo;
@@ -23,16 +24,11 @@ public class CalculadorBacktracking extends Observable<IObserverCalculador> {
 	private int contadorPodas;
 	private IndexCache cacheIndice;
 
-	public CalculadorBacktracking(List<Persona> personas, Map<String, Integer> requerimientosRoles,
+	public CalculadorBacktracking(List<Persona> personas, List<Requerimiento> requerimientosRoles,
 			boolean[][] matrizIncompatibilidades) {
-		try {
-			SolutionValidator.solutionValidator(personas, requerimientosRoles, matrizIncompatibilidades);
-		} catch (IllegalArgumentException e) {
-			System.err.println(e.getMessage());
-			throw new IllegalArgumentException(e.getMessage());
-		}
+		SolutionValidator.solutionValidator(personas, requerimientosRoles, matrizIncompatibilidades);
 		this.listaPersonas = new ArrayList<>(personas);
-		this.requerimientosRoles = requerimientosRoles;
+		this.requerimientos = new ArrayList<>(requerimientosRoles);
 		this.matrizIncompatibilidades = matrizIncompatibilidades;
 		this.mejorEquipo = new Equipo(new ArrayList<Persona>());
 		this.contadorCasosBase = 0;
@@ -75,28 +71,21 @@ public class CalculadorBacktracking extends Observable<IObserverCalculador> {
 	}
 
 	private boolean esPosibleAgregar(int indicePersona, Persona persona, Equipo solucionParcial) {
-		int maximoPermitido = requerimientosRoles.getOrDefault(persona.getRol(), 0);
-		int cantidadActual = solucionParcial.getCantidadPorRol(persona.getRol());
-		return !(cantidadActual >= maximoPermitido) && !RestriccionesPoda.esIncompatibleConEquipo(indicePersona,
-				solucionParcial, listaPersonas, matrizIncompatibilidades, this.cacheIndice.obtenerIndiceCache());
+		int cantidadActual = solucionParcial.getCantidadPorRol(RolEnum.valueOf(persona.getRol()));
+		return EquipoCalculadorUtil.esPosibleAgregar(RolEnum.valueOf(persona.getRol()), cantidadActual, requerimientos,
+				!RestriccionesPoda.esIncompatibleConEquipo(indicePersona, solucionParcial, listaPersonas,
+						matrizIncompatibilidades, this.cacheIndice.obtenerIndiceCache()));
 	}
 
 	private boolean cumpleExactamenteConLosRoles(Equipo equipo) {
-		for (String rol : requerimientosRoles.keySet()) {
-			int requerido = requerimientosRoles.get(rol);
-			if (equipo.getCantidadPorRol(rol) != requerido) {
-				return false;
-			}
-		}
-		return true;
+		return EquipoCalculadorUtil.cumpleConLosRequerimientos(equipo, requerimientos);
 	}
 
 	private void notificarProgreso() {
-		long tiempoActual = System.currentTimeMillis();
-		long tiempoTranscurrido = tiempoActual - ultimoTiempoNotificado;
-		if (tiempoTranscurrido > 100) {
-			ultimoTiempoNotificado = tiempoActual;
-			ProgresoEventoDto evento = new ProgresoEventoDto(contadorCasosBase, tiempoTranscurrido, contadorPodas,
+		if (EquipoCalculadorUtil.debeNotificarProgreso(ultimoTiempoNotificado, 100)) {
+			ultimoTiempoNotificado = EquipoCalculadorUtil.obtenerTiempoActual();
+			ProgresoEventoDto evento = new ProgresoEventoDto(contadorCasosBase,
+					EquipoCalculadorUtil.obtenerTiempoActual() - ultimoTiempoNotificado, contadorPodas,
 					OrigenCalculadorEnum.BACKTRACKING);
 			notifyObservers(o -> o.alCambiarProgreso(evento));
 		}

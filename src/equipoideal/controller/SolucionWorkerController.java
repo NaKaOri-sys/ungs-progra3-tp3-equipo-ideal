@@ -49,17 +49,18 @@ public class SolucionWorkerController extends SwingWorker<ResultadoComparativoDt
 	protected void process(List<ProgresoEventoDto> chunks) {
 		if (chunks == null || chunks.isEmpty())
 			return;
-		ProgresoEventoDto ultimoProgreso = chunks.get(chunks.size() - 1);
-		if (ultimoProgreso == null)
-			return;
-		if (ultimoProgreso.getOrigen() == OrigenCalculadorEnum.BACKTRACKING) {
-			this.resultado.setStatsBacktracking(ultimoProgreso);
-			viewPanel.actualizarEstadisticas(ultimoProgreso.getCasosBaseProcesados());
-			viewPanel.actualizarMensaje("Tiempo transcurrido (backtracking): " + ultimoProgreso.getTiempo());
-		}
-		if (ultimoProgreso.getOrigen() == OrigenCalculadorEnum.HEURISTICA) {
-			this.resultado.setStatsHeuristica(ultimoProgreso);
-			viewPanel.actualizarMensaje("Tiempo transcurrido (heurística): " + ultimoProgreso.getTiempo());
+		for (ProgresoEventoDto progreso : chunks) {
+			if (progreso != null) {
+				if (progreso.getOrigen() == OrigenCalculadorEnum.BACKTRACKING) {
+					this.resultado.setStatsBacktracking(progreso);
+					viewPanel.actualizarEstadisticas(progreso.getCasosBaseProcesados());
+					viewPanel.actualizarMensaje("Tiempo transcurrido (backtracking): " + progreso.getTiempo());
+				}
+				if (progreso.getOrigen() == OrigenCalculadorEnum.HEURISTICA) {
+					this.resultado.setStatsHeuristica(progreso);
+					viewPanel.actualizarMensaje("Tiempo transcurrido (heurística): " + progreso.getTiempo());
+				}				
+			}
 		}
 	}
 
@@ -68,15 +69,17 @@ public class SolucionWorkerController extends SwingWorker<ResultadoComparativoDt
 		this.facade.removeObserver(this);
 		try {
 			ResultadoComparativoDto resultadoDto = get();
-			if (resultadoDto == null) {
+			if (resultadoDto == null || resultadoDto.getEquipoHeuristica() == null || resultadoDto.getEquipoBacktracking() == null) {
 				this.viewPanel.mostrarError("El equipo resultante no es valido, vuelva a intentarlo");
 				this.navigation.updateView(VentanaEnum.MENU);
 				return;
 			}
 			viewPanel.finalizarCarga();
-			this.resultado = resultadoDto;
+			this.resultado.setEquipoHeuristica(resultadoDto.getEquipoHeuristica());
+			this.resultado.setEquipoBacktracking(resultadoDto.getEquipoBacktracking());
 			this.navigation.updateView(VentanaEnum.RESULTADO);
 		} catch (Exception e) {
+			System.err.println(">>> WORKER DONE ERROR: " + e.getMessage());
 			this.viewPanel.mostrarError("Hubo un error al procesar el worker, error: " + e.getMessage());
 			this.navigation.updateView(VentanaEnum.MENU);
 			return;

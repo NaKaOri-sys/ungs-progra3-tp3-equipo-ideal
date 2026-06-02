@@ -9,7 +9,7 @@ public class Persona implements Comparable<Persona> {
 	private String rol;
 	private String rutaFoto;
 
-	
+	//TODO el rol deberia ser el mismo Enum existente, porque sino posibilita ingresar por ej Albañil y quedaria disparejo con el Enum.
 	public Persona(String nombre, String apellido, int calificacion, String rol) {
 		this.nombre = nombre;
 		this.apellido = apellido;

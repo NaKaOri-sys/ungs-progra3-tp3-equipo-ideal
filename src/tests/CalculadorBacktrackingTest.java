@@ -4,36 +4,46 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import equipoideal.model.CalculadorBacktracking;
 import equipoideal.model.Persona;
+import equipoideal.model.Requerimiento;
 import equipoideal.model.dto.EquipoDto;
+import equipoideal.util.RolEnum;
 
 public class CalculadorBacktrackingTest {
 
 	private ArrayList<Persona> personas;
-	private HashMap<String, Integer> requerimientos;
+	private List<Requerimiento> requerimientos;
 	private boolean[][] incompatibilidades;
 	private CalculadorBacktracking calc;
+	private Requerimiento lider;
+	private Requerimiento dev;
+	private Requerimiento qa;
 
 	@Before
 	public void setUp() {
 		personas = new ArrayList<>();
-		personas.add(new Persona("Leo", "Messi", 5, "Lider"));
-		personas.add(new Persona("Cristiano", "Ronaldo", 4, "Dev"));
-		personas.add(new Persona("Kylian", "Mbappe", 3, "Tester"));
-		personas.add(new Persona("Harry", "Maguire", 2, "Dev"));
+		personas.add(new Persona("Leo", "Messi", 5, "LIDER"));
+		personas.add(new Persona("Cristiano", "Ronaldo", 4, "PROGRAMADOR"));
+		personas.add(new Persona("Kylian", "Mbappe", 3, "TESTER"));
+		personas.add(new Persona("Harry", "Maguire", 2, "PROGRAMADOR"));
 		
-		requerimientos = new HashMap<>();
+		requerimientos = new ArrayList<>();
+		lider = new Requerimiento(RolEnum.LIDER, 1);
+		dev = new Requerimiento(RolEnum.PROGRAMADOR, 1);
+		qa = new Requerimiento(RolEnum.TESTER, 2);
 		incompatibilidades = new boolean[personas.size()][personas.size()];
 	}
 
 	@Test
 	public void testBacktracking_EncuentraSolucion() {
-		requerimientos.put("Lider", 1);
-		requerimientos.put("Dev", 1);
+		requerimientos.add(lider);
+		requerimientos.add(dev);
 		
 		calc = new CalculadorBacktracking(personas, requerimientos, incompatibilidades);
 		EquipoDto resultado = calc.calcularMejorEquipo();
@@ -43,8 +53,8 @@ public class CalculadorBacktrackingTest {
 
 	@Test
 	public void testBacktracking_SolucionEsOptima() {
-		requerimientos.put("Lider", 1);
-		requerimientos.put("Dev", 1);
+		requerimientos.add(lider);
+		requerimientos.add(dev);
 		
 		calc = new CalculadorBacktracking(personas, requerimientos, incompatibilidades);
 		EquipoDto resultado = calc.calcularMejorEquipo();
@@ -58,8 +68,8 @@ public class CalculadorBacktrackingTest {
 		incompatibilidades[0][1] = true;
 		incompatibilidades[1][0] = true;
 		
-		requerimientos.put("Lider", 1);
-		requerimientos.put("Dev", 1);
+		requerimientos.add(lider);
+		requerimientos.add(dev);
 		
 		calc = new CalculadorBacktracking(personas, requerimientos, incompatibilidades);
 		EquipoDto resultado = calc.calcularMejorEquipo();
@@ -72,9 +82,9 @@ public class CalculadorBacktrackingTest {
 
 	@Test
 	public void testBacktracking_SinSolucion() {
-		requerimientos.put("Lider", 1);
-		requerimientos.put("Dev", 1);
-		requerimientos.put("Tester", 2);  // Solo hay 1 Tester
+		requerimientos.add(lider);
+		requerimientos.add(dev);
+		requerimientos.add(qa);  // Solo hay 1 Tester
 		
 		calc = new CalculadorBacktracking(personas, requerimientos, incompatibilidades);
 		EquipoDto resultado = calc.calcularMejorEquipo();
