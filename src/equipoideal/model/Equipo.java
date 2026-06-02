@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import equipoideal.model.dto.EquipoDto;
 import equipoideal.model.dto.PersonaDto;
+import equipoideal.util.RolEnum;
 
 public class Equipo {
 	private List<Persona> integrantes;
@@ -26,13 +27,13 @@ public class Equipo {
 		return suma;
 	}
 
-	public int getCantidadPorRol(String rol) {
-		if (rol == null)
+	public int getCantidadPorRol(RolEnum rolEnum) {
+		if (rolEnum == null)
 			throw new IllegalArgumentException("El rol no puede estar vacio.");
 		int suma = 0;
 		for (Persona persona : integrantes) {
 			String rolActual = persona.getRol();
-			if (rol.equals(rolActual)) {
+			if (rolEnum.toString().equals(rolActual)) {
 				suma += 1;
 			}
 		}

@@ -4,10 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import equipoideal.model.Persona;
+import equipoideal.model.Requerimiento;
 
 public class SolutionValidator {
 	
-	public static void solutionValidator(List<Persona> personas, Map<String, Integer> requerimientosRoles,
+	public static void solutionValidator(List<Persona> personas, List<Requerimiento> requerimientosRoles,
 			boolean[][] matrizIncompatibilidades) {
 		if (personas == null || personas.isEmpty())
 			throw new IllegalArgumentException("La lista de personas no puede estar vacia.");

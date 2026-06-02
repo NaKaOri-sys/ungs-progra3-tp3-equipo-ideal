@@ -52,18 +52,13 @@ public class Main {
 		RequerimientoIntegrationController reqIntegrationController = new RequerimientoIntegrationController(requerimientosDialog, personaDialogModel);
 
 		
-		//TODO desp agregar this.personas, this.requerimientos, this.incompatibilidades
-		CalculadorBacktracking backtracking = new CalculadorBacktracking(personaDialogModel.getListaPersonas(), requerimientosModel.getRequerimientos(), null);
-		CalculadorHeuristica heuristica = new CalculadorHeuristica(personaDialogModel.getListaPersonas(), requerimientosModel.getRequerimientos(), null);
-		
-		CalculadorSolucion calculador = new CalculadorSolucion(backtracking, heuristica);
 		// INCOMPATIBILIDAD
 		//TODO los nombres!!!!
 		IncompatibleDialog incompatibleDialog = new IncompatibleDialog(null,"IncompatibleDialog");
 		incompatibleDialog.crearInputs();
 		//TODO Falta crear el controller de incompatibilidad y el modelo de incompatibilidad
 		
-		new NavigationController(mainView, navigation,personasDialog,requerimientosDialog,incompatibleDialog, calculador);
+		new NavigationController(mainView, navigation,personasDialog,personaDialogModel, requerimientosModel, requerimientosDialog,null, incompatibleDialog);
 		navigation.updateView(VentanaEnum.MENU);
 
 		mainView.setVisible(true);

@@ -3,36 +3,32 @@ package equipoideal.model;
 import equipoideal.model.dto.EquipoDto;
 import equipoideal.model.dto.ProgresoEventoDto;
 import equipoideal.model.event.IObserverCalculador;
+import equipoideal.util.EquipoCalculadorUtil;
 import equipoideal.util.IndexCache;
 import equipoideal.util.Observable;
 import equipoideal.util.OrigenCalculadorEnum;
+import equipoideal.util.RolEnum;
 import equipoideal.util.SolutionValidator;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 public class CalculadorHeuristica extends Observable<IObserverCalculador> {
 
 	private List<Persona> listaPersonas;
-	private Map<String, Integer> requerimientos;
+	private List<Requerimiento> requerimientos;
 	private boolean[][] matrizIncompatibilidades;
 	private List<Persona> listaOrdenadaPersonas;
 	private IndexCache cacheIndice;
 	private long ultimoTiempoNotificado;
 
-	public CalculadorHeuristica(List<Persona> listaPersonas, Map<String, Integer> requerimientos,
+	public CalculadorHeuristica(List<Persona> listaPersonas, List<Requerimiento> requerimientos,
 			boolean[][] matrizIncompatibilidades) {
-		try {
-			SolutionValidator.solutionValidator(listaPersonas, requerimientos, matrizIncompatibilidades);
-		} catch (IllegalArgumentException e) {
-			System.err.println("Hubo un error al inicializar la heuristica: " + e.getMessage());
-			return;
-		}
+		SolutionValidator.solutionValidator(listaPersonas, requerimientos, matrizIncompatibilidades);
 		this.listaPersonas = new ArrayList<>(listaPersonas);
 		this.listaOrdenadaPersonas = new ArrayList<>(listaPersonas);
-		this.requerimientos = requerimientos;
+		this.requerimientos = new ArrayList<>(requerimientos);
 		this.matrizIncompatibilidades = matrizIncompatibilidades;
 	}
 
@@ -57,40 +53,26 @@ public class CalculadorHeuristica extends Observable<IObserverCalculador> {
 	}
 
 	private boolean esPosibleAgregar(Persona persona, Equipo equipoParcial) {
-		String rol = persona.getRol();
-		int cantidadActualDelRol = equipoParcial.getCantidadPorRol(rol);
-		int maximoRequerido = requerimientos.getOrDefault(rol, 0);
-
-		return !(cantidadActualDelRol >= maximoRequerido) && !(esIncompatibleConEquipo(persona, equipoParcial));
+		RolEnum rol = RolEnum.valueOf(persona.getRol());
+		int cantidadActual = equipoParcial.getCantidadPorRol(RolEnum.valueOf(persona.getRol()));
+		return EquipoCalculadorUtil.esPosibleAgregar(rol, cantidadActual, requerimientos, !(esIncompatibleConEquipo(persona, equipoParcial)));
 	}
 
 	private boolean esIncompatibleConEquipo(Persona personaActual, Equipo equipoParcial) {
-		int idxActual = this.cacheIndice.obtenerIndiceCache().get(personaActual);
-		boolean algunoIncompatible = false;
-		for (Persona integrante : equipoParcial.obtenerIntegrantes()) {
-			int idxIntegrante = this.cacheIndice.obtenerIndiceCache().get(integrante);
-			algunoIncompatible = algunoIncompatible || matrizIncompatibilidades[idxActual][idxIntegrante];
-		}
-		return algunoIncompatible;
+		return EquipoCalculadorUtil.esIncompatibleConEquipo(personaActual, equipoParcial, 
+				matrizIncompatibilidades, this.cacheIndice.obtenerIndiceCache());
 	}
 
 	private boolean cumpleConTodosLosRequerimientos(Equipo equipo) {
-		for (Map.Entry<String, Integer> entry : requerimientos.entrySet()) {
-			String rol = entry.getKey();
-			int requerido = entry.getValue();
-			if (equipo.getCantidadPorRol(rol) < requerido) {
-				return false;
-			}
-		}
-		return true;
+		return EquipoCalculadorUtil.cumpleConLosRequerimientos(equipo, requerimientos);
 	}
 
 	private void notificarProgreso() {
-		long tiempoActual = System.currentTimeMillis();
-		long tiempoTranscurrido = tiempoActual - ultimoTiempoNotificado;
-		if (tiempoTranscurrido > 100) {
-			ultimoTiempoNotificado = tiempoActual;
-			ProgresoEventoDto evento = new ProgresoEventoDto(0, tiempoTranscurrido, 0, OrigenCalculadorEnum.HEURISTICA);
+		if (EquipoCalculadorUtil.debeNotificarProgreso(ultimoTiempoNotificado, 100)) {
+			ultimoTiempoNotificado = EquipoCalculadorUtil.obtenerTiempoActual();
+			ProgresoEventoDto evento = new ProgresoEventoDto(0, 
+					EquipoCalculadorUtil.obtenerTiempoActual() - ultimoTiempoNotificado, 0, 
+					OrigenCalculadorEnum.HEURISTICA);
 			notifyObservers(o -> o.alCambiarProgreso(evento));
 		}
 	}

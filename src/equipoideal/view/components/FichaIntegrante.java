@@ -19,8 +19,8 @@ public class FichaIntegrante extends JPanel {
         add(lblFoto, BorderLayout.WEST);
 
         JPanel infoPanel = new JPanel(new GridLayout(2, 1));
-        infoPanel.add(new JLabel("<html><b>" + persona.getNombre() + "</b></html>"));
-        infoPanel.add(new JLabel("Rol: " + persona.getRol() + " | Cal: " + persona.getCalificacion()));
+        infoPanel.add(new JLabel("<html><b>" + persona.getNombre() +" "+ persona.getApellido() +"</b></html>"));
+        infoPanel.add(new JLabel("Rol: " + persona.getRol() + " | Calificación: " + persona.getCalificacion()));
         
         add(infoPanel, BorderLayout.CENTER);
     }
