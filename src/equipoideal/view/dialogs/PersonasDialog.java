@@ -12,17 +12,21 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 import equipoideal.model.dto.PersonaDto;
 import equipoideal.model.listener.PersonasListener;
+import equipoideal.util.RolEnum;
 
 
 
@@ -31,9 +35,11 @@ public class PersonasDialog extends DialogPadre{
 	private JButton btnCargarDesde;
 	private JTextField txtNombre;
 	private JTextField txtApellido;
-	private JTextField txtPuntuacion;
-	private JTextField txtRol;
+	private JSpinner spinnerPuntuacion;
+	private JComboBox<RolEnum> comboRol;
 	private JButton btnFoto;
+	private JButton btnExportar;
+	private JButton btnLimpiarCache;
 	private JPanel panelBotonesNuevos;
 	private PersonasListener listener;
 	private JLabel lblImagen;
@@ -73,6 +79,12 @@ public class PersonasDialog extends DialogPadre{
 		panelFoto.add(lblImagen, "IMG");
 		
 		panelBotonesNuevos.add(panelFoto, BorderLayout.WEST);
+		
+		btnExportar = new JButton("Descargar JSON");
+		panelBotones.add(btnExportar);
+		
+		btnLimpiarCache = new JButton("Limpiar cache imagenes");
+		panelBotones.add(btnLimpiarCache);
 
 		JPanel panelDerecho = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		panelDerecho.setOpaque(false);
@@ -90,10 +102,11 @@ public class PersonasDialog extends DialogPadre{
 		txtApellido = new JTextField();
 		
 		JLabel lblPuntuacion = new JLabel("Ingrese Puntos:");
-		txtPuntuacion = new JTextField();
+		spinnerPuntuacion = new JSpinner( new SpinnerNumberModel( 1,1,5, 1));
+		((JSpinner.DefaultEditor) spinnerPuntuacion.getEditor()).getTextField().setEditable(false);
 		
 		JLabel lblRol = new JLabel("Ingrese Puesto:");
-		txtRol = new JTextField();
+		comboRol = new JComboBox<>(RolEnum.values());
 		
 		nuevosInputs.add(lblNombre);
 		nuevosInputs.add(lblApellido);
@@ -104,13 +117,12 @@ public class PersonasDialog extends DialogPadre{
 		nuevosInputs.add(lblPuntuacion);
 		nuevosInputs.add(lblRol);
 		
-		nuevosInputs.add(txtPuntuacion);
-		nuevosInputs.add(txtRol);
+		nuevosInputs.add(spinnerPuntuacion);
+		nuevosInputs.add(comboRol);
 		
 		panelInputs.add(panelBotonesNuevos, BorderLayout.NORTH);
 		panelInputs.add(nuevosInputs, BorderLayout.CENTER);
 		
-
 		panelBotonesNuevos.setBorder(BorderFactory.createEmptyBorder(10,40,20,40));
 		
 		crearTabla();
@@ -131,7 +143,7 @@ public class PersonasDialog extends DialogPadre{
 
 		    JFileChooser fileChooser = new JFileChooser();
 		    fileChooser.setFileFilter(new FileNameExtensionFilter(
-		        "Imágenes", "jpg", "png", "jpeg"
+		        "Archivos .png .jpg . jpeg", "jpg", "png", "jpeg"
 		    ));
 
 		    int result = fileChooser.showOpenDialog(this);
@@ -143,13 +155,14 @@ public class PersonasDialog extends DialogPadre{
 					listener.onFotoSeleccionada(imagenSeleccionada);
 				}
 		    }
+		    
 		});
 		
 		btnCargarDesde.addActionListener(e -> {
 			
 			JFileChooser fileChooser = new JFileChooser();
 
-		    fileChooser.setFileFilter( new FileNameExtensionFilter("JSON y TXT", "json", "txt"));
+		    fileChooser.setFileFilter( new FileNameExtensionFilter("Archivos .json", "json"));
 
 		    int resultado = fileChooser.showOpenDialog(this);
 
@@ -160,6 +173,39 @@ public class PersonasDialog extends DialogPadre{
 					listener.onCargaDesdeJson(archivo.getAbsolutePath());
 				}
 		    }
+		});
+		
+		btnExportar.addActionListener(e -> {
+
+		    JFileChooser fileChooser = new JFileChooser();
+
+		    fileChooser.setDialogTitle("Guardar JSON");
+
+		    fileChooser.setFileFilter(
+		        new FileNameExtensionFilter("Archivos JSON", "json")
+		    );
+
+		    int resultado = fileChooser.showSaveDialog(this);
+
+		    if (resultado == JFileChooser.APPROVE_OPTION) {
+
+		        File archivo = fileChooser.getSelectedFile();
+
+		        String ruta = archivo.getAbsolutePath();
+
+		        if (!ruta.endsWith(".json")) {
+		            ruta += ".json";
+		        }
+
+		        if (listener != null) {
+		            listener.onExportarJson(ruta);
+		        }
+		    }
+		});
+		btnLimpiarCache.addActionListener(e -> {
+			if (listener != null) {
+	            listener.onLimpiarCache();
+	        }
 		});
 	}
 	
@@ -199,8 +245,8 @@ public class PersonasDialog extends DialogPadre{
 	public void limpiarInputs() {
 	    txtNombre.setText("");
 	    txtApellido.setText("");
-	    txtPuntuacion.setText("");
-	    txtRol.setText("");
+	    spinnerPuntuacion.setValue(1);
+	    comboRol.setSelectedIndex(0);
 	    txtNombre.requestFocus();
 	}
 	
@@ -223,12 +269,12 @@ public class PersonasDialog extends DialogPadre{
 	    return txtApellido.getText();
 	}
 
-	public String getPuntos() {
-	    return txtPuntuacion.getText();
+	public int getPuntos() {
+	    return (int) spinnerPuntuacion.getValue();
 	}
 
-	public String getRol() {
-	    return txtRol.getText();
+	public RolEnum getRol() {
+	    return (RolEnum) comboRol.getSelectedItem();
 	}
 
 	public String getRutaFoto() {

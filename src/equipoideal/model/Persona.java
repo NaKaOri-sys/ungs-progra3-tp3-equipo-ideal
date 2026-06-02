@@ -1,16 +1,16 @@
 package equipoideal.model;
 
 import equipoideal.model.dto.PersonaDto;
+import equipoideal.util.RolEnum;
 
 public class Persona implements Comparable<Persona> {
 	private String nombre;
 	private String apellido;
 	private int calificacion;
-	private String rol;
+	private RolEnum rol;
 	private String rutaFoto;
-
-	//TODO el rol deberia ser el mismo Enum existente, porque sino posibilita ingresar por ej Albañil y quedaria disparejo con el Enum.
-	public Persona(String nombre, String apellido, int calificacion, String rol) {
+	
+	public Persona(String nombre, String apellido, int calificacion, RolEnum rol) {
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.calificacion = calificacion;
@@ -25,7 +25,7 @@ public class Persona implements Comparable<Persona> {
 		return apellido;
 	}
 
-	public String getRol() {
+	public RolEnum getRol() {
 		return rol;
 	}
 
@@ -53,7 +53,7 @@ public class Persona implements Comparable<Persona> {
 	}
 	
 	public PersonaDto toDto() {
-	    return new PersonaDto(nombre, apellido, calificacion,rol);
+	    return new PersonaDto(nombre, apellido, calificacion, rol.toString());
 	}
 
 }

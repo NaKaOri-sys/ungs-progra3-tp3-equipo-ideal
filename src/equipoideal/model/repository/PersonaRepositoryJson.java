@@ -28,4 +28,9 @@ public class PersonaRepositoryJson implements PersonaRepository{
 		PersonaArchivo.limpiarArchivoJson(archivo);
 	}
 
+	@Override
+	public void exportarJson(String destino) {
+		PersonaArchivo.exportarArchivoJSON(archivo, destino);
+	}
+
 }

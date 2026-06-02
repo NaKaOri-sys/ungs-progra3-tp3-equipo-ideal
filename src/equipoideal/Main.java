@@ -25,6 +25,8 @@ import equipoideal.view.dialogs.RequerimientosDialog;
 public class Main {
 	private static final String FILE_PATH = "personas.json";
 
+	private static final String FOLDER_PATH = "data/fotos";
+	
 	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -35,7 +37,7 @@ public class Main {
 		Navigation navigation = new Navigation();
 		
 		PersonaRepository repository = new PersonaRepositoryJson(FILE_PATH);
-		PersonaDialogModel personaDialogModel = new PersonaDialogModel(repository);
+		PersonaDialogModel personaDialogModel = new PersonaDialogModel(repository, FOLDER_PATH);
 		// PERSONAS
 		//TODO revisar nombres!!
 		PersonasDialog personasDialog = new PersonasDialog(null,"PersonasDialog");
@@ -45,7 +47,7 @@ public class Main {
 		
 		// REQUERIMIENTOS
 		//TODO revisar nombres!!
-		RequerimientosModel requerimientosModel = new RequerimientosModel();
+		RequerimientosModel requerimientosModel = new RequerimientosModel(personaDialogModel);
 		RequerimientosDialog requerimientosDialog = new RequerimientosDialog(null,"RequerimientosDialog");
 		requerimientosDialog.crearInputs();
 		RequerimientosController requerimientosController = new RequerimientosController(requerimientosDialog, requerimientosModel);

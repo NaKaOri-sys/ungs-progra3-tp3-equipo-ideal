@@ -21,7 +21,12 @@ public class RequerimientosController implements RequerimientosListener {
 	public void onRequerimientosAgregados() {
         RequerimientosDto dto = vista.getRequerimientos();
         
+        try {
         modelo.crearRequerimientos(dto);
+        } catch (IllegalArgumentException e) {
+
+	        System.out.println(e.getMessage());
+	    }
         vista.limpiarInputs();
 	}
 

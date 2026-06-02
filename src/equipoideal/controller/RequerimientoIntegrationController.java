@@ -13,11 +13,11 @@ public class RequerimientoIntegrationController implements IObserverPersonas {
 	private RequerimientosDialog vista;
 	private PersonaDialogModel modelo;
 	
-	
 	public RequerimientoIntegrationController(RequerimientosDialog vista, PersonaDialogModel modelo) {
 		this.vista = vista;
 		this.modelo = modelo;
 		modelo.addObserver(this);
+		
 	}
 	
 	@Override

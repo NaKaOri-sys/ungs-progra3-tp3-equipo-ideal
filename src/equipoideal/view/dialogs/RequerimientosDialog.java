@@ -42,10 +42,11 @@ public class RequerimientosDialog extends DialogPadre{
 	public void crearInputs() {
 		
 		panelInputs.setLayout(new GridLayout(4, 1, 10, 10));
-		spinnerLider = new JSpinner(new SpinnerNumberModel(0, 0, 20, 1));
-		spinnerArquitecto = new JSpinner(new SpinnerNumberModel(0, 0, 20, 1));
-		spinnerProgramador = new JSpinner(new SpinnerNumberModel(0, 0, 20, 1));
-		spinnerTester = new JSpinner(new SpinnerNumberModel(0, 0, 20, 1));
+		
+		spinnerLider = crearSpinner();
+	    spinnerArquitecto = crearSpinner();
+	    spinnerProgramador = crearSpinner();
+	    spinnerTester = crearSpinner();
 		
 		panelInputs.add(crearFila("Lider De Equipo", spinnerLider));
 		panelInputs.add(crearFila("Arquitecto", spinnerArquitecto));
@@ -73,7 +74,13 @@ public class RequerimientosDialog extends DialogPadre{
 		return fila;
 	}
 	
-	
+	private JSpinner crearSpinner() {
+	    JSpinner spinner = new JSpinner(new SpinnerNumberModel(0, 0, 20, 1));
+	    
+	    ((JSpinner.DefaultEditor) spinner.getEditor()).getTextField().setEditable(false);
+	    
+	    return spinner;
+	}
 	@Override
 	public void accionesBoton() {
 		btnAceptar.addActionListener(e -> {
