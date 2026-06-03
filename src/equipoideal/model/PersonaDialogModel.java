@@ -109,6 +109,16 @@ public class PersonaDialogModel extends Observable<IObserverPersonas>{
 	}
 	
 	
+	
+	public String obtenerNombrePorIndice(int indice) {
+	    if (indice >= 0 && indice < listaPersonas.size()) {
+	        Persona p = listaPersonas.get(indice);
+	        return p.getNombre() + " " + p.getApellido();
+	    }
+	    return "";
+	}
+	
+	
 }
 		
 		

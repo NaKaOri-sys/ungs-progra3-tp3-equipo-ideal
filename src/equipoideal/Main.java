@@ -2,6 +2,7 @@ package equipoideal;
 
 import javax.swing.UIManager;
 
+import equipoideal.controller.IncompatibleController;
 import equipoideal.controller.NavigationController;
 import equipoideal.controller.PersonaIntegrationController;
 import equipoideal.controller.PersonasController;
@@ -10,6 +11,7 @@ import equipoideal.controller.RequerimientosController;
 import equipoideal.model.CalculadorBacktracking;
 import equipoideal.model.CalculadorHeuristica;
 import equipoideal.model.CalculadorSolucion;
+import equipoideal.model.IncompatibleModel;
 import equipoideal.model.Navigation;
 import equipoideal.model.PersonaDialogModel;
 import equipoideal.model.RequerimientosModel;
@@ -56,9 +58,13 @@ public class Main {
 		
 		// INCOMPATIBILIDAD
 		//TODO los nombres!!!!
-		IncompatibleDialog incompatibleDialog = new IncompatibleDialog(null,"IncompatibleDialog");
-		incompatibleDialog.crearInputs();
-		//TODO Falta crear el controller de incompatibilidad y el modelo de incompatibilidad
+		// INCOMPATIBILIDAD
+        //TODO los nombres!!!!
+        IncompatibleDialog incompatibleDialog = new IncompatibleDialog(null, "IncompatibleDialog");
+        incompatibleDialog.crearInputs();
+        
+        IncompatibleModel incompatibleModel = new IncompatibleModel(personaDialogModel.getListaPersonas().size());
+        IncompatibleController incompatibleController = new IncompatibleController(incompatibleDialog, personaDialogModel, incompatibleModel);
 		
 		new NavigationController(mainView, navigation,personasDialog,personaDialogModel, requerimientosModel, requerimientosDialog,null, incompatibleDialog);
 		navigation.updateView(VentanaEnum.MENU);

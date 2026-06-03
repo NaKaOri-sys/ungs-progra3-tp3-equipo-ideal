@@ -1,83 +1,110 @@
 package equipoideal.view.dialogs;
 
-import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-
-import javax.swing.BorderFactory;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import equipoideal.model.listener.IncompatiblesListener; 
 
-public class IncompatibleDialog extends DialogPadre{
-	private JButton btnCargarDesde;
+public class IncompatibleDialog extends DialogPadre {
+    
+    private JComboBox<String> selectorPersona1;
+    private JComboBox<String> selectorPersona2;
+    private IncompatiblesListener listener;
 
-	public IncompatibleDialog(JDialog frame, String titulo) {
-		super(frame, titulo);
-	}
+    public IncompatibleDialog(JDialog frame, String titulo) {
+        super(frame, titulo);
+        crearInputs();
+        accionesBoton();
+    }
 
-	@Override
-	public void crearInputs() {
-		panelInputs.setLayout(new GridLayout(2, 2, 10, 10));
-		JLabel lblPersona1 = new JLabel("Persona 1");
-		
-		JLabel lblPersona2 = new JLabel("Persona 2");
-		
-		JComboBox<String> boxPersona1 = new JComboBox<>();
-		JComboBox<String> boxPersona2 = new JComboBox<>();  //Cambiar
-		
-		boxPersona1.addItem("hola");
-		boxPersona1.addItem("hola1");
-		boxPersona2.addItem("chau");    //Son solo para probar
-		boxPersona2.addItem("chau1");
-		
-		panelInputs.add(lblPersona1);
-		panelInputs.add(lblPersona2);
-		
-		panelInputs.add(boxPersona1);
-		panelInputs.add(boxPersona2);
-		
-		panelBotones.removeAll();
+    public void setIncompatiblesListener(IncompatiblesListener listener) {
+        this.listener = listener;
+    }
 
-		
-		btnCargarDesde = new JButton("Cargar Desde...");
+    @Override
+    public void crearInputs() {
+        panelInputs.setLayout(new GridLayout(2, 2, 10, 10));
         
-		
-		JPanel filaSuperior = new JPanel(new FlowLayout(FlowLayout.CENTER));
-	    filaSuperior.setOpaque(false);
-	    filaSuperior.add(btnAceptar);
-		
+        JLabel lblPersona1 = new JLabel("Persona 1:");
+        JLabel lblPersona2 = new JLabel("Persona 2:");
+        
+        selectorPersona1 = new JComboBox<>();
+        selectorPersona2 = new JComboBox<>();
+        
+        panelInputs.add(lblPersona1);
+        panelInputs.add(lblPersona2);
+        panelInputs.add(selectorPersona1);
+        panelInputs.add(selectorPersona2);
+        
+        panelBotones.removeAll(); 
+       
+        btnAceptar.setText("Registrar Incompatibilidad"); 
+        
+        JPanel filaSuperior = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        filaSuperior.setOpaque(false);
+        filaSuperior.add(btnAceptar);
+        
+        JPanel filaInferior = new JPanel(new FlowLayout(FlowLayout.CENTER)); 
+        filaInferior.setOpaque(false);
+        filaInferior.add(btnCerrar);
+        
+        panelBotones.setLayout(new GridLayout(2, 1, 0, 5));
+        panelBotones.add(filaSuperior);
+        panelBotones.add(filaInferior);
 
-	    JPanel filaInferior = new JPanel(new FlowLayout(FlowLayout.CENTER)); 
-	    filaInferior.setOpaque(false);
+        crearTabla();
+        configurarColumnasTabla();
+    }
 
-		filaInferior.add(btnCargarDesde, BorderLayout.WEST);
+    private void configurarColumnasTabla() {
+        String[] columnasIncompatibles = {"Persona 1", "Persona 2"};
+        DefaultTableModel modeloCustom = new DefaultTableModel(columnasIncompatibles, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        tabla.setModel(modeloCustom);
+    }
 
-		filaInferior.add( btnCerrar, BorderLayout.EAST);
-		
-		panelBotones.add(filaSuperior);
+    public void cargarPersonasEnSelectores(List<String> nombresPersonas) {
+    	selectorPersona1.removeAllItems();
+    	selectorPersona2.removeAllItems();
+        for (String nombre : nombresPersonas) {
+        	selectorPersona1.addItem(nombre);
+        	selectorPersona2.addItem(nombre);
+        }
+    }
 
-		panelBotones.add(filaInferior);
+    public int getIndexPersona1() { return selectorPersona1.getSelectedIndex(); }
+    public int getIndexPersona2() { return selectorPersona2.getSelectedIndex(); }
 
-		crearTabla();
-		
-	}
+    public void agregarIncompatibilidadTabla(String p1, String p2) {
+        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+        modelo.addRow(new Object[]{p1, p2});
+    }
 
-	@Override
-	public void accionesBoton() {
-		
-	}
+    @Override
+    public void accionesBoton() {
+        btnAceptar.addActionListener(e -> {
+            if (listener != null) listener.onIncompatibilidadRegistrada();
+        });
+       
+    }
 
-	@Override
-	public void limpiarInputs() {
-		// TODO Auto-generated method stub
-		
-	}
-
+    @Override
+    public void limpiarInputs() {
+        if (selectorPersona1.getItemCount() > 0) selectorPersona1.setSelectedIndex(0);
+        if (selectorPersona2.getItemCount() > 0) selectorPersona2.setSelectedIndex(0);
+    }
+    
+    public JButton getBtnAceptar() {
+        return btnAceptar; 
+    }
 }
