@@ -14,6 +14,7 @@ import equipoideal.model.Requerimiento;
 import equipoideal.model.RequerimientosModel;
 import equipoideal.model.dto.ResultadoComparativoDto;
 import equipoideal.model.event.IObserverNavigation;
+import equipoideal.util.RolEnum;
 import equipoideal.util.VentanaEnum;
 import equipoideal.view.MainView;
 import equipoideal.view.dialogs.IncompatibleDialog;
@@ -79,34 +80,17 @@ public class NavigationController implements IObserverNavigation {
 			}
 			
 			//TODO cuando ya este incompatibilidades, se puede borrar esto
-			// DATOS HARDCODEADOS PARA TESTING - DATASET GRANDE
-			List<Persona> personasTest = new ArrayList<>();
-			String[] nombres = {"Leo", "Cristiano", "Kylian", "Harry", "David", "Sergio", "Luis", "Gerard", "Xavi", "Andres", "Zinedine", "Ronaldinho", "Pele", "Maradona", "Beckham", "Zidane", "Figo", "Rivas", "Iniesta", "Maldini", "Buffon", "Van Der Sar", "Schmeichel", "Casillas", "Neuer", "Donnarumma", "Higuain", "Benzema", "Lewandowski", "Vardy"};
-			String[] apellidos = {"Messi", "Ronaldo", "Mbappe", "Maguire", "De Gea", "Busquets", "Suarez", "Pique", "Hernandez", "Iniesta", "Zidane", "Ronaldinho", "Pele", "Maradona", "Beckham", "Van Nistelrooy", "Figo", "Rivas", "Carvajal", "Ramos", "Buffon", "Van Der Sar", "Schmeichel", "Casillas", "Neuer", "Donnarumma", "Higuain", "Benzema", "Lewandowski", "Vardy"};
-			String[] roles = {"LIDER", "PROGRAMADOR", "TESTER", "ARQUITECTO", "LIDER", "PROGRAMADOR", "TESTER", "ARQUITECTO", "LIDER", "PROGRAMADOR", "TESTER", "ARQUITECTO", "LIDER", "PROGRAMADOR", "TESTER", "ARQUITECTO", "LIDER", "PROGRAMADOR", "TESTER", "ARQUITECTO", "LIDER", "PROGRAMADOR", "TESTER", "ARQUITECTO", "LIDER", "PROGRAMADOR", "TESTER", "ARQUITECTO", "LIDER", "PROGRAMADOR"};
-			
-			for (int i = 0; i < nombres.length; i++) {
-				int calificacion = 2 + (i % 4); // Calificaciones de 2-5
-				personasTest.add(new Persona(nombres[i], apellidos[i], calificacion, roles[i]));
-			}
-			
-			List<Requerimiento> requerimientosTest = new ArrayList<>();
-			requerimientosTest.add(new equipoideal.model.Requerimiento(equipoideal.util.RolEnum.LIDER, 2));
-			requerimientosTest.add(new equipoideal.model.Requerimiento(equipoideal.util.RolEnum.ARQUITECTO, 2));
-			requerimientosTest.add(new equipoideal.model.Requerimiento(equipoideal.util.RolEnum.PROGRAMADOR, 4));
-			requerimientosTest.add(new equipoideal.model.Requerimiento(equipoideal.util.RolEnum.TESTER, 2));
-			
-			boolean[][] matrizTest = new boolean[personasTest.size()][personasTest.size()];
+			boolean[][] matrizTest = new boolean[personaModel.getListaPersonas().size()][personaModel.getListaPersonas().size()];
 			// Algunas incompatibilidades aleatorias
 			matrizTest[0][1] = true;
 			matrizTest[1][0] = true;
 			matrizTest[2][5] = true;
 			matrizTest[5][2] = true;
 			
-			CalculadorBacktracking backtracking = new CalculadorBacktracking(personasTest,
-					requerimientosTest, matrizTest);
-			CalculadorHeuristica heuristica = new CalculadorHeuristica(personasTest,
-					requerimientosTest, matrizTest);
+			CalculadorBacktracking backtracking = new CalculadorBacktracking(personaModel.getListaPersonas(),
+					requerimientoModel.getRequerimientos(), matrizTest);
+			CalculadorHeuristica heuristica = new CalculadorHeuristica(personaModel.getListaPersonas(),
+					requerimientoModel.getRequerimientos(), matrizTest);
 
 			CalculadorSolucion calculador = new CalculadorSolucion(backtracking, heuristica);
 			this.resultadoComparativoDto = new equipoideal.model.dto.ResultadoComparativoDto();

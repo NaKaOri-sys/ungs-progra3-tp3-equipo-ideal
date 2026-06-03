@@ -53,7 +53,7 @@ public class Persona implements Comparable<Persona> {
 	}
 	
 	public PersonaDto toDto() {
-	    return new PersonaDto(nombre, apellido, calificacion, rol.toString());
+	    return new PersonaDto(nombre, apellido, calificacion, rol.toString(), rutaFoto);
 	}
 
 }
