@@ -71,8 +71,8 @@ public class CalculadorBacktracking extends Observable<IObserverCalculador> {
 	}
 
 	private boolean esPosibleAgregar(int indicePersona, Persona persona, Equipo solucionParcial) {
-		int cantidadActual = solucionParcial.getCantidadPorRol(RolEnum.valueOf(persona.getRol()));
-		return EquipoCalculadorUtil.esPosibleAgregar(RolEnum.valueOf(persona.getRol()), cantidadActual, requerimientos,
+		int cantidadActual = solucionParcial.getCantidadPorRol((persona.getRol()));
+		return EquipoCalculadorUtil.esPosibleAgregar((persona.getRol()), cantidadActual, requerimientos,
 				!RestriccionesPoda.esIncompatibleConEquipo(indicePersona, solucionParcial, listaPersonas,
 						matrizIncompatibilidades, this.cacheIndice.obtenerIndiceCache()));
 	}

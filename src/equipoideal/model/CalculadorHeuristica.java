@@ -53,8 +53,8 @@ public class CalculadorHeuristica extends Observable<IObserverCalculador> {
 	}
 
 	private boolean esPosibleAgregar(Persona persona, Equipo equipoParcial) {
-		RolEnum rol = RolEnum.valueOf(persona.getRol());
-		int cantidadActual = equipoParcial.getCantidadPorRol(RolEnum.valueOf(persona.getRol()));
+		RolEnum rol = (persona.getRol());
+		int cantidadActual = equipoParcial.getCantidadPorRol((persona.getRol()));
 		return EquipoCalculadorUtil.esPosibleAgregar(rol, cantidadActual, requerimientos, !(esIncompatibleConEquipo(persona, equipoParcial)));
 	}
 

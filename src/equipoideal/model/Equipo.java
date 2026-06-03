@@ -32,8 +32,7 @@ public class Equipo {
 			throw new IllegalArgumentException("El rol no puede estar vacio.");
 		int suma = 0;
 		for (Persona persona : integrantes) {
-			String rolActual = persona.getRol();
-			if (rolEnum.toString().equals(rolActual)) {
+			if (rolEnum.equals(persona.getRol())) {
 				suma += 1;
 			}
 		}
@@ -43,7 +42,7 @@ public class Equipo {
 	public EquipoDto toDto() {
 		EquipoDto dto = new EquipoDto(new ArrayList<PersonaDto>());
 		for (Persona persona : integrantes) {
-			PersonaDto integrante = new PersonaDto(persona.getNombre(), persona.getApellido(), persona.getCalificacion(), persona.getRol());
+			PersonaDto integrante = new PersonaDto(persona.getNombre(), persona.getApellido(), persona.getCalificacion(), persona.getRol().toString(), persona.getRutaFoto());
 			dto.getIntegrantes().add(integrante);
 		}
 		return dto;
