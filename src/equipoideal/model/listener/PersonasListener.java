@@ -9,4 +9,6 @@ public interface PersonasListener {
     void onPersonaAgregada();
     void onCargaDesdeJson(String ruta);
 	void onFotoSeleccionada(File imagen);
+	void onExportarJson(String rutaExportarArchivo);
+	void onLimpiarCache();
 }
