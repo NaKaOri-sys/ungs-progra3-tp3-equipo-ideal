@@ -21,7 +21,7 @@ public class CalculadorHeuristica extends Observable<IObserverCalculador> {
 	private boolean[][] matrizIncompatibilidades;
 	private List<Persona> listaOrdenadaPersonas;
 	private IndexCache cacheIndice;
-	private long ultimoTiempoNotificado;
+	private long tiempoInicio = 0;
 
 	public CalculadorHeuristica(List<Persona> listaPersonas, List<Requerimiento> requerimientos,
 			boolean[][] matrizIncompatibilidades) {
@@ -33,8 +33,8 @@ public class CalculadorHeuristica extends Observable<IObserverCalculador> {
 	}
 
 	public EquipoDto ejecutarHeuristica() {
+		this.tiempoInicio = EquipoCalculadorUtil.obtenerTiempoActual();
 		this.cacheIndice = new IndexCache(listaPersonas);
-		notificarProgreso();
 		Equipo equipoResultante = new Equipo(new ArrayList<Persona>());
 		Collections.sort(listaOrdenadaPersonas, (p1, p2) -> p2.compareTo(p1));
 		try {
@@ -45,7 +45,7 @@ public class CalculadorHeuristica extends Observable<IObserverCalculador> {
 					break;
 				}
 			}
-			notificarProgreso();
+			notificarObserver(EquipoCalculadorUtil.obtenerTiempoActual(), tiempoInicio);
 			return equipoResultante.toDto();
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
@@ -55,25 +55,22 @@ public class CalculadorHeuristica extends Observable<IObserverCalculador> {
 	private boolean esPosibleAgregar(Persona persona, Equipo equipoParcial) {
 		RolEnum rol = (persona.getRol());
 		int cantidadActual = equipoParcial.getCantidadPorRol((persona.getRol()));
-		return EquipoCalculadorUtil.esPosibleAgregar(rol, cantidadActual, requerimientos, !(esIncompatibleConEquipo(persona, equipoParcial)));
+		return EquipoCalculadorUtil.esPosibleAgregar(rol, cantidadActual, requerimientos,
+				!(esIncompatibleConEquipo(persona, equipoParcial)));
 	}
 
 	private boolean esIncompatibleConEquipo(Persona personaActual, Equipo equipoParcial) {
-		return EquipoCalculadorUtil.esIncompatibleConEquipo(personaActual, equipoParcial, 
-				matrizIncompatibilidades, this.cacheIndice.obtenerIndiceCache());
+		return EquipoCalculadorUtil.esIncompatibleConEquipo(personaActual, equipoParcial, matrizIncompatibilidades,
+				this.cacheIndice.obtenerIndiceCache());
 	}
 
 	private boolean cumpleConTodosLosRequerimientos(Equipo equipo) {
 		return EquipoCalculadorUtil.cumpleConLosRequerimientos(equipo, requerimientos);
 	}
 
-	private void notificarProgreso() {
-		if (EquipoCalculadorUtil.debeNotificarProgreso(ultimoTiempoNotificado, 100)) {
-			ultimoTiempoNotificado = EquipoCalculadorUtil.obtenerTiempoActual();
-			ProgresoEventoDto evento = new ProgresoEventoDto(0, 
-					EquipoCalculadorUtil.obtenerTiempoActual() - ultimoTiempoNotificado, 0, 
-					OrigenCalculadorEnum.HEURISTICA);
-			notifyObservers(o -> o.alCambiarProgreso(evento));
-		}
+	private void notificarObserver(long tiempoActual, long tiempoInicio) {
+		ProgresoEventoDto evento = new ProgresoEventoDto(0, tiempoActual - tiempoInicio,
+				0, OrigenCalculadorEnum.HEURISTICA);
+		notifyObservers(o -> o.alCambiarProgreso(evento));
 	}
 }

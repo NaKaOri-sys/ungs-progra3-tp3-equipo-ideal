@@ -54,11 +54,10 @@ public class SolucionWorkerController extends SwingWorker<ResultadoComparativoDt
 				if (progreso.getOrigen() == OrigenCalculadorEnum.BACKTRACKING) {
 					this.resultado.setStatsBacktracking(progreso);
 					viewPanel.actualizarEstadisticas(progreso.getCasosBaseProcesados());
-					viewPanel.actualizarMensaje("Tiempo transcurrido (backtracking): " + progreso.getTiempo());
+					viewPanel.actualizarMensaje("Tiempo transcurrido (backtracking): " + progreso.getTiempo()+ "ms.");
 				}
 				if (progreso.getOrigen() == OrigenCalculadorEnum.HEURISTICA) {
 					this.resultado.setStatsHeuristica(progreso);
-					viewPanel.actualizarMensaje("Tiempo transcurrido (heurística): " + progreso.getTiempo());
 				}				
 			}
 		}

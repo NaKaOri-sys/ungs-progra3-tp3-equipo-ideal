@@ -33,10 +33,8 @@ public class EquipoCalculadorUtil {
 		return false;
 	}
 
-	public static boolean debeNotificarProgreso(long ultimoTiempoNotificado, long umbralMs) {
-		long tiempoActual = System.currentTimeMillis();
-		long tiempoTranscurrido = tiempoActual - ultimoTiempoNotificado;
-		return tiempoTranscurrido > umbralMs;
+	public static boolean debeNotificarProgreso(long tiempoActual, long ultimoTiempoNotificado, long umbralMs) {
+	    return (tiempoActual - ultimoTiempoNotificado) > umbralMs;
 	}
 
 	public static long obtenerTiempoActual() {

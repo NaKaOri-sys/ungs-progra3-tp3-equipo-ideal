@@ -80,20 +80,26 @@ public class NavigationController implements IObserverNavigation {
 			}
 			
 			//TODO cuando ya este incompatibilidades, se puede borrar esto
-			boolean[][] matrizTest = new boolean[personaModel.getListaPersonas().size()][personaModel.getListaPersonas().size()];
-			// Algunas incompatibilidades aleatorias
-			matrizTest[0][1] = true;
-			matrizTest[1][0] = true;
-			matrizTest[2][5] = true;
-			matrizTest[5][2] = true;
+			int tamanio = personaModel.getListaPersonas().size();
+			boolean[][] matrizTest = new boolean[tamanio][tamanio];
+			java.util.Random random = new java.util.Random(System.currentTimeMillis());
+			for (int i = 0; i < tamanio; i++) {
+				for (int j = i + 1; j < tamanio; j++) {
+					boolean incompatible = random.nextDouble() < 0.01;
+					if (incompatible) {
+						matrizTest[i][j] = true;
+						matrizTest[j][i] = true;
+					}
+				}
+			}
 			
-			CalculadorBacktracking backtracking = new CalculadorBacktracking(personaModel.getListaPersonas(),
-					requerimientoModel.getRequerimientos(), matrizTest);
-			CalculadorHeuristica heuristica = new CalculadorHeuristica(personaModel.getListaPersonas(),
-					requerimientoModel.getRequerimientos(), matrizTest);
+			CalculadorBacktracking backtracking = new CalculadorBacktracking(new ArrayList<>(personaModel.getListaPersonas()),
+					new ArrayList<>(requerimientoModel.getRequerimientos()), matrizTest);
+			CalculadorHeuristica heuristica = new CalculadorHeuristica(new ArrayList<>(personaModel.getListaPersonas()),
+					new ArrayList<>(requerimientoModel.getRequerimientos()), matrizTest);
 
 			CalculadorSolucion calculador = new CalculadorSolucion(backtracking, heuristica);
-			this.resultadoComparativoDto = new equipoideal.model.dto.ResultadoComparativoDto();
+			this.resultadoComparativoDto = new ResultadoComparativoDto();
 			this.solucionWorkerController = new SolucionWorkerController(calculador,
 					this.mainView.getPanelBusqueda(), this.navigation, this.resultadoComparativoDto);
 			this.solucionWorkerController.execute();
