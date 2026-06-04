@@ -11,6 +11,9 @@ import equipoideal.model.Persona;
  */
 public class RestriccionesPoda {
 	public static boolean debePodar(Equipo solucionParcial, int indice, Equipo mejorEquipo, List<Persona> personas) {
+		if (mejorEquipo.obtenerIntegrantes().isEmpty()) {
+			return false;
+		}
 		int puntajePosible = solucionParcial.getCalificacionTotal() + calcularRemanenteMaximo(indice, personas);
 		return puntajePosible <= mejorEquipo.getCalificacionTotal();
 	}

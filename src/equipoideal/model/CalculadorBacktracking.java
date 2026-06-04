@@ -11,13 +11,13 @@ import equipoideal.util.IndexCache;
 import equipoideal.util.Observable;
 import equipoideal.util.OrigenCalculadorEnum;
 import equipoideal.util.RestriccionesPoda;
-import equipoideal.util.RolEnum;
 import equipoideal.util.SolutionValidator;
 
 public class CalculadorBacktracking extends Observable<IObserverCalculador> {
 	private List<Persona> listaPersonas;
 	private List<Requerimiento> requerimientos;
 	private boolean[][] matrizIncompatibilidades;
+	private long tiempoInicio = 0;
 	private long ultimoTiempoNotificado = 0;
 	private Equipo mejorEquipo;
 	private int contadorCasosBase;
@@ -39,9 +39,11 @@ public class CalculadorBacktracking extends Observable<IObserverCalculador> {
 	public EquipoDto calcularMejorEquipo() {
 		this.contadorCasosBase = 0;
 		this.contadorPodas = 0;
-		notificarProgreso();
+		this.tiempoInicio = EquipoCalculadorUtil.obtenerTiempoActual();
+		this.ultimoTiempoNotificado = this.tiempoInicio;
 		Equipo solucionParcialInicial = new Equipo(new ArrayList<Persona>());
 		ejecutarBacktracking(0, solucionParcialInicial);
+		notificarObserver(contadorCasosBase, EquipoCalculadorUtil.obtenerTiempoActual(), tiempoInicio, contadorPodas);
 		return this.mejorEquipo.toDto();
 	}
 
@@ -82,12 +84,17 @@ public class CalculadorBacktracking extends Observable<IObserverCalculador> {
 	}
 
 	private void notificarProgreso() {
-		if (EquipoCalculadorUtil.debeNotificarProgreso(ultimoTiempoNotificado, 100)) {
-			ultimoTiempoNotificado = EquipoCalculadorUtil.obtenerTiempoActual();
-			ProgresoEventoDto evento = new ProgresoEventoDto(contadorCasosBase,
-					EquipoCalculadorUtil.obtenerTiempoActual() - ultimoTiempoNotificado, contadorPodas,
-					OrigenCalculadorEnum.BACKTRACKING);
-			notifyObservers(o -> o.alCambiarProgreso(evento));
+		long tiempoActual = EquipoCalculadorUtil.obtenerTiempoActual();
+		if (EquipoCalculadorUtil.debeNotificarProgreso(tiempoActual, ultimoTiempoNotificado, 100)) {
+			ultimoTiempoNotificado = tiempoActual;
+			notificarObserver(contadorCasosBase, tiempoActual, tiempoInicio, contadorPodas);
+			
 		}
+	}
+
+	private void notificarObserver(int contadorCasosBase, long tiempoActual, long tiempoInicio, int contadorPodas) {
+		ProgresoEventoDto evento = new ProgresoEventoDto(contadorCasosBase, tiempoActual - tiempoInicio,
+				contadorPodas, OrigenCalculadorEnum.BACKTRACKING);
+		notifyObservers(o -> o.alCambiarProgreso(evento));
 	}
 }
