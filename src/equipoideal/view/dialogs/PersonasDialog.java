@@ -24,6 +24,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
+import equipoideal.model.Incompatibilidad;
+import equipoideal.model.Persona;
 import equipoideal.model.dto.PersonaDto;
 import equipoideal.model.listener.PersonasListener;
 import equipoideal.util.RolEnum;
@@ -280,4 +282,7 @@ public class PersonasDialog extends DialogPadre{
 	public String getRutaFoto() {
 	    return rutaFoto;
 	}
+	
+	
+	
 }
