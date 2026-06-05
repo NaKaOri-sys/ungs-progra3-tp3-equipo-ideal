@@ -9,13 +9,12 @@ public class RequerimientosController implements RequerimientosListener {
 	private RequerimientosDialog vista;
 	private RequerimientosModel modelo;
 	
-	
+	//TODO faltaria un eliminar o editar los requerimientos ya que si uno se equivoca no hay forma de corregirlo.
 	public RequerimientosController(RequerimientosDialog vista, RequerimientosModel modelo) {
 		this.vista = vista;
 		this.modelo = modelo;
 		this.vista.setRequerimientosListener(this);
 	}
-	
 	
 	@Override
 	public void onRequerimientosAgregados() {

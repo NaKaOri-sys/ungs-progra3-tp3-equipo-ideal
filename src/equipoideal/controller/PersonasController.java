@@ -11,7 +11,7 @@ public class PersonasController implements PersonasListener {
 
 	private PersonasDialog vista;
 	private PersonaDialogModel modelo;
-
+	//TODO es un ABM de personas, pero no se pueden editar ni eliminar, solo agregar. Por lo menos el eliminar estaria bueno que este ya que si te equivocaste, tenes que cerrar la app.
 	public PersonasController(PersonasDialog vista, PersonaDialogModel modelo) {
 		this.vista = vista;
 		this.modelo = modelo;
