@@ -22,9 +22,9 @@ public class RequerimientosController implements RequerimientosListener {
         RequerimientosDto dto = vista.getRequerimientos();
         
         try {
-        modelo.crearRequerimientos(dto);
+        modelo.crearRequerimientos(dto); //TODO mostrar feedback al usuario ya que no se muestra nada y es confuso xd
         } catch (IllegalArgumentException e) {
-
+        	//TODO mostrar error al usuario
 	        System.out.println(e.getMessage());
 	    }
         vista.limpiarInputs();

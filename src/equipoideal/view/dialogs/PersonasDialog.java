@@ -96,7 +96,7 @@ public class PersonasDialog extends DialogPadre{
 	    
 	    JPanel nuevosInputs = new JPanel(new GridLayout(4, 2, 10, 10)); 
 	    nuevosInputs.setOpaque(false);
-		
+		//TODO queda mejor solo Nombre, Apellido, Rol y Puntuacion, sin el "Ingrese"
 		JLabel lblNombre = new JLabel("Ingrese Nombre:");
 		txtNombre = new JTextField();
 		
@@ -106,7 +106,7 @@ public class PersonasDialog extends DialogPadre{
 		JLabel lblPuntuacion = new JLabel("Ingrese Puntos:");
 		spinnerPuntuacion = new JSpinner( new SpinnerNumberModel( 1,1,5, 1));
 		((JSpinner.DefaultEditor) spinnerPuntuacion.getEditor()).getTextField().setEditable(false);
-		
+		//TODO lo mismo que en el todo de arriba, queda mejor solo Rol, sin el "Ingrese"
 		JLabel lblRol = new JLabel("Ingrese Puesto:");
 		comboRol = new JComboBox<>(RolEnum.values());
 		

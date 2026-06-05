@@ -29,16 +29,36 @@ public class CalculadorHeuristicaTest {
 	@Before
 	public void setUp() {
 		personas = new ArrayList<>();
-		personas.add(new Persona("Leo", "Messi", 5, "LIDER"));
-		personas.add(new Persona("Cristiano", "Ronaldo", 4, "PROGRAMADOR"));
-		personas.add(new Persona("Kylian", "Mbappe", 3, "TESTER"));
-		personas.add(new Persona("Harry", "Maguire", 2, "PROGRAMADOR"));
+		personas.add(new Persona("Leo", "Messi", 5, RolEnum.LIDER));
+		personas.add(new Persona("Cristiano", "Ronaldo", 4, RolEnum.PROGRAMADOR));
+		personas.add(new Persona("Kylian", "Mbappe", 3, RolEnum.TESTER));
+		personas.add(new Persona("Harry", "Maguire", 2, RolEnum.PROGRAMADOR));
 
 		requerimientos = new ArrayList<>();
 		lider = new Requerimiento(RolEnum.LIDER, 1);
 		dev = new Requerimiento(RolEnum.PROGRAMADOR, 1);
 		qa = new Requerimiento(RolEnum.TESTER, 2);
 		incompatibilidades = new boolean[personas.size()][personas.size()];
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testHeuristica_listaPersonasVacia() {
+		new CalculadorHeuristica(new ArrayList<>(), requerimientos, incompatibilidades);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testHeuristica_listaRequerimientosVacia() {
+		new CalculadorHeuristica(personas, new ArrayList<>(), incompatibilidades);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testHeuristica_matrizIncompatibilidadesVacia() {
+		new CalculadorHeuristica(personas, requerimientos, new boolean[0][0]);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testHeuristica_matrizIncompatibilidadesDistintoTamanioListaPersonas() {
+		new CalculadorHeuristica(personas, requerimientos, new boolean[personas.size() - 1][personas.size() - 1]);
 	}
 
 	@Test

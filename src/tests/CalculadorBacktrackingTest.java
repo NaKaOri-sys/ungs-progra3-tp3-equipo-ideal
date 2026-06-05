@@ -28,11 +28,11 @@ public class CalculadorBacktrackingTest {
 	@Before
 	public void setUp() {
 		personas = new ArrayList<>();
-		personas.add(new Persona("Leo", "Messi", 5, "LIDER"));
-		personas.add(new Persona("Cristiano", "Ronaldo", 4, "PROGRAMADOR"));
-		personas.add(new Persona("Kylian", "Mbappe", 3, "TESTER"));
-		personas.add(new Persona("Harry", "Maguire", 2, "PROGRAMADOR"));
-		
+		personas.add(new Persona("Leo", "Messi", 5, RolEnum.LIDER));
+		personas.add(new Persona("Cristiano", "Ronaldo", 4, RolEnum.PROGRAMADOR));
+		personas.add(new Persona("Kylian", "Mbappe", 3, RolEnum.TESTER));
+		personas.add(new Persona("Harry", "Maguire", 2, RolEnum.PROGRAMADOR));
+
 		requerimientos = new ArrayList<>();
 		lider = new Requerimiento(RolEnum.LIDER, 1);
 		dev = new Requerimiento(RolEnum.PROGRAMADOR, 1);
@@ -40,14 +40,34 @@ public class CalculadorBacktrackingTest {
 		incompatibilidades = new boolean[personas.size()][personas.size()];
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void testBacktracking_listaPersonasVacia() {
+		new CalculadorBacktracking(new ArrayList<>(), requerimientos, incompatibilidades);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testBacktracking_listaRequerimientosVacia() {
+		new CalculadorBacktracking(personas, new ArrayList<>(), incompatibilidades);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testBacktracking_matrizIncompatibilidadesVacia() {
+		new CalculadorBacktracking(personas, requerimientos, new boolean[0][0]);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testBacktracking_matrizIncompatibilidadesDistintoTamanioListaPersonas() {
+		new CalculadorBacktracking(personas, requerimientos, new boolean[personas.size() - 1][personas.size() - 1]);
+	}
+
 	@Test
 	public void testBacktracking_EncuentraSolucion() {
 		requerimientos.add(lider);
 		requerimientos.add(dev);
-		
+
 		calc = new CalculadorBacktracking(personas, requerimientos, incompatibilidades);
 		EquipoDto resultado = calc.calcularMejorEquipo();
-		
+
 		assertFalse("Debe encontrar solución", resultado.getIntegrantes().isEmpty());
 	}
 
@@ -55,10 +75,10 @@ public class CalculadorBacktrackingTest {
 	public void testBacktracking_SolucionEsOptima() {
 		requerimientos.add(lider);
 		requerimientos.add(dev);
-		
+
 		calc = new CalculadorBacktracking(personas, requerimientos, incompatibilidades);
 		EquipoDto resultado = calc.calcularMejorEquipo();
-		
+
 		int total = resultado.getIntegrantes().stream().mapToInt(p -> p.getCalificacion()).sum();
 		assertEquals("Debe sumar 9 (5+4)", 9, total);
 	}
@@ -67,16 +87,16 @@ public class CalculadorBacktrackingTest {
 	public void testBacktracking_RespetaIncompatibilidades() {
 		incompatibilidades[0][1] = true;
 		incompatibilidades[1][0] = true;
-		
+
 		requerimientos.add(lider);
 		requerimientos.add(dev);
-		
+
 		calc = new CalculadorBacktracking(personas, requerimientos, incompatibilidades);
 		EquipoDto resultado = calc.calcularMejorEquipo();
-		
+
 		boolean tieneMessi = resultado.getIntegrantes().stream().anyMatch(p -> "Messi".equals(p.getApellido()));
 		boolean tieneRonaldo = resultado.getIntegrantes().stream().anyMatch(p -> "Ronaldo".equals(p.getApellido()));
-		
+
 		assertFalse("No puede tener ambos incompatibles", tieneMessi && tieneRonaldo);
 	}
 
@@ -84,11 +104,11 @@ public class CalculadorBacktrackingTest {
 	public void testBacktracking_SinSolucion() {
 		requerimientos.add(lider);
 		requerimientos.add(dev);
-		requerimientos.add(qa);  // Solo hay 1 Tester
-		
+		requerimientos.add(qa); // Solo hay 1 Tester
+
 		calc = new CalculadorBacktracking(personas, requerimientos, incompatibilidades);
 		EquipoDto resultado = calc.calcularMejorEquipo();
-		
+
 		assertTrue("Debe estar vacío sin solución", resultado.getIntegrantes().isEmpty());
 	}
 }

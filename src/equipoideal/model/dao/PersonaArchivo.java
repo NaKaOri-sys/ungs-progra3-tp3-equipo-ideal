@@ -19,7 +19,6 @@ import equipoideal.model.Persona;
 import equipoideal.util.PersonaValidator;
 
 public class PersonaArchivo {
-
 	public static void generarJsonPersona(String archivo, ArrayList<Persona> personas) {
 		if (archivo == null || archivo.trim().isEmpty()) {
 			throw new IllegalArgumentException("El nombre del archivo no puede estar vacío.");
@@ -28,21 +27,18 @@ public class PersonaArchivo {
 		if (personas == null) {
 			throw new IllegalArgumentException("La lista de personas no puede ser null.");
 		}
-		
-		
-		  Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-			
-		    String json =gson.toJson(personas);
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-			
-		    try (FileWriter writer =new FileWriter(archivo)) {
-		    	writer.write(json);
-		    } catch (Exception e) {
-		        System.err.println( "Error al generar JSON: " + e.getMessage());
+		String json = gson.toJson(personas);
 
-		        throw new RuntimeException( e.getMessage() );
-		    }
+		try (FileWriter writer = new FileWriter(archivo)) {
+			writer.write(json);
+		} catch (Exception e) {
+			System.err.println("Error al generar JSON: " + e.getMessage());
+
+			throw new RuntimeException(e.getMessage());
+		}
 	}
 
 	public static ArrayList<Persona> cargarJSON(String archivo) {
@@ -50,17 +46,18 @@ public class PersonaArchivo {
 		if (archivo == null || archivo.trim().isEmpty()) {
 			throw new IllegalArgumentException("El nombre del archivo no puede estar vacío.");
 		}
-		
+
 		File file = new File(archivo);
 		if (!file.exists()) {
-		    throw new IllegalArgumentException("El archivo no existe.");
+			throw new IllegalArgumentException("El archivo no existe.");
 		}
 
 		Gson gson = new Gson();
 
 		try (Reader reader = new FileReader(archivo)) {
 
-			Type personaType = new TypeToken<ArrayList<Persona>>() {}.getType();
+			Type personaType = new TypeToken<ArrayList<Persona>>() {
+			}.getType();
 
 			ArrayList<Persona> personas = gson.fromJson(reader, personaType);
 
@@ -74,7 +71,7 @@ public class PersonaArchivo {
 
 			System.err.println("El JSON tiene errores de sintaxis.");
 
-			throw new IllegalArgumentException ("Formato JSON inválido.");
+			throw new IllegalArgumentException("Formato JSON inválido.");
 
 		} catch (IOException e) {
 
@@ -88,11 +85,15 @@ public class PersonaArchivo {
 		}
 	}
 
-	public static void limpiarArchivoJson(String archivo){
-		
+	// TODO revisar si este metodo es necesario, ya que el JSON solo se generaria
+	// cuando se presiona el boton guardar y en realidad es como que el cliente
+	// decidiria donde tener el archivo, no lo almacenaria en la ruta interna de la
+	// app
+	public static void limpiarArchivoJson(String archivo) {
+
 		File file = new File(archivo);
 		if (!file.exists()) {
-		    throw new IllegalArgumentException("El archivo no existe.");
+			throw new IllegalArgumentException("El archivo no existe.");
 		}
 
 		if (archivo == null || archivo.trim().isEmpty()) {
@@ -105,29 +106,28 @@ public class PersonaArchivo {
 
 		} catch (Exception e) {
 
-			System.err.println("No se pudo limpiar el JSON: "+ e.getMessage());
+			System.err.println("No se pudo limpiar el JSON: " + e.getMessage());
 
 			throw new RuntimeException(e.getMessage());
 		}
 	}
-	
+
+	// TODO con los cambios propuestos, quizas este sería el único metodo publico y
+	// los otros podrian ser privados, ya que el cliente solo podría exportarse un
+	// JSON
 	public static void exportarArchivoJSON(String archivo, String destino) {
 		File origen = new File(archivo);
 
-	    File archivoDestino = new File(destino);
+		File archivoDestino = new File(destino);
 
-	    try {
+		try {
 
-	        Files.copy(origen.toPath(), archivoDestino.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(origen.toPath(), archivoDestino.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-	    } catch (IOException e) {
+		} catch (IOException e) {
 
-	        throw new RuntimeException("No se pudo exportar el JSON.");
-	    }
+			throw new RuntimeException("No se pudo exportar el JSON.");
+		}
 	}
-	
-	
-
-		
 
 }

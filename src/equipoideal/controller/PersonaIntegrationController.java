@@ -21,7 +21,7 @@ public class PersonaIntegrationController implements IObserverPersonas {
 	
     @Override
     public void onListaPersonasModificada(ArrayList<Persona> nuevaLista) {
-    	
+    	//TODO esto no se si es realmente necesario, solo generaria el json si se presiona el boton de generar json.
     	modelo.guardarPersonaEnJSON();
     	
         ArrayList<PersonaDto> personasDTO = transformarDTO(nuevaLista);
