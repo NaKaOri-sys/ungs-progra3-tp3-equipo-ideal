@@ -19,88 +19,93 @@ public abstract class DialogPadre extends JDialog {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	protected JPanel panelPrincipal;
 	protected JPanel panelInputs;
 	protected JPanel panelBotones;
 	protected JPanel panelLista;
 
-    protected JButton btnAceptar;
-    protected JButton btnCerrar;
-    
-    protected JScrollPane scrollPane;
-    protected JTable tabla;
-    
-    protected  Color ColorFondo = Color.gray;
+	protected JButton btnAceptar;
+	protected JButton btnCerrar;
+
+	protected JScrollPane scrollPane;
+	protected JTable tabla;
+
+	protected Color ColorFondo = Color.gray;
+
 //    protected  Font Fuente = new Font
-	 
+	// TODO porque en el constructor se recibe un Jdialog? al extender de este
+	// dialog, todos ya adquiren la capacidad de ser un dialog, entonces no es
+	// necesario recibirlo como parametro, además queda raro que en Main se pase
+	// null, si no se va a usar, entonces no es necesario recibirlo
 	public DialogPadre(JDialog frame, String titulo) {
-        super(frame, titulo, true);
-        
-        setSize(800, 600);
-        setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
-        getContentPane().setBackground(ColorFondo);
-        
-        panelPrincipal = new JPanel(new BorderLayout());
-        panelPrincipal.setBackground(ColorFondo);
+		super(frame, titulo, true);
 
-        panelInputs = new JPanel();
-        panelInputs.setBackground(ColorFondo);
+		setSize(800, 600);
+		setLocationRelativeTo(null);
+		setLayout(new BorderLayout());
+		getContentPane().setBackground(ColorFondo);
 
-        panelBotones = new JPanel();
-        panelBotones.setBackground(ColorFondo);
+		panelPrincipal = new JPanel(new BorderLayout());
+		panelPrincipal.setBackground(ColorFondo);
+
+		panelInputs = new JPanel();
+		panelInputs.setBackground(ColorFondo);
+
+		panelBotones = new JPanel();
+		panelBotones.setBackground(ColorFondo);
 
 		panelBotones.setLayout(new GridLayout(2, 1, 0, 5));
 
-        panelLista = new JPanel();
-        panelLista.setBackground(ColorFondo);
-        
-        JPanel panelContenedorSuperior = new JPanel(new BorderLayout());
-        panelContenedorSuperior.setOpaque(false); 
+		panelLista = new JPanel();
+		panelLista.setBackground(ColorFondo);
 
-        panelContenedorSuperior.add(panelInputs, BorderLayout.NORTH);
-        panelContenedorSuperior.add(panelBotones, BorderLayout.SOUTH);
+		JPanel panelContenedorSuperior = new JPanel(new BorderLayout());
+		panelContenedorSuperior.setOpaque(false);
 
-        panelPrincipal.add(panelContenedorSuperior, BorderLayout.NORTH); 
-        panelPrincipal.add(panelLista, BorderLayout.CENTER);             
+		panelContenedorSuperior.add(panelInputs, BorderLayout.NORTH);
+		panelContenedorSuperior.add(panelBotones, BorderLayout.SOUTH);
 
-        add(panelPrincipal);        
+		panelPrincipal.add(panelContenedorSuperior, BorderLayout.NORTH);
+		panelPrincipal.add(panelLista, BorderLayout.CENTER);
 
-        btnAceptar = new JButton("Agregar");
-        panelBotones.add(btnAceptar);
+		add(panelPrincipal);
 
-        btnCerrar = new JButton("Cerrar");
-        panelBotones.add(btnCerrar);
-        
-        panelBotones.setBorder(BorderFactory.createEmptyBorder(20,200,20,200));
-		panelInputs.setBorder(BorderFactory.createEmptyBorder(20,40,20,40));
-        panelLista.setBorder(BorderFactory.createEmptyBorder(10, 40, 20, 40));
-        
-        btnCerrar.addActionListener(e -> dispose());
-        
+		btnAceptar = new JButton("Agregar");
+		panelBotones.add(btnAceptar);
+
+		btnCerrar = new JButton("Cerrar");
+		panelBotones.add(btnCerrar);
+
+		panelBotones.setBorder(BorderFactory.createEmptyBorder(20, 200, 20, 200));
+		panelInputs.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
+		panelLista.setBorder(BorderFactory.createEmptyBorder(10, 40, 20, 40));
+
+		btnCerrar.addActionListener(e -> dispose());
+
 	}
+
 	protected void crearTabla() {
-		String[] columnas = {"Nombre", "Apellido", "Puesto", "Puntos", "Incompatible con.."};
-        
-        DefaultTableModel modeloVacio = new DefaultTableModel(columnas, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
+		String[] columnas = { "Nombre", "Apellido", "Puesto", "Puntos", "Incompatible con.." };
 
-        tabla = new JTable(modeloVacio);
-        scrollPane = new JScrollPane(tabla);
-        
-        panelLista.setLayout(new BorderLayout());
-        panelLista.add(scrollPane, BorderLayout.CENTER);
-        panelLista.setBorder(BorderFactory.createEmptyBorder(10, 40, 20, 40));
+		DefaultTableModel modeloVacio = new DefaultTableModel(columnas, 0) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+
+		tabla = new JTable(modeloVacio);
+		scrollPane = new JScrollPane(tabla);
+
+		panelLista.setLayout(new BorderLayout());
+		panelLista.add(scrollPane, BorderLayout.CENTER);
+		panelLista.setBorder(BorderFactory.createEmptyBorder(10, 40, 20, 40));
 	}
-	
+
 	public abstract void crearInputs();
 
 	public abstract void accionesBoton();
-	
+
 	public abstract void limpiarInputs();
 }

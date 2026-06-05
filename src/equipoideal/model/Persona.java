@@ -9,7 +9,11 @@ public class Persona implements Comparable<Persona> {
 	private int calificacion;
 	private RolEnum rol;
 	private String rutaFoto;
-	
+
+	// TODO falta agregar equals y hashcode, para poder comparar personas por su
+	// nombre y apellido, o por un id unico que se le asigne a cada persona. Esto es
+	// importante para evitar duplicados en la lista de personas, y para poder
+	// identificar a las personas de manera univoca en el sistema.
 	public Persona(String nombre, String apellido, int calificacion, RolEnum rol) {
 		this.nombre = nombre;
 		this.apellido = apellido;
@@ -29,11 +33,9 @@ public class Persona implements Comparable<Persona> {
 		return rol;
 	}
 
-	
 	public int getCalificacion() {
 		return calificacion;
 	}
-	
 
 	@Override
 	public int compareTo(Persona persona) {
@@ -51,9 +53,9 @@ public class Persona implements Comparable<Persona> {
 	public void setRutaFoto(String rutaFoto) {
 		this.rutaFoto = rutaFoto;
 	}
-	
+
 	public PersonaDto toDto() {
-	    return new PersonaDto(nombre, apellido, calificacion, rol.toString(), rutaFoto);
+		return new PersonaDto(nombre, apellido, calificacion, rol.toString(), rutaFoto);
 	}
 
 }

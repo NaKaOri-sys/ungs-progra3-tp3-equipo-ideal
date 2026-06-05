@@ -20,8 +20,8 @@ public class SolucionWorkerController extends SwingWorker<ResultadoComparativoDt
 	private ResultadoComparativoDto resultado;
 	private CalculadorSolucion facade;
 
-	public SolucionWorkerController(CalculadorSolucion facade,
-			LoadingSolutionPanel viewPanel, Navigation nav, ResultadoComparativoDto resultado) {
+	public SolucionWorkerController(CalculadorSolucion facade, LoadingSolutionPanel viewPanel, Navigation nav,
+			ResultadoComparativoDto resultado) {
 		this.viewPanel = viewPanel;
 		this.navigation = nav;
 		this.resultado = resultado;
@@ -45,6 +45,12 @@ public class SolucionWorkerController extends SwingWorker<ResultadoComparativoDt
 		publish(evento);
 	}
 
+	// TODO ver si se puede crear un modelo para el worker asi el controller queda
+	// libre de logica de negocio y se encarga solo de la comunicacion entre el
+	// modelo y la vista, y el modelo se encarga de procesar los eventos y
+	// actualizar el resultado. Esto permitiria que el controller quede mas limpio y
+	// enfocado en la comunicacion, y el modelo se encargue de la logica de negocio
+	// y procesamiento de eventos.
 	@Override
 	protected void process(List<ProgresoEventoDto> chunks) {
 		if (chunks == null || chunks.isEmpty())
@@ -54,11 +60,11 @@ public class SolucionWorkerController extends SwingWorker<ResultadoComparativoDt
 				if (progreso.getOrigen() == OrigenCalculadorEnum.BACKTRACKING) {
 					this.resultado.setStatsBacktracking(progreso);
 					viewPanel.actualizarEstadisticas(progreso.getCasosBaseProcesados());
-					viewPanel.actualizarMensaje("Tiempo transcurrido (backtracking): " + progreso.getTiempo()+ "ms.");
+					viewPanel.actualizarMensaje("Tiempo transcurrido (backtracking): " + progreso.getTiempo() + "ms.");
 				}
 				if (progreso.getOrigen() == OrigenCalculadorEnum.HEURISTICA) {
 					this.resultado.setStatsHeuristica(progreso);
-				}				
+				}
 			}
 		}
 	}
@@ -68,7 +74,8 @@ public class SolucionWorkerController extends SwingWorker<ResultadoComparativoDt
 		this.facade.removeObserver(this);
 		try {
 			ResultadoComparativoDto resultadoDto = get();
-			if (resultadoDto == null || resultadoDto.getEquipoHeuristica() == null || resultadoDto.getEquipoBacktracking() == null) {
+			if (resultadoDto == null || resultadoDto.getEquipoHeuristica() == null
+					|| resultadoDto.getEquipoBacktracking() == null) {
 				this.viewPanel.mostrarError("El equipo resultante no es valido, vuelva a intentarlo");
 				this.navigation.updateView(VentanaEnum.MENU);
 				return;
