@@ -3,28 +3,22 @@ package tests;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
+import java.util.LinkedHashMap;
 import org.junit.Before;
 import org.junit.Test;
 
-import equipoideal.model.CalculadorBacktracking;
 import equipoideal.model.CalculadorHeuristica;
 import equipoideal.model.Persona;
-import equipoideal.model.Requerimiento;
 import equipoideal.model.dto.EquipoDto;
+import equipoideal.model.dto.PersonaDto;
 import equipoideal.util.RolEnum;
 
 public class CalculadorHeuristicaTest {
 
 	private ArrayList<Persona> personas;
-	private List<Requerimiento> requerimientos;
+	private LinkedHashMap<RolEnum, Integer> requerimientos;
 	private boolean[][] incompatibilidades;
 	private CalculadorHeuristica calc;
-	private Requerimiento lider;
-	private Requerimiento dev;
-	private Requerimiento qa;
 
 	@Before
 	public void setUp() {
@@ -34,10 +28,11 @@ public class CalculadorHeuristicaTest {
 		personas.add(new Persona("Kylian", "Mbappe", 3, RolEnum.TESTER));
 		personas.add(new Persona("Harry", "Maguire", 2, RolEnum.PROGRAMADOR));
 
-		requerimientos = new ArrayList<>();
-		lider = new Requerimiento(RolEnum.LIDER, 1);
-		dev = new Requerimiento(RolEnum.PROGRAMADOR, 1);
-		qa = new Requerimiento(RolEnum.TESTER, 2);
+		requerimientos = new LinkedHashMap<RolEnum, Integer>();
+		requerimientos.put(RolEnum.LIDER, 1);
+		requerimientos.put(RolEnum.PROGRAMADOR, 1);
+		requerimientos.put(RolEnum.TESTER, 2);
+		
 		incompatibilidades = new boolean[personas.size()][personas.size()];
 	}
 	
@@ -48,7 +43,7 @@ public class CalculadorHeuristicaTest {
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void testHeuristica_listaRequerimientosVacia() {
-		new CalculadorHeuristica(personas, new ArrayList<>(), incompatibilidades);
+		new CalculadorHeuristica(personas, new LinkedHashMap<RolEnum, Integer>(), incompatibilidades);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
@@ -63,12 +58,8 @@ public class CalculadorHeuristicaTest {
 
 	@Test
 	public void testHeuristica_EncuentraSolucionEnCasoFeliz() {
-		requerimientos.add(lider);
-		requerimientos.add(dev);
-
 		calc = new CalculadorHeuristica(personas, requerimientos, incompatibilidades);
 		EquipoDto resultado = calc.ejecutarHeuristica();
-
 		assertFalse("Debe encontrar solución", resultado.getIntegrantes().isEmpty());
 	}
 
@@ -76,9 +67,6 @@ public class CalculadorHeuristicaTest {
 	public void testHeuristica_RespetaIncompatibilidades() {
 		incompatibilidades[0][1] = true;
 		incompatibilidades[1][0] = true;
-
-		requerimientos.add(lider);
-		requerimientos.add(dev);
 
 		calc = new CalculadorHeuristica(personas, requerimientos, incompatibilidades);
 		EquipoDto resultado = calc.ejecutarHeuristica();
@@ -91,11 +79,9 @@ public class CalculadorHeuristicaTest {
 
 	@Test
 	public void testHeuristica_SeleccionaPersonaConMayorCalificacion() {
-		requerimientos.add(dev);
-
 		calc = new CalculadorHeuristica(personas, requerimientos, incompatibilidades);
 		EquipoDto resultado = calc.ejecutarHeuristica();
 
-		assertEquals("Debe elegir al de mayor calificación", 4, resultado.getIntegrantes().get(0).getCalificacion());
+		assertEquals("Debe elegir al de mayor calificación", 5, resultado.getIntegrantes().get(0).getCalificacion());
 	}
 }

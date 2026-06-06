@@ -1,7 +1,9 @@
 package equipoideal.controller;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import equipoideal.model.CalculadorBacktracking;
 import equipoideal.model.CalculadorHeuristica;
@@ -10,7 +12,6 @@ import equipoideal.model.IncompatibleModel;
 import equipoideal.model.Navigation;
 import equipoideal.model.Persona;
 import equipoideal.model.PersonaModel;
-import equipoideal.model.Requerimiento;
 import equipoideal.model.RequerimientoModel;
 import equipoideal.model.SolucionWorkerModel;
 import equipoideal.model.dto.ResultadoComparativoDto;
@@ -56,7 +57,7 @@ public class NavigationController implements IObserverNavigation {
 		this.requerimientoModel = requerimientoModel;
 		this.incompatibleModel = incompatibleModel;
 		this.resultadoComparativoDto = new ResultadoComparativoDto();
-		
+		//TODO esto no va acá ya que acopla demasiado a navigation habria que inicializarlo en main o en menuController 
 		this.incompatibleController = new IncompatibleController(this.incompatibleDialog, this.personaModel.getListaPersonas(), this.incompatibleModel);
 		this.navigation.addObserver(this);
 	}
@@ -84,13 +85,11 @@ public class NavigationController implements IObserverNavigation {
 				this.solucionWorkerController = null;
 			}
 
-			boolean[][] matrizRealDeIncompatibilidades = this.incompatibleModel.getMatrizIncompatibilidades();
-
 			CalculadorBacktracking backtracking = new CalculadorBacktracking(
 					new ArrayList<>(personaModel.getListaPersonas()),
-					new ArrayList<>(requerimientoModel.getRequerimientos()), matrizTest);
+					new LinkedHashMap<RolEnum, Integer>(requerimientoModel.getRequerimientos()), this.incompatibleModel.getMatrizIncompatibilidades());
 			CalculadorHeuristica heuristica = new CalculadorHeuristica(new ArrayList<>(personaModel.getListaPersonas()),
-					new ArrayList<>(requerimientoModel.getRequerimientos()), matrizTest);
+					new LinkedHashMap<RolEnum, Integer>(requerimientoModel.getRequerimientos()), this.incompatibleModel.getMatrizIncompatibilidades());
 
 			CalculadorSolucion calculador = new CalculadorSolucion(backtracking, heuristica);
 			SolucionWorkerModel workerModel = new SolucionWorkerModel(this.resultadoComparativoDto);

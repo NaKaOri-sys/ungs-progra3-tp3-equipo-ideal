@@ -1,7 +1,9 @@
 package equipoideal.model;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import equipoideal.model.dto.EquipoDto;
 import equipoideal.model.dto.ProgresoEventoDto;
@@ -11,11 +13,12 @@ import equipoideal.util.IndexCache;
 import equipoideal.util.Observable;
 import equipoideal.util.OrigenCalculadorEnum;
 import equipoideal.util.RestriccionesPoda;
+import equipoideal.util.RolEnum;
 import equipoideal.util.SolutionValidator;
 
 public class CalculadorBacktracking extends Observable<IObserverCalculador> {
 	private List<Persona> listaPersonas;
-	private List<Requerimiento> requerimientos;
+	private LinkedHashMap<RolEnum, Integer> requerimientos;
 	private boolean[][] matrizIncompatibilidades;
 	private long tiempoInicio = 0;
 	private long ultimoTiempoNotificado = 0;
@@ -24,11 +27,11 @@ public class CalculadorBacktracking extends Observable<IObserverCalculador> {
 	private int contadorPodas;
 	private IndexCache cacheIndice;
 
-	public CalculadorBacktracking(List<Persona> personas, List<Requerimiento> requerimientosRoles,
+	public CalculadorBacktracking(List<Persona> personas, LinkedHashMap<RolEnum, Integer> requerimientos,
 			boolean[][] matrizIncompatibilidades) {
-		SolutionValidator.solutionValidator(personas, requerimientosRoles, matrizIncompatibilidades);
+		SolutionValidator.solutionValidator(personas, requerimientos, matrizIncompatibilidades);
 		this.listaPersonas = new ArrayList<>(personas);
-		this.requerimientos = new ArrayList<>(requerimientosRoles);
+		this.requerimientos = new LinkedHashMap<RolEnum, Integer>(requerimientos);
 		this.matrizIncompatibilidades = matrizIncompatibilidades;
 		this.mejorEquipo = new Equipo(new ArrayList<Persona>());
 		this.contadorCasosBase = 0;

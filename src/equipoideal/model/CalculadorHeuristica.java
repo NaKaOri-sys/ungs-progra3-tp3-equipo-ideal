@@ -12,23 +12,24 @@ import equipoideal.util.SolutionValidator;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class CalculadorHeuristica extends Observable<IObserverCalculador> {
 
 	private List<Persona> listaPersonas;
-	private List<Requerimiento> requerimientos;
+	private LinkedHashMap<RolEnum, Integer> requerimientos;
 	private boolean[][] matrizIncompatibilidades;
 	private List<Persona> listaOrdenadaPersonas;
 	private IndexCache cacheIndice;
 	private long tiempoInicio = 0;
 
-	public CalculadorHeuristica(List<Persona> listaPersonas, List<Requerimiento> requerimientos,
+	public CalculadorHeuristica(List<Persona> listaPersonas, LinkedHashMap<RolEnum, Integer> requerimientos,
 			boolean[][] matrizIncompatibilidades) {
 		SolutionValidator.solutionValidator(listaPersonas, requerimientos, matrizIncompatibilidades);
 		this.listaPersonas = new ArrayList<>(listaPersonas);
 		this.listaOrdenadaPersonas = new ArrayList<>(listaPersonas);
-		this.requerimientos = new ArrayList<>(requerimientos);
+		this.requerimientos = new LinkedHashMap<RolEnum, Integer>(requerimientos);
 		this.matrizIncompatibilidades = matrizIncompatibilidades;
 	}
 

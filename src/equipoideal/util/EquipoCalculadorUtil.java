@@ -1,20 +1,18 @@
 package equipoideal.util;
 
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import equipoideal.model.Equipo;
 import equipoideal.model.Persona;
-import equipoideal.model.Requerimiento;
-import equipoideal.model.dto.ProgresoEventoDto;
-import equipoideal.model.event.IObserverCalculador;
 
 public class EquipoCalculadorUtil {
 
-	public static boolean cumpleConLosRequerimientos(Equipo equipo, List<Requerimiento> requerimientos) {
-		for (int i = 0; i < requerimientos.size(); i++) {
-			int requerido = requerimientos.get(i).getCantidad();
-			if (equipo.getCantidadPorRol(requerimientos.get(i).getRol()) != requerido) {
+	public static boolean cumpleConLosRequerimientos(Equipo equipo, LinkedHashMap<RolEnum, Integer> requerimientos) {
+		for (Entry<RolEnum, Integer> req : requerimientos.entrySet()) {
+			RolEnum rol = req.getKey();
+			if (equipo.getCantidadPorRol(rol) != req.getValue()) {
 				return false;
 			}
 		}
@@ -41,11 +39,12 @@ public class EquipoCalculadorUtil {
 		return System.currentTimeMillis();
 	}
 	
-	public static boolean esPosibleAgregar(RolEnum rol, int cantidadRol, List<Requerimiento> requerimientos,boolean condicion) {
+	public static boolean esPosibleAgregar(RolEnum rol, int cantidadRol, LinkedHashMap<RolEnum, Integer> requerimientos,boolean condicion) {
 		int maximoRequerido = 0;
-		for (int i = 0; i < requerimientos.size(); i++) {
-			if (requerimientos.get(i).getRol().equals(rol)) {
-				maximoRequerido = requerimientos.get(i).getCantidad();
+		for (Entry<RolEnum, Integer> req : requerimientos.entrySet()) {
+			RolEnum rolActual = req.getKey();
+			if (rolActual.equals(rol)) {
+				maximoRequerido = req.getValue();
 			}
 		}
 		return !(cantidadRol >= maximoRequerido) && condicion;
