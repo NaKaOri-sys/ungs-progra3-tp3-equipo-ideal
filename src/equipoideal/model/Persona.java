@@ -1,5 +1,8 @@
 package equipoideal.model;
 
+import java.util.ArrayList;
+import java.util.Objects;
+
 import equipoideal.model.dto.PersonaDto;
 import equipoideal.util.RolEnum;
 
@@ -9,11 +12,8 @@ public class Persona implements Comparable<Persona> {
 	private int calificacion;
 	private RolEnum rol;
 	private String rutaFoto;
+	
 
-	// TODO falta agregar equals y hashcode, para poder comparar personas por su
-	// nombre y apellido, o por un id unico que se le asigne a cada persona. Esto es
-	// importante para evitar duplicados en la lista de personas, y para poder
-	// identificar a las personas de manera univoca en el sistema.
 	public Persona(String nombre, String apellido, int calificacion, RolEnum rol) {
 		this.nombre = nombre;
 		this.apellido = apellido;
@@ -33,9 +33,11 @@ public class Persona implements Comparable<Persona> {
 		return rol;
 	}
 
+	
 	public int getCalificacion() {
 		return calificacion;
 	}
+	
 
 	@Override
 	public int compareTo(Persona persona) {
@@ -53,9 +55,38 @@ public class Persona implements Comparable<Persona> {
 	public void setRutaFoto(String rutaFoto) {
 		this.rutaFoto = rutaFoto;
 	}
-
+	
 	public PersonaDto toDto() {
-		return new PersonaDto(nombre, apellido, calificacion, rol.toString(), rutaFoto);
+		return new PersonaDto(nombre, apellido, calificacion, rol, rutaFoto);
+	}
+	
+	public ArrayList<PersonaDto> transformarEnDto(ArrayList<Persona> lista) {
+		ArrayList<PersonaDto> dto = new ArrayList<>();
+
+		for (Persona p : lista) {
+			dto.add(p.toDto());
+		}
+		
+		return dto;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		
+		Persona other = (Persona) obj;
+		return Objects.equals(nombre, other.nombre) && Objects.equals(apellido, other.apellido);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(nombre, apellido);
 	}
 
 }

@@ -1,42 +1,27 @@
 package equipoideal.controller;
 
+
 import java.util.ArrayList;
 
 import equipoideal.model.Persona;
-import equipoideal.model.PersonaDialogModel;
+import equipoideal.model.PersonaModel;
 import equipoideal.model.dto.PersonaDto;
-import equipoideal.model.event.IObserverPersonas;
-import equipoideal.view.dialogs.PersonasDialog;
+import equipoideal.model.event.IObserverPersona;
+import equipoideal.view.dialogs.PersonaDialog;
 
 
-public class PersonaIntegrationController implements IObserverPersonas {
-	private PersonasDialog vista;
-    private PersonaDialogModel modelo;
-    
-    public PersonaIntegrationController(PersonasDialog vista, PersonaDialogModel modelo) {
+public class PersonaIntegrationController implements IObserverPersona {
+	private PersonaDialog vista;
+
+    public PersonaIntegrationController(PersonaDialog vista, PersonaModel modelo) {
         this.vista = vista;
-        this.modelo = modelo;
-        this.modelo.addObserver(this);
+        modelo.addObserver(this);
     }
-	
+
     @Override
-    public void onListaPersonasModificada(ArrayList<Persona> nuevaLista) {
-    	//TODO esto no se si es realmente necesario, solo generaria el json si se presiona el boton de generar json.
-    	modelo.guardarPersonaEnJSON();
-    	
-        ArrayList<PersonaDto> personasDTO = transformarDTO(nuevaLista);
+	public void onListaPersonasModificada(ArrayList<Persona> nuevaLista) {
+		ArrayList<PersonaDto> dto = nuevaLista.get(0).transformarEnDto(nuevaLista);
+		vista.actualizarTablaPersonas(dto);
+	}
 
-        vista.actualizarTablaPersonas(personasDTO);
-    }
-    
-    private ArrayList<PersonaDto> transformarDTO(ArrayList<Persona> lista) {
-
-        ArrayList<PersonaDto> dto = new ArrayList<>();
-
-        for (Persona p : lista) {
-            dto.add(p.toDto());
-        }
-
-        return dto;
-    }
 }

@@ -7,17 +7,14 @@ import java.awt.GridLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 public abstract class DialogPadre extends JDialog {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	protected JPanel panelPrincipal;
@@ -34,12 +31,12 @@ public abstract class DialogPadre extends JDialog {
 	protected Color ColorFondo = Color.gray;
 
 //    protected  Font Fuente = new Font
-	// TODO porque en el constructor se recibe un Jdialog? al extender de este
-	// dialog, todos ya adquiren la capacidad de ser un dialog, entonces no es
-	// necesario recibirlo como parametro, además queda raro que en Main se pase
-	// null, si no se va a usar, entonces no es necesario recibirlo
-	public DialogPadre(JDialog frame, String titulo) {
-		super(frame, titulo, true);
+	
+	
+	public DialogPadre(String titulo) {
+		this.setResizable(false);
+		setTitle(titulo);
+		setModal(true);
 
 		setSize(800, 600);
 		setLocationRelativeTo(null);
@@ -95,12 +92,21 @@ public abstract class DialogPadre extends JDialog {
 			}
 		};
 
+
 		tabla = new JTable(modeloVacio);
 		scrollPane = new JScrollPane(tabla);
+
+		tabla.setRowSelectionAllowed(true);
+		tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		panelLista.setLayout(new BorderLayout());
 		panelLista.add(scrollPane, BorderLayout.CENTER);
 		panelLista.setBorder(BorderFactory.createEmptyBorder(10, 40, 20, 40));
+	}
+	
+	public void ventanaMensaje(String mensaje) {
+		VentanaEmergente mensajePantalla = new VentanaEmergente(this, mensaje);
+		mensajePantalla.setVisible(true);
 	}
 
 	public abstract void crearInputs();

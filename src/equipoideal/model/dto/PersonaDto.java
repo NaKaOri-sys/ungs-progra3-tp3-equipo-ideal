@@ -1,13 +1,17 @@
 package equipoideal.model.dto;
 
+import equipoideal.util.RolEnum;
+
 public class PersonaDto {
 	private String nombre;
 	private String apellido;
 	private int calificacion;
-	private String rol;
+
+	private RolEnum rol;
 	private String rutaFoto;
 
-	public PersonaDto(String nombre, String apellido, int calificacion, String rol, String rutaFoto) {
+	public PersonaDto(String nombre, String apellido, int calificacion, RolEnum rol, String rutaFoto) {
+
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.calificacion = calificacion;
@@ -16,7 +20,7 @@ public class PersonaDto {
 	}
 
 	public String getRutaFoto() {
-		return this.rutaFoto;
+		return rutaFoto;
 	}
 
 	public String getNombre() {
@@ -27,7 +31,7 @@ public class PersonaDto {
 		return this.apellido;
 	}
 
-	public String getRol() {
+	public RolEnum getRol() {
 		return this.rol;
 	}
 

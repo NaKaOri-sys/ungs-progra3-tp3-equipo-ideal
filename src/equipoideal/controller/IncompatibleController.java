@@ -3,7 +3,7 @@ package equipoideal.controller;
 import java.util.ArrayList;
 import java.util.List;
 import equipoideal.model.Persona;
-import equipoideal.model.PersonaDialogModel;
+import equipoideal.model.PersonaModel;
 import equipoideal.model.IncompatibleModel; 
 import equipoideal.model.listener.IncompatiblesListener;
 import equipoideal.view.dialogs.IncompatibleDialog;
@@ -12,11 +12,11 @@ import equipoideal.view.dialogs.VentanaEmergente;
 public class IncompatibleController implements IncompatiblesListener {
 
     private IncompatibleDialog vista;
-    private PersonaDialogModel personaDialogModel; 
+    private PersonaModel personaDialogModel; 
     private IncompatibleModel incompatibleModel;   
     private List<Persona> listaPersonasTemporal; 
 
-    public IncompatibleController(IncompatibleDialog vista, PersonaDialogModel personaDialogModel, IncompatibleModel incompatibleModel) {
+    public IncompatibleController(IncompatibleDialog vista, PersonaModel personaDialogModel, IncompatibleModel incompatibleModel) {
         this.vista = vista;
         this.personaDialogModel = personaDialogModel;
         this.incompatibleModel = incompatibleModel;        

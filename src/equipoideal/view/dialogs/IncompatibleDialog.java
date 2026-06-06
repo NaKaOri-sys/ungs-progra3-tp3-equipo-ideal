@@ -13,12 +13,16 @@ import equipoideal.model.listener.IncompatiblesListener;
 
 public class IncompatibleDialog extends DialogPadre {
     
-    private JComboBox<String> selectorPersona1;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JComboBox<String> selectorPersona1;
     private JComboBox<String> selectorPersona2;
     private IncompatiblesListener listener;
 
-    public IncompatibleDialog(JDialog frame, String titulo) {
-        super(frame, titulo);
+    public IncompatibleDialog(String titulo) {
+        super(titulo);
         crearInputs();
         accionesBoton();
     }

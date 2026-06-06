@@ -6,19 +6,20 @@ import java.awt.GridLayout;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JTable;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.table.DefaultTableModel;
 
 import equipoideal.model.dto.PersonaDto;
-import equipoideal.model.dto.RequerimientosDto;
-import equipoideal.model.listener.RequerimientosListener;
+import equipoideal.model.dto.RequerimientoDto;
+import equipoideal.model.listener.RequerimientoListener;
 
 
-public class RequerimientosDialog extends DialogPadre{
+public class RequerimientoDialog extends DialogPadre{
 	
 	/**
 	 * 
@@ -28,20 +29,23 @@ public class RequerimientosDialog extends DialogPadre{
 	private JSpinner spinnerArquitecto;
 	private JSpinner spinnerProgramador;
 	private JSpinner spinnerTester;
-	private RequerimientosListener listener;
-
-	public RequerimientosDialog(JDialog frame, String titulo) {
-		super(frame, titulo);
+	private RequerimientoListener listener;
+	
+	private JTable tablaRequerimientos;
+	private DefaultTableModel modeloTRequerimientos;
+	
+	public RequerimientoDialog(String titulo) {
+		super(titulo);
 	}
 	
-	public void setRequerimientosListener(RequerimientosListener listener) {
+	public void setRequerimientosListener(RequerimientoListener listener) {
 		this.listener = listener;
 	}
 	
 	@Override
 	public void crearInputs() {
-		
-		panelInputs.setLayout(new GridLayout(4, 1, 10, 10));
+		btnAceptar.setText("Agregar/Actualizar Requerimientos");
+		panelInputs.setLayout(new GridLayout(5, 1, 10, 10));
 		
 		spinnerLider = crearSpinner();
 	    spinnerArquitecto = crearSpinner();
@@ -53,6 +57,7 @@ public class RequerimientosDialog extends DialogPadre{
 		panelInputs.add(crearFila("Programador", spinnerProgramador));
         panelInputs.add(crearFila("Testers", spinnerTester));
         
+        crearTablaRequerimientos();
         accionesBoton();
         
 		panelInputs.setBorder(BorderFactory.createEmptyBorder(20,200,20,200));
@@ -60,6 +65,26 @@ public class RequerimientosDialog extends DialogPadre{
 		crearTabla();
     }
 		
+	private void crearTablaRequerimientos() {
+		String[] columnas = {"Líder", "Arquitecto", "Programador", "Tester"};
+		modeloTRequerimientos = new DefaultTableModel(columnas, 1) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        
+        tablaRequerimientos = new JTable(modeloTRequerimientos);
+        tablaRequerimientos.getTableHeader().setReorderingAllowed(false);
+        
+        JScrollPane scrollTablaReq = new JScrollPane(tablaRequerimientos);
+        scrollTablaReq.setPreferredSize(new Dimension(0, 45)); 
+        
+        
+        panelInputs.add(scrollTablaReq);
+		
+	}
+
 	private JPanel crearFila(String nombre, JSpinner spinnerFila) {
 		JPanel fila = new JPanel();
 		fila.setLayout(new BorderLayout());
@@ -89,9 +114,10 @@ public class RequerimientosDialog extends DialogPadre{
 			}
 		});
 	}
-		
-	public RequerimientosDto getRequerimientos() {
-	    return new RequerimientosDto(
+	
+	
+	public RequerimientoDto getRequerimientos() {
+	    return new RequerimientoDto(
 	        (int) spinnerLider.getValue(),
 	        (int) spinnerArquitecto.getValue(),
 	        (int) spinnerProgramador.getValue(),
@@ -109,10 +135,19 @@ public class RequerimientosDialog extends DialogPadre{
 	        modelo.addRow(new String[] {
 	            p.getNombre(),
 	            p.getApellido(),
-	            p.getRol(),
+	            p.getRol().toString(),
 	            String.valueOf(p.getCalificacion())
 	        });
 	    }
+	}
+	
+	public void setRequerimientosActuales(RequerimientoDto dto) {
+		if (modeloTRequerimientos != null) {
+			modeloTRequerimientos.setValueAt(dto.getLideres(), 0, 0);
+			modeloTRequerimientos.setValueAt(dto.getArquitectos(), 0, 1);
+			modeloTRequerimientos.setValueAt(dto.getProgramadores(), 0, 2);
+			modeloTRequerimientos.setValueAt(dto.getTesters(), 0, 3);
+		}
 	}
 
 	public void limpiarInputs() {
@@ -127,6 +162,6 @@ public class RequerimientosDialog extends DialogPadre{
 	}
 		
 	
-		
+	
 	
 }

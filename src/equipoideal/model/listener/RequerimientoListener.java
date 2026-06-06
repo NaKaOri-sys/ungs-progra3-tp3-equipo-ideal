@@ -1,6 +1,6 @@
 package equipoideal.model.listener;
 
-public interface RequerimientosListener {
+public interface RequerimientoListener {
     /**
      * Este método se dispara cuando el usuario hace clic en "Agregar" en el JDialog.
      */

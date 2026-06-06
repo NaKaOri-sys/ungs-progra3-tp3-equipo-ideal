@@ -2,7 +2,7 @@ package equipoideal.model.listener;
 
 import java.io.File;
 
-public interface PersonasListener {
+public interface PersonaListener {
     /**
      * Este método se dispara cuando el usuario hace clic en "Agregar" en el JDialog.
      */
@@ -11,4 +11,7 @@ public interface PersonasListener {
 	void onFotoSeleccionada(File imagen);
 	void onExportarJson(String rutaExportarArchivo);
 	void onLimpiarCache();
+	void onEliminarPersona();
+	void onEdicionPersona();
+	void onGuardarEdicionPersona();
 }

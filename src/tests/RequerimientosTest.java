@@ -7,25 +7,25 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
-import equipoideal.model.PersonaDialogModel;
-import equipoideal.model.Requerimiento;
-import equipoideal.model.RequerimientosModel;
-import equipoideal.model.dto.RequerimientosDto;
+import equipoideal.model.PersonaModel;
+import equipoideal.model.RequerimientoModel;
+import equipoideal.model.dto.PersonaDto;
+import equipoideal.model.dto.RequerimientoDto;
 import equipoideal.util.RolEnum;
 
 public class RequerimientosTest {
-	private RequerimientosModel modelo;
-	private PersonaDialogModel personaDialogModel;
+	private RequerimientoModel modelo;
+	private PersonaModel personaDialogModel;
 	
 	@Before
 	public void setUp() throws IOException {
-		personaDialogModel = new PersonaDialogModel(null, null);
-		modelo = new RequerimientosModel(personaDialogModel);
+		personaDialogModel = new PersonaModel(null, null);
+		modelo = new RequerimientoModel(personaDialogModel);
 	}
 	
 	@Test
 	public void crearRequerimientoDtoTest() {
-		RequerimientosDto dto = new RequerimientosDto(1, 2, 3, 4);
+		RequerimientoDto dto = new RequerimientoDto(1, 2, 3, 4);
 		
 		assertEquals(1, dto.getLideres());
 		assertEquals(2, dto.getArquitectos());
@@ -34,78 +34,76 @@ public class RequerimientosTest {
 	}
 	
 	@Test
-	public void crearObjetoRequerimientoTest() {
-		Requerimiento req = new Requerimiento(RolEnum.PROGRAMADOR, 5);
+	public void crearRequerimientosDesdeDTOTest() {
 		
-		assertEquals(RolEnum.PROGRAMADOR, req.getRol());
-		assertEquals(5, req.getCantidad());
+		PersonaDto persona1 = new PersonaDto("Leo", "Messi", 5, RolEnum.LIDER, "rutaFoto");
+		personaDialogModel.agregarPersona(persona1);
+		PersonaDto persona2 = new PersonaDto("Kylian", "Mbappe", 4, RolEnum.ARQUITECTO, "rutaFoto2");
+		personaDialogModel.agregarPersona(persona2);
+	    
+	    RequerimientoDto reqDto = new RequerimientoDto(1, 1, 0, 0);
+	    
+	    modelo.crearRequerimientos(reqDto);
+	    
+	    Integer cantidadLideres = modelo.getRequerimientos().get(RolEnum.LIDER);
+	    assertEquals(Integer.valueOf(1), cantidadLideres);
 	}
 	
-	@Test
-	public void crearRequerimientosDesdeDTOTest() {
-	    
-	    
-	    personaDialogModel.agregarPersona("Leo", "Messi", 5, RolEnum.LIDER, "ruta");
-	    personaDialogModel.agregarPersona("Cristiano", "Ronaldo", 4, RolEnum.ARQUITECTO, "ruta");
-	    
-	    
-	    
-	    RequerimientosDto dto = new RequerimientosDto(1, 1, 0, 0);
-	    
-	    modelo.crearRequerimientos(dto);
-	    
-	    assertEquals(RolEnum.LIDER, modelo.getRequerimientos().get(0).getRol());
-	    assertEquals(1, modelo.getRequerimientos().get(0).getCantidad());
-	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void requerimientosVacioTest() {
-		RequerimientosDto dtoVacio = new RequerimientosDto(0, 0, 0, 0);
+		RequerimientoDto dtoVacio = new RequerimientoDto(0, 0, 0, 0);
 		modelo.crearRequerimientos(dtoVacio);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void masRequerimientosQuePersonasTest() {
-		RequerimientosDto dto = new RequerimientosDto(1, 2, 1, 2);
+		RequerimientoDto dto = new RequerimientoDto(1, 2, 1, 2);
 		modelo.crearRequerimientos(dto);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void faltanLideresTest() {
 		
-		personaDialogModel.agregarPersona("Leo", "Messi", 5, RolEnum.ARQUITECTO, "ruta");
-		personaDialogModel.agregarPersona("Cristiano", "Ronaldo", 4, RolEnum.ARQUITECTO, "ruta");
+		PersonaDto persona1 = new PersonaDto("Leo", "Messi", 5, RolEnum.ARQUITECTO, "ruta");
+		PersonaDto persona2 = new PersonaDto("Cristiano", "Ronaldo", 4, RolEnum.ARQUITECTO, "ruta");
+		personaDialogModel.agregarPersona(persona1);
+		personaDialogModel.agregarPersona(persona2);
 		
-		RequerimientosDto dtoInvalido = new RequerimientosDto(2, 0, 0, 0);
+		RequerimientoDto dtoInvalido = new RequerimientoDto(2, 0, 0, 0);
 		modelo.crearRequerimientos(dtoInvalido);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void faltanArquitectosTest() {
+		PersonaDto persona1 = new PersonaDto("Leo", "Messi", 5, RolEnum.LIDER, "ruta");
+		PersonaDto persona2 = new PersonaDto("Cristiano", "Ronaldo", 4, RolEnum.LIDER, "ruta");
+		personaDialogModel.agregarPersona(persona1);
+		personaDialogModel.agregarPersona(persona2);
 		
-		personaDialogModel.agregarPersona("Leo", "Messi", 5, RolEnum.LIDER, "ruta");
-		personaDialogModel.agregarPersona("Cristiano", "Ronaldo", 4, RolEnum.LIDER, "ruta");
-		
-		RequerimientosDto dtoInvalido = new RequerimientosDto(0, 3, 0, 0);
+		RequerimientoDto dtoInvalido = new RequerimientoDto(0, 3, 0, 0);
 		modelo.crearRequerimientos(dtoInvalido);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void faltanProgramadoresTest() {
-		personaDialogModel.agregarPersona("Leo", "Messi", 5, RolEnum.TESTER, "ruta");
-		personaDialogModel.agregarPersona("Cristiano", "Ronaldo", 4, RolEnum.TESTER, "ruta");
+		PersonaDto persona1 = new PersonaDto("Leo", "Messi", 5, RolEnum.TESTER, "ruta");
+		PersonaDto persona2 = new PersonaDto("Cristiano", "Ronaldo", 4, RolEnum.TESTER, "ruta");
+		personaDialogModel.agregarPersona(persona1);
+		personaDialogModel.agregarPersona(persona2);
 		
-		RequerimientosDto dtoInvalido = new RequerimientosDto(0, 0, 2, 0);
+		RequerimientoDto dtoInvalido = new RequerimientoDto(0, 0, 2, 0);
 		modelo.crearRequerimientos(dtoInvalido);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void faltanTestersTest() {
+		PersonaDto persona1 = new PersonaDto("Leo", "Messi", 5, RolEnum.PROGRAMADOR, "ruta");
+		PersonaDto persona2 = new PersonaDto("Cristiano", "Ronaldo", 4, RolEnum.PROGRAMADOR, "ruta");
+		personaDialogModel.agregarPersona(persona1);
+		personaDialogModel.agregarPersona(persona2);
 		
-		personaDialogModel.agregarPersona("Leo", "Messi", 5, RolEnum.PROGRAMADOR, "ruta");
-		personaDialogModel.agregarPersona("Cristiano", "Ronaldo", 4, RolEnum.PROGRAMADOR, "ruta");
-		
-		RequerimientosDto dtoInvalido = new RequerimientosDto(0, 0, 0, 2);
+		RequerimientoDto dtoInvalido = new RequerimientoDto(0, 0, 0, 2);
 		modelo.crearRequerimientos(dtoInvalido);
 	}
 	
