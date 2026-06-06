@@ -12,6 +12,7 @@ import equipoideal.model.Persona;
 import equipoideal.model.PersonaDialogModel;
 import equipoideal.model.Requerimiento;
 import equipoideal.model.RequerimientosModel;
+import equipoideal.model.SolucionWorkerModel;
 import equipoideal.model.dto.ResultadoComparativoDto;
 import equipoideal.model.event.IObserverNavigation;
 import equipoideal.util.RolEnum;
@@ -78,8 +79,8 @@ public class NavigationController implements IObserverNavigation {
 				this.solucionWorkerController.dispose();
 				this.solucionWorkerController = null;
 			}
-			
-			//TODO cuando ya este incompatibilidades, se puede borrar esto
+
+			// TODO cuando ya este incompatibilidades, se puede borrar esto
 			int tamanio = personaModel.getListaPersonas().size();
 			boolean[][] matrizTest = new boolean[tamanio][tamanio];
 			java.util.Random random = new java.util.Random(System.currentTimeMillis());
@@ -92,17 +93,20 @@ public class NavigationController implements IObserverNavigation {
 					}
 				}
 			}
-			
-			CalculadorBacktracking backtracking = new CalculadorBacktracking(new ArrayList<>(personaModel.getListaPersonas()),
+
+			CalculadorBacktracking backtracking = new CalculadorBacktracking(
+					new ArrayList<>(personaModel.getListaPersonas()),
 					new ArrayList<>(requerimientoModel.getRequerimientos()), matrizTest);
 			CalculadorHeuristica heuristica = new CalculadorHeuristica(new ArrayList<>(personaModel.getListaPersonas()),
 					new ArrayList<>(requerimientoModel.getRequerimientos()), matrizTest);
 
 			CalculadorSolucion calculador = new CalculadorSolucion(backtracking, heuristica);
-			this.resultadoComparativoDto = new ResultadoComparativoDto();
-			this.solucionWorkerController = new SolucionWorkerController(calculador,
-					this.mainView.getPanelBusqueda(), this.navigation, this.resultadoComparativoDto);
+			SolucionWorkerModel workerModel = new SolucionWorkerModel(this.resultadoComparativoDto);
+			
+			this.solucionWorkerController = new SolucionWorkerController(calculador, this.mainView.getPanelBusqueda(),
+					this.navigation, workerModel);
 			this.solucionWorkerController.execute();
+			this.resultadoComparativoDto = workerModel.getResultado();
 			break;
 
 		case RESULTADO:
@@ -110,9 +114,9 @@ public class NavigationController implements IObserverNavigation {
 				this.workerResultController.dispose();
 				this.workerResultController = null;
 			}
-			
-			this.workerResultController = new WorkerResultController(this.mainView.getPanelResultado(),
-					this.navigation, this.resultadoComparativoDto);
+
+			this.workerResultController = new WorkerResultController(this.mainView.getPanelResultado(), this.navigation,
+					this.resultadoComparativoDto);
 			break;
 		}
 		// TODO Actualizar las vistas y crear los Controllers segun los casos.

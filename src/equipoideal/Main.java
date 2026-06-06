@@ -76,7 +76,7 @@ public class Main {
 														// no todo el modelo entero. Además la instancia de este mismo
 														// deberia estar en NavigationController o en MenuController, sino nunca va a
 														// actualizar la matriz y siempre será 0
-
+		
 		new NavigationController(mainView, navigation, personasDialog, personaDialogModel, requerimientosModel,
 				requerimientosDialog, null, incompatibleDialog);
 		navigation.updateView(VentanaEnum.MENU);

@@ -5,28 +5,31 @@ import java.util.List;
 import javax.swing.SwingWorker;
 import equipoideal.model.CalculadorSolucion;
 import equipoideal.model.Navigation;
+import equipoideal.model.SolucionWorkerModel;
 import equipoideal.model.dto.ProgresoEventoDto;
 import equipoideal.util.OrigenCalculadorEnum;
 import equipoideal.model.dto.ResultadoComparativoDto;
 import equipoideal.model.event.IObserverCalculador;
+import equipoideal.model.event.IWorkerObserver;
 import equipoideal.util.VentanaEnum;
 import equipoideal.view.LoadingSolutionPanel;
 
 public class SolucionWorkerController extends SwingWorker<ResultadoComparativoDto, ProgresoEventoDto>
-		implements IObserverCalculador {
+		implements IObserverCalculador, IWorkerObserver {
 
 	private LoadingSolutionPanel viewPanel;
 	private Navigation navigation;
-	private ResultadoComparativoDto resultado;
 	private CalculadorSolucion facade;
+	private SolucionWorkerModel model;
 
 	public SolucionWorkerController(CalculadorSolucion facade, LoadingSolutionPanel viewPanel, Navigation nav,
-			ResultadoComparativoDto resultado) {
+			SolucionWorkerModel model) {
 		this.viewPanel = viewPanel;
+		this.model = model;
 		this.navigation = nav;
-		this.resultado = resultado;
 		this.facade = facade;
 		this.facade.addObserver(this);
+		this.model.addObserver(this);
 	}
 
 	@Override
@@ -45,54 +48,42 @@ public class SolucionWorkerController extends SwingWorker<ResultadoComparativoDt
 		publish(evento);
 	}
 
-	// TODO ver si se puede crear un modelo para el worker asi el controller queda
-	// libre de logica de negocio y se encarga solo de la comunicacion entre el
-	// modelo y la vista, y el modelo se encarga de procesar los eventos y
-	// actualizar el resultado. Esto permitiria que el controller quede mas limpio y
-	// enfocado en la comunicacion, y el modelo se encargue de la logica de negocio
-	// y procesamiento de eventos.
 	@Override
 	protected void process(List<ProgresoEventoDto> chunks) {
 		if (chunks == null || chunks.isEmpty())
 			return;
-		for (ProgresoEventoDto progreso : chunks) {
-			if (progreso != null) {
-				if (progreso.getOrigen() == OrigenCalculadorEnum.BACKTRACKING) {
-					this.resultado.setStatsBacktracking(progreso);
-					viewPanel.actualizarEstadisticas(progreso.getCasosBaseProcesados());
-					viewPanel.actualizarMensaje("Tiempo transcurrido (backtracking): " + progreso.getTiempo() + "ms.");
-				}
-				if (progreso.getOrigen() == OrigenCalculadorEnum.HEURISTICA) {
-					this.resultado.setStatsHeuristica(progreso);
-				}
-			}
-		}
+		this.model.procesarProgreso(chunks);
 	}
 
 	@Override
 	protected void done() {
 		this.facade.removeObserver(this);
 		try {
-			ResultadoComparativoDto resultadoDto = get();
-			if (resultadoDto == null || resultadoDto.getEquipoHeuristica() == null
-					|| resultadoDto.getEquipoBacktracking() == null) {
-				this.viewPanel.mostrarError("El equipo resultante no es valido, vuelva a intentarlo");
-				this.navigation.updateView(VentanaEnum.MENU);
-				return;
-			}
-			viewPanel.finalizarCarga();
-			this.resultado.setEquipoHeuristica(resultadoDto.getEquipoHeuristica());
-			this.resultado.setEquipoBacktracking(resultadoDto.getEquipoBacktracking());
-			this.navigation.updateView(VentanaEnum.RESULTADO);
+			this.model.setResultado(get());
 		} catch (Exception e) {
 			System.err.println(">>> WORKER DONE ERROR: " + e.getMessage());
-			this.viewPanel.mostrarError("Hubo un error al procesar el worker, error: " + e.getMessage());
-			this.navigation.updateView(VentanaEnum.MENU);
-			return;
 		}
 	}
 
 	public void dispose() {
 		this.facade.removeObserver(this);
+	}
+
+	@Override
+	public void onFinish() {
+		viewPanel.finalizarCarga();
+		this.navigation.updateView(VentanaEnum.RESULTADO);
+	}
+
+	@Override
+	public void onProgress(ProgresoEventoDto progress) {
+		viewPanel.actualizarEstadisticas(progress.getCasosBaseProcesados());
+		viewPanel.actualizarMensaje("Tiempo transcurrido (backtracking): " + progress.getTiempo() + "ms.");
+	}
+
+	@Override
+	public void onError(String error) {
+		viewPanel.mostrarError(error);
+		this.navigation.updateView(VentanaEnum.MENU);
 	}
 }
