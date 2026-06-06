@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import equipoideal.model.PersonaModel;
-import equipoideal.model.Requerimiento;
 import equipoideal.model.RequerimientoModel;
 import equipoideal.model.dto.PersonaDto;
 import equipoideal.model.dto.RequerimientoDto;
@@ -35,30 +34,19 @@ public class RequerimientosTest {
 	}
 	
 	@Test
-	public void crearObjetoRequerimientoTest() {
-		Requerimiento req = new Requerimiento(RolEnum.PROGRAMADOR, 5);
-		
-		assertEquals(RolEnum.PROGRAMADOR, req.getRol());
-		assertEquals(5, req.getCantidad());
-	}
-	
-	@Test
 	public void crearRequerimientosDesdeDTOTest() {
-	    
-	    
+		
 		PersonaDto persona1 = new PersonaDto("Leo", "Messi", 5, RolEnum.LIDER, "rutaFoto");
 		personaDialogModel.agregarPersona(persona1);
 		PersonaDto persona2 = new PersonaDto("Kylian", "Mbappe", 4, RolEnum.ARQUITECTO, "rutaFoto2");
 		personaDialogModel.agregarPersona(persona2);
 	    
-	    
-	    
 	    RequerimientoDto reqDto = new RequerimientoDto(1, 1, 0, 0);
 	    
 	    modelo.crearRequerimientos(reqDto);
 	    
-	    assertEquals(RolEnum.LIDER, modelo.getRequerimientos().get(0).getRol());
-	    assertEquals(1, modelo.getRequerimientos().get(0).getCantidad());
+	    Integer cantidadLideres = modelo.getRequerimientos().get(RolEnum.LIDER);
+	    assertEquals(Integer.valueOf(1), cantidadLideres);
 	}
 	
 	

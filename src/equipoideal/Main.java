@@ -5,7 +5,9 @@ import javax.swing.UIManager;
 import equipoideal.controller.IncompatibleController;
 import equipoideal.controller.NavigationController;
 import equipoideal.controller.PersonaController;
+import equipoideal.controller.PersonaIntegrationController;
 import equipoideal.controller.RequerimientoController;
+import equipoideal.controller.RequerimientoIntegrationController;
 import equipoideal.model.CalculadorBacktracking;
 import equipoideal.model.CalculadorHeuristica;
 import equipoideal.model.CalculadorSolucion;
@@ -49,14 +51,18 @@ public class Main {
 		PersonaDialog personasDialog = new PersonaDialog("Gestion de Personas");
 		personasDialog.crearInputs();
 		PersonaController personaController = new PersonaController(personasDialog, personaDialogModel);
-		
+		PersonaIntegrationController personaIntegrationController = new PersonaIntegrationController(personasDialog,
+				personaDialogModel);
 
 		// REQUERIMIENTOS
 		RequerimientoModel requerimientosModel = new RequerimientoModel(personaDialogModel);
 		RequerimientoDialog requerimientosDialog = new RequerimientoDialog("Gestion de Requerimientos");
 		requerimientosDialog.crearInputs();
-		RequerimientoController requerimientosController = new RequerimientoController(requerimientosDialog, requerimientosModel, personaDialogModel);
+		RequerimientoController requerimientosController = new RequerimientoController(requerimientosDialog, requerimientosModel);
+		RequerimientoIntegrationController reqIntegrationController = new RequerimientoIntegrationController(
+				requerimientosDialog, personaDialogModel);
 		 // TODO este controller no tiene mucho sentido que guarde
+		
 		// personas, deberia simplemente cargar los requerimientos y
 		// mostrarlos en la tabla que muestra las personas
 

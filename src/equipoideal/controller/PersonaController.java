@@ -22,13 +22,6 @@ public class PersonaController implements PersonaListener {
 		this.vista = vista;
 		this.modelo = modelo;
 		this.vista.setPersonasListener(this);
-		
-		modelo.addObserver(nuevaLista -> {
-			if (nuevaLista != null && !nuevaLista.isEmpty()) {
-				ArrayList<PersonaDto> dto = nuevaLista.get(0).transformarEnDto(nuevaLista);
-				this.vista.actualizarTablaPersonas(dto);
-			}
-		});
 	}
 
 	@Override

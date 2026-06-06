@@ -1,10 +1,11 @@
 package equipoideal.model.event;
 
-import java.util.ArrayList;
-import equipoideal.model.Requerimiento;
+import java.util.Map;
+
+import equipoideal.util.RolEnum;
 
 public interface IObserverRequerimiento {
 
-	void onRequerimientosCreados(ArrayList<Requerimiento> nuevosRequerimientos);
+	void onRequerimientosCreados(Map<RolEnum, Integer> nuevosRequerimientos);
 
 }
