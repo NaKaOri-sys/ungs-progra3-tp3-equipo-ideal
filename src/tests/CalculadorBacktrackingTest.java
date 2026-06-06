@@ -82,7 +82,6 @@ public class CalculadorBacktrackingTest {
 	@Test
 	public void testBacktracking_SinSolucion() {
 		requerimientos.put(RolEnum.TESTER, 3);
-		System.out.println("Requerimientos: " + requerimientos.toString());
 		calc = new CalculadorBacktracking(personas, requerimientos, incompatibilidades);
 		EquipoDto resultado = calc.calcularMejorEquipo();
 
