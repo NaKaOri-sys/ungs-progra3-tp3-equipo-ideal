@@ -21,9 +21,11 @@ public class IncompatibleDialog extends DialogPadre {
     private JComboBox<String> selectorPersona2;
     private IncompatiblesListener listener;
 
+
     public IncompatibleDialog(String titulo) {
         super(titulo);
         crearInputs();
+
         accionesBoton();
     }
 
@@ -86,8 +88,12 @@ public class IncompatibleDialog extends DialogPadre {
         }
     }
 
-    public int getIndexPersona1() { return selectorPersona1.getSelectedIndex(); }
-    public int getIndexPersona2() { return selectorPersona2.getSelectedIndex(); }
+    public int getIndexPersona1() { 
+    	return selectorPersona1.getSelectedIndex();
+    	}
+    public int getIndexPersona2() {
+    	return selectorPersona2.getSelectedIndex();
+    	}
 
     public void agregarIncompatibilidadTabla(String p1, String p2) {
         DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
@@ -98,8 +104,7 @@ public class IncompatibleDialog extends DialogPadre {
     public void accionesBoton() {
         btnAceptar.addActionListener(e -> {
             if (listener != null) listener.onIncompatibilidadRegistrada();
-        });
-       
+        }); 
     }
 
     @Override
@@ -111,4 +116,10 @@ public class IncompatibleDialog extends DialogPadre {
     public JButton getBtnAceptar() {
         return btnAceptar; 
     }
+    
+    public void mostrarMensajeError(String mensaje) {
+        VentanaEmergente error = new VentanaEmergente(this, mensaje);
+        error.setVisible(true);
+    }
+    
 }

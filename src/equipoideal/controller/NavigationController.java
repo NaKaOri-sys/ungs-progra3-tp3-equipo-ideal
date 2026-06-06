@@ -38,6 +38,8 @@ public class NavigationController implements IObserverNavigation {
 	private MenuController menuController;
 	private SolucionWorkerController solucionWorkerController;
 	private WorkerResultController workerResultController;
+	
+	private IncompatibleController incompatibleController;
 
 	private ResultadoComparativoDto resultadoComparativoDto;
 
@@ -54,6 +56,8 @@ public class NavigationController implements IObserverNavigation {
 		this.requerimientoModel = requerimientoModel;
 		this.incompatibleModel = incompatibleModel;
 		this.resultadoComparativoDto = new ResultadoComparativoDto();
+		
+		this.incompatibleController = new IncompatibleController(this.incompatibleDialog, this.personaModel.getListaPersonas(), this.incompatibleModel);
 		this.navigation.addObserver(this);
 	}
 
@@ -80,19 +84,7 @@ public class NavigationController implements IObserverNavigation {
 				this.solucionWorkerController = null;
 			}
 
-			// TODO cuando ya este incompatibilidades, se puede borrar esto
-			int tamanio = personaModel.getListaPersonas().size();
-			boolean[][] matrizTest = new boolean[tamanio][tamanio];
-			java.util.Random random = new java.util.Random(System.currentTimeMillis());
-			for (int i = 0; i < tamanio; i++) {
-				for (int j = i + 1; j < tamanio; j++) {
-					boolean incompatible = random.nextDouble() < 0.01;
-					if (incompatible) {
-						matrizTest[i][j] = true;
-						matrizTest[j][i] = true;
-					}
-				}
-			}
+			boolean[][] matrizRealDeIncompatibilidades = this.incompatibleModel.getMatrizIncompatibilidades();
 
 			CalculadorBacktracking backtracking = new CalculadorBacktracking(
 					new ArrayList<>(personaModel.getListaPersonas()),

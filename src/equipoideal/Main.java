@@ -66,20 +66,18 @@ public class Main {
 		// personas, deberia simplemente cargar los requerimientos y
 		// mostrarlos en la tabla que muestra las personas
 
+
+
 		// INCOMPATIBILIDAD
 		IncompatibleDialog incompatibleDialog = new IncompatibleDialog("Gestion de Incompatibilidades");
-		incompatibleDialog.crearInputs();
+        incompatibleDialog.crearInputs();
 
-		IncompatibleModel incompatibleModel = new IncompatibleModel(personaDialogModel.getListaPersonas().size());
-		IncompatibleController incompatibleController = new IncompatibleController(incompatibleDialog,
-				personaDialogModel, incompatibleModel); // TODO este controller depende de que hayan personas cargadas,
-														// por lo tanto hay que pasarle solamente la lista de personas,
-														// no todo el modelo entero. Además la instancia de este mismo
-														// deberia estar en NavigationController o en MenuController, sino nunca va a
-														// actualizar la matriz y siempre será 0
-		
+        IncompatibleModel incompatibleModel = new IncompatibleModel(personaDialogModel.getListaPersonas().size());
+        
+
+
 		new NavigationController(mainView, navigation, personasDialog, personaDialogModel, requerimientosModel,
-				requerimientosDialog, null, incompatibleDialog);
+                requerimientosDialog, incompatibleModel, incompatibleDialog);
 		navigation.updateView(VentanaEnum.MENU);
 
 		mainView.setVisible(true);

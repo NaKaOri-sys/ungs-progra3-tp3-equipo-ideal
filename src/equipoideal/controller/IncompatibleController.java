@@ -3,7 +3,6 @@ package equipoideal.controller;
 import java.util.ArrayList;
 import java.util.List;
 import equipoideal.model.Persona;
-import equipoideal.model.PersonaModel;
 import equipoideal.model.IncompatibleModel; 
 import equipoideal.model.listener.IncompatiblesListener;
 import equipoideal.view.dialogs.IncompatibleDialog;
@@ -12,28 +11,31 @@ import equipoideal.view.dialogs.VentanaEmergente;
 public class IncompatibleController implements IncompatiblesListener {
 
     private IncompatibleDialog vista;
-    private PersonaModel personaDialogModel; 
     private IncompatibleModel incompatibleModel;   
     private List<Persona> listaPersonasTemporal; 
 
-    public IncompatibleController(IncompatibleDialog vista, PersonaModel personaDialogModel, IncompatibleModel incompatibleModel) {
+    // Ahora recibe la lista directa de personas .A
+    public IncompatibleController(IncompatibleDialog vista, List<Persona> listaPersonas, IncompatibleModel incompatibleModel) {
         this.vista = vista;
-        this.personaDialogModel = personaDialogModel;
-        this.incompatibleModel = incompatibleModel;        
-        this.vista.setIncompatiblesListener(this);
-        this.listaPersonasTemporal = new ArrayList<>();
-        this.incompatibleModel.actualizarTamañoMatriz(personaDialogModel.getListaPersonas().size());
+        this.listaPersonasTemporal = listaPersonas;
+        this.incompatibleModel = incompatibleModel;
         
-        actualizarSelectores();
+        this.vista.setIncompatiblesListener(this);
+        
+        // La primera carga se hace con lo que haya al iniciar
+        refrescarPantalla();
     }
 
-    public void actualizarSelectores() {
-        listaPersonasTemporal = personaDialogModel.getListaPersonas();
+    //  Este método lo va a llamar el NavigationController .C
+    public void refrescarPantalla() {
+        // Sincroniza el tamaño de la matriz con los empleados actuales
+        this.incompatibleModel.actualizarTamañoMatriz(listaPersonasTemporal.size());
+        
+        // Vuelve a llenar los comboboxes de la pantalla
         List<String> nombresCompletos = new ArrayList<>();
         for (Persona empleado : listaPersonasTemporal) {
             nombresCompletos.add(empleado.getNombre() + " " + empleado.getApellido() + " (" + empleado.getRol() + ")");
         }
-        
         vista.cargarPersonasEnSelectores(nombresCompletos);
     }
     
@@ -42,21 +44,29 @@ public class IncompatibleController implements IncompatiblesListener {
         int indiceSeleccionadoA = vista.getIndexPersona1();
         int indiceSeleccionadoB = vista.getIndexPersona2();
 
-        if (indiceSeleccionadoA == -1 || indiceSeleccionadoB == -1) return;
+        if (indiceSeleccionadoA == -1 || indiceSeleccionadoB == -1) 
+        	return;
 
         if (indiceSeleccionadoA == indiceSeleccionadoB) {
-            VentanaEmergente error = new VentanaEmergente(vista, "Una persona no puede ser incompatible con ella misma.");
-            error.setVisible(true);
+        	vista.mostrarMensajeError("Una persona no puede ser incompatible con ella misma.");
             return;
         }
 
         incompatibleModel.registrarIncompatibilidad(indiceSeleccionadoA, indiceSeleccionadoB);
 
-
-        String nombreEmpleadoA = personaDialogModel.obtenerNombrePorIndice(indiceSeleccionadoA); 
-        String nombreEmpleadoB = personaDialogModel.obtenerNombrePorIndice(indiceSeleccionadoB);
+        // cambie: Ahora busca el nombre en mi propia lista temporal
+        String nombreEmpleadoA = obtenerNombrePorHistorial(indiceSeleccionadoA); 
+        String nombreEmpleadoB = obtenerNombrePorHistorial(indiceSeleccionadoB);
         
         vista.agregarIncompatibilidadTabla(nombreEmpleadoA, nombreEmpleadoB);
         vista.limpiarInputs();
+    }
+
+    private String obtenerNombrePorHistorial(int indice) {
+        if (indice >= 0 && indice < listaPersonasTemporal.size()) {
+            Persona p = listaPersonasTemporal.get(indice);
+            return p.getNombre() + " " + p.getApellido();
+        }
+        return "";
     }
 }
