@@ -1,38 +1,40 @@
 package equipoideal.util;
 
+import equipoideal.model.dto.PersonaDto;
+
 public class PersonaValidator {
 
-	public static void validarPersona(String nombre, String apellido, int puntos, RolEnum rol) {
+	public static void validarPersona(PersonaDto dto) {
 
-	    if (nombre == null || nombre.trim().isEmpty()) {
+	    if (dto.getNombre() == null || dto.getNombre().trim().isEmpty()) {
 	        throw new IllegalArgumentException("El nombre no puede estar vacío.");
 	    }
 
-	    if (apellido == null || apellido.trim().isEmpty()) {
+	    if (dto.getApellido() == null || dto.getApellido().trim().isEmpty()) {
 	        throw new IllegalArgumentException("El apellido no puede estar vacío.");
 	    }
 
-	    if (rol == null) {
+	    if (dto.getRol() == null) {
 	        throw new IllegalArgumentException("El rol es inválido.");
 	    }
 
-	    if (nombre.length() < 2 || nombre.length() > 30) {
+	    if (dto.getNombre().length() < 2 || dto.getNombre().length() > 30) {
 	        throw new IllegalArgumentException("El nombre debe tener entre 2 y 30 caracteres.");
 	    }
 
-	    if (apellido.length() < 2 || apellido.length() > 30) {
+	    if (dto.getApellido().length() < 2 || dto.getApellido().length() > 30) {
 	        throw new IllegalArgumentException("El apellido debe tener entre 2 y 30 caracteres.");
 	    }
 	    
-	    if (!contieneSoloLetras(nombre)) {
+	    if (!contieneSoloLetras(dto.getNombre())) {
 	        throw new IllegalArgumentException("El nombre solo puede tener letras.");
 	    }
 	    
-	    if (!contieneSoloLetras(apellido)) {
+	    if (!contieneSoloLetras(dto.getApellido())) {
 	        throw new IllegalArgumentException("El apellido solo puede tener letras.");
 	    }
 	    
-	    if (puntos < 1 || puntos > 5) {
+	    if (dto.getCalificacion() < 1 || dto.getCalificacion() > 5) {
 	        throw new IllegalArgumentException("La puntuación debe estar entre 1 y 5.");
 	    }
 	}

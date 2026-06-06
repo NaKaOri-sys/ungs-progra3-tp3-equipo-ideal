@@ -11,21 +11,15 @@ public class PersonaRepositoryJson implements PersonaRepository{
 	public PersonaRepositoryJson(String archivo) {
 		this.archivo = archivo;
 	}
-	//TODO archivo1? xD
 	@Override
-	public ArrayList<Persona> loadAll(String archivo1) {
-	    return PersonaArchivo.cargarJSON(archivo1);
+	public ArrayList<Persona> loadAll(String archivoJSON) {
+	    return PersonaArchivo.cargarJSON(archivoJSON);
 	}
 
 	@Override
 	public void saveAll(ArrayList<Persona> personas) {
 		PersonaArchivo.generarJsonPersona(archivo, personas);
 		
-	}
-
-	@Override
-	public void cleanAll() {
-		PersonaArchivo.limpiarArchivoJson(archivo);
 	}
 
 	@Override

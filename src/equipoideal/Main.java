@@ -4,25 +4,23 @@ import javax.swing.UIManager;
 
 import equipoideal.controller.IncompatibleController;
 import equipoideal.controller.NavigationController;
-import equipoideal.controller.PersonaIntegrationController;
-import equipoideal.controller.PersonasController;
-import equipoideal.controller.RequerimientoIntegrationController;
-import equipoideal.controller.RequerimientosController;
+import equipoideal.controller.PersonaController;
+import equipoideal.controller.RequerimientoController;
 import equipoideal.model.CalculadorBacktracking;
 import equipoideal.model.CalculadorHeuristica;
 import equipoideal.model.CalculadorSolucion;
 import equipoideal.model.IncompatibleModel;
 import equipoideal.model.Navigation;
-import equipoideal.model.PersonaDialogModel;
-import equipoideal.model.RequerimientosModel;
+import equipoideal.model.PersonaModel;
+import equipoideal.model.RequerimientoModel;
 import equipoideal.model.dto.ResultadoComparativoDto;
 import equipoideal.model.repository.PersonaRepository;
 import equipoideal.model.repository.PersonaRepositoryJson;
 import equipoideal.util.VentanaEnum;
 import equipoideal.view.MainView;
 import equipoideal.view.dialogs.IncompatibleDialog;
-import equipoideal.view.dialogs.PersonasDialog;
-import equipoideal.view.dialogs.RequerimientosDialog;
+import equipoideal.view.dialogs.PersonaDialog;
+import equipoideal.view.dialogs.RequerimientoDialog;
 
 public class Main {
 	private static final String FILE_PATH = "personas.json";
@@ -46,27 +44,24 @@ public class Main {
 		// NavigationController, PersonasController, RequerimientosController
 
 		PersonaRepository repository = new PersonaRepositoryJson(FILE_PATH);
-		PersonaDialogModel personaDialogModel = new PersonaDialogModel(repository, FOLDER_PATH);
+		PersonaModel personaDialogModel = new PersonaModel(repository, FOLDER_PATH);
 		// PERSONAS
-		PersonasDialog personasDialog = new PersonasDialog(null, "PersonasDialog");
+		PersonaDialog personasDialog = new PersonaDialog("Gestion de Personas");
 		personasDialog.crearInputs();
-		PersonasController personaController = new PersonasController(personasDialog, personaDialogModel);
-		PersonaIntegrationController personaIntegrationController = new PersonaIntegrationController(personasDialog,
-				personaDialogModel);
+		PersonaController personaController = new PersonaController(personasDialog, personaDialogModel);
+		
 
 		// REQUERIMIENTOS
-		RequerimientosModel requerimientosModel = new RequerimientosModel(personaDialogModel);
-		RequerimientosDialog requerimientosDialog = new RequerimientosDialog(null, "RequerimientosDialog");
+		RequerimientoModel requerimientosModel = new RequerimientoModel(personaDialogModel);
+		RequerimientoDialog requerimientosDialog = new RequerimientoDialog("Gestion de Requerimientos");
 		requerimientosDialog.crearInputs();
-		RequerimientosController requerimientosController = new RequerimientosController(requerimientosDialog,
-				requerimientosModel);
-		RequerimientoIntegrationController reqIntegrationController = new RequerimientoIntegrationController(
-				requerimientosDialog, personaDialogModel); // TODO este controller no tiene mucho sentido que guarde
-															// personas, deberia simplemente cargar los requerimientos y
-															// mostrarlos en la tabla que muestra las personas
+		RequerimientoController requerimientosController = new RequerimientoController(requerimientosDialog, requerimientosModel, personaDialogModel);
+		 // TODO este controller no tiene mucho sentido que guarde
+		// personas, deberia simplemente cargar los requerimientos y
+		// mostrarlos en la tabla que muestra las personas
 
 		// INCOMPATIBILIDAD
-		IncompatibleDialog incompatibleDialog = new IncompatibleDialog(null, "IncompatibleDialog");
+		IncompatibleDialog incompatibleDialog = new IncompatibleDialog("Gestion de Incompatibilidades");
 		incompatibleDialog.crearInputs();
 
 		IncompatibleModel incompatibleModel = new IncompatibleModel(personaDialogModel.getListaPersonas().size());

@@ -61,20 +61,6 @@ public class PersonaArchivoTest {
 	}
 	
 	@Test
-	public void limpiarArchivoJsonTest() throws IOException {
-		
-		File archivoTemporal = carpetaTemporal.newFile("personas.json");
-		
-		PersonaArchivo.generarJsonPersona(archivoTemporal.getAbsolutePath(), personas);
-		
-		PersonaArchivo.limpiarArchivoJson(archivoTemporal.getAbsolutePath());
-		
-		ArrayList<Persona> personasCargadas = PersonaArchivo.cargarJSON(archivoTemporal.getAbsolutePath());
-		
-		assertEquals(0, personasCargadas.size());
-	}
-	
-	@Test
 	public void exportarArchivoJsonTest() throws IOException {
 		
 		File origen = carpetaTemporal.newFile("origen.json");
@@ -136,5 +122,12 @@ public class PersonaArchivoTest {
 		writer.close();
 		
 		PersonaArchivo.cargarJSON(archivoTemporal.getAbsolutePath());
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void cargarJsonArchivoTotalmenteVacioTest() throws IOException {
+		File archivoVacio = carpetaTemporal.newFile("vacio.json");
+		
+		PersonaArchivo.cargarJSON(archivoVacio.getAbsolutePath());
 	}
 }

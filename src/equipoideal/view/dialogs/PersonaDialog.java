@@ -13,9 +13,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -24,111 +22,132 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
-import equipoideal.model.Incompatibilidad;
-import equipoideal.model.Persona;
 import equipoideal.model.dto.PersonaDto;
-import equipoideal.model.listener.PersonasListener;
+import equipoideal.model.listener.PersonaListener;
 import equipoideal.util.RolEnum;
 
 
 
-public class PersonasDialog extends DialogPadre{
+public class PersonaDialog extends DialogPadre{
 	private static final long serialVersionUID = 1L;
-	private JButton btnCargarDesde;
-	private JTextField txtNombre;
-	private JTextField txtApellido;
-	private JSpinner spinnerPuntuacion;
-	private JComboBox<RolEnum> comboRol;
-	private JButton btnFoto;
+	protected JButton btnCargarDesde;
+	protected JTextField txtNombre;
+	protected JTextField txtApellido;
+	protected JSpinner spinnerPuntuacion;
+	protected JComboBox<RolEnum> comboRol;
+	protected JButton btnFoto;
 	private JButton btnExportar;
 	private JButton btnLimpiarCache;
+	private JButton btnEditarPersona;
+	private JButton btnEliminarPersona;
 	private JPanel panelBotonesNuevos;
-	private PersonasListener listener;
+	protected PersonaListener listener;
 	private JLabel lblImagen;
-	private JPanel panelFoto;
-	private String rutaFoto;
+	protected JPanel panelFoto;
+	protected String rutaFoto;
 
 
-	public PersonasDialog(JDialog frame, String titulo) {
-		super(frame, titulo);
+	public PersonaDialog(String titulo) {
+		super(titulo);
 		
 	}
 	
-	public void setPersonasListener(PersonasListener listener) {
+	public void setPersonasListener(PersonaListener listener) {
 		this.listener = listener;
 	}
 
 	@Override
 	public void crearInputs() {
-		
+
+		crearFormularioPersonas();
+
+		btnExportar = new JButton("Descargar JSON");
+		panelBotones.add(btnExportar);
+
+		btnLimpiarCache = new JButton("Limpiar cache imagenes");
+		panelBotones.add(btnLimpiarCache);
+
+		crearTabla();
+
+		btnEditarPersona = new JButton("Editar");
+		btnEliminarPersona = new JButton("Eliminar");
+
+		JPanel panelAccionesTabla = new JPanel();
+		panelAccionesTabla.setLayout(new GridLayout(2, 1, 0, 10));
+
+		panelAccionesTabla.add(btnEditarPersona);
+		panelAccionesTabla.add(btnEliminarPersona);
+
+		panelLista.add(panelAccionesTabla, BorderLayout.EAST);
+
+		accionesBoton();
+	}
+	
+	protected void crearFormularioPersonas() {
+
 		panelInputs.setLayout(new BorderLayout(0, 10));
+
+		panelBotonesNuevos = new JPanel(new BorderLayout());
+		panelBotonesNuevos.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+		panelBotonesNuevos.setOpaque(false);
 		
 		btnCargarDesde = new JButton("Cargar Personas");
 		btnCargarDesde.setPreferredSize(new Dimension(180, 40));
 		
-		panelBotonesNuevos = new JPanel(new BorderLayout());
-		panelBotonesNuevos.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-		panelBotonesNuevos.setOpaque(false);
-	    
-		panelFoto = new JPanel(new CardLayout());
-		panelFoto.setPreferredSize(new Dimension(120, 120));
-	    
-		btnFoto = new JButton("Foto");
-		lblImagen = new JLabel();
-		lblImagen.setHorizontalAlignment(JLabel.CENTER);
-
-		panelFoto.add(btnFoto, "BTN");
-		panelFoto.add(lblImagen, "IMG");
-		
-		panelBotonesNuevos.add(panelFoto, BorderLayout.WEST);
-		
-		btnExportar = new JButton("Descargar JSON");
-		panelBotones.add(btnExportar);
-		
-		btnLimpiarCache = new JButton("Limpiar cache imagenes");
-		panelBotones.add(btnLimpiarCache);
-
 		JPanel panelDerecho = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		panelDerecho.setOpaque(false);
 		panelDerecho.add(btnCargarDesde);
 
 		panelBotonesNuevos.add(panelDerecho, BorderLayout.EAST);
-	    
-	    JPanel nuevosInputs = new JPanel(new GridLayout(4, 2, 10, 10)); 
-	    nuevosInputs.setOpaque(false);
-		//TODO queda mejor solo Nombre, Apellido, Rol y Puntuacion, sin el "Ingrese"
-		JLabel lblNombre = new JLabel("Ingrese Nombre:");
+
+		panelFoto = new JPanel(new CardLayout());
+		panelFoto.setPreferredSize(new Dimension(120, 120));
+
+		btnFoto = new JButton("Foto");
+
+		lblImagen = new JLabel();
+		lblImagen.setHorizontalAlignment(JLabel.CENTER);
+
+		panelFoto.add(btnFoto, "BTN");
+		panelFoto.add(lblImagen, "IMG");
+
+		panelBotonesNuevos.add(panelFoto, BorderLayout.WEST);
+
+		JPanel nuevosInputs = new JPanel(new GridLayout(4, 2, 10, 10));
+		nuevosInputs.setOpaque(false);
+
+		JLabel lblNombre = new JLabel("Nombre:");
 		txtNombre = new JTextField();
-		
-		JLabel lblApellido = new JLabel("Ingrese Apellido:");
+
+		JLabel lblApellido = new JLabel("Apellido:");
 		txtApellido = new JTextField();
-		
-		JLabel lblPuntuacion = new JLabel("Ingrese Puntos:");
-		spinnerPuntuacion = new JSpinner( new SpinnerNumberModel( 1,1,5, 1));
-		((JSpinner.DefaultEditor) spinnerPuntuacion.getEditor()).getTextField().setEditable(false);
-		//TODO lo mismo que en el todo de arriba, queda mejor solo Rol, sin el "Ingrese"
-		JLabel lblRol = new JLabel("Ingrese Puesto:");
+
+		JLabel lblPuntuacion = new JLabel("Puntos:");
+
+		spinnerPuntuacion =new JSpinner(new SpinnerNumberModel(1, 1, 5, 1));
+
+		((JSpinner.DefaultEditor)spinnerPuntuacion.getEditor()).getTextField().setEditable(false);
+
+		JLabel lblRol = new JLabel("Puesto:");
+
 		comboRol = new JComboBox<>(RolEnum.values());
-		
+
 		nuevosInputs.add(lblNombre);
 		nuevosInputs.add(lblApellido);
-		
+
 		nuevosInputs.add(txtNombre);
 		nuevosInputs.add(txtApellido);
-		
+
 		nuevosInputs.add(lblPuntuacion);
 		nuevosInputs.add(lblRol);
-		
+
 		nuevosInputs.add(spinnerPuntuacion);
 		nuevosInputs.add(comboRol);
-		
+
 		panelInputs.add(panelBotonesNuevos, BorderLayout.NORTH);
 		panelInputs.add(nuevosInputs, BorderLayout.CENTER);
-		
-		panelBotonesNuevos.setBorder(BorderFactory.createEmptyBorder(10,40,20,40));
-		
-		crearTabla();
-        accionesBoton();
+
+		panelBotonesNuevos.setBorder(BorderFactory.createEmptyBorder(10, 40, 20, 40));
 	}
 
 	@Override
@@ -141,28 +160,13 @@ public class PersonasDialog extends DialogPadre{
 		});
 		
 		
-		btnFoto.addActionListener(e -> {
-
-		    JFileChooser fileChooser = new JFileChooser();
-		    fileChooser.setFileFilter(new FileNameExtensionFilter(
-		        "Archivos .png .jpg . jpeg", "jpg", "png", "jpeg"
-		    ));
-
-		    int result = fileChooser.showOpenDialog(this);
-
-		    if (result == JFileChooser.APPROVE_OPTION) {
-		        File imagenSeleccionada = fileChooser.getSelectedFile();
-		        
-		        if (listener != null) {
-					listener.onFotoSeleccionada(imagenSeleccionada);
-				}
-		    }
-		    
-		});
+		btnFoto.addActionListener(e -> cargarImagen());
 		
 		btnCargarDesde.addActionListener(e -> {
 			
 			JFileChooser fileChooser = new JFileChooser();
+			
+			fileChooser.setDialogTitle("Elegir archivo JSON");
 
 		    fileChooser.setFileFilter( new FileNameExtensionFilter("Archivos .json", "json"));
 
@@ -183,9 +187,7 @@ public class PersonasDialog extends DialogPadre{
 
 		    fileChooser.setDialogTitle("Guardar JSON");
 
-		    fileChooser.setFileFilter(
-		        new FileNameExtensionFilter("Archivos JSON", "json")
-		    );
+		    fileChooser.setFileFilter(new FileNameExtensionFilter("Archivos JSON", "json"));
 
 		    int resultado = fileChooser.showSaveDialog(this);
 
@@ -204,11 +206,44 @@ public class PersonasDialog extends DialogPadre{
 		        }
 		    }
 		});
+		
 		btnLimpiarCache.addActionListener(e -> {
 			if (listener != null) {
 	            listener.onLimpiarCache();
 	        }
 		});
+		
+		btnEditarPersona.addActionListener(e -> {
+			if (listener != null) {
+	            listener.onEdicionPersona();
+	        }
+		});
+		
+		btnEliminarPersona.addActionListener(e -> {
+			if (listener != null) {
+	            listener.onEliminarPersona();
+	        }
+		});
+	}
+	
+	
+	
+	protected void cargarImagen() {
+
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogTitle("Elegir Imagen");
+		fileChooser.setFileFilter(new FileNameExtensionFilter("Archivos .png .jpg . jpeg", "jpg", "png", "jpeg"));
+
+		int result = fileChooser.showOpenDialog(this);
+
+		if (result == JFileChooser.APPROVE_OPTION) {
+
+			File imagenSeleccionada = fileChooser.getSelectedFile();
+
+			if (listener != null) {
+				listener.onFotoSeleccionada(imagenSeleccionada);
+			}
+		}
 	}
 	
 	public void mostrarImagen(String rutaFoto) {
@@ -236,7 +271,7 @@ public class PersonasDialog extends DialogPadre{
 	        modelo.addRow(new String[] {
 	            p.getNombre(),
 	            p.getApellido(),
-	            p.getRol(),
+	            p.getRol().toString(),
 	            String.valueOf(p.getCalificacion())
 	        });
 	    }
@@ -262,27 +297,17 @@ public class PersonasDialog extends DialogPadre{
 	    rutaFoto = null;
 	}
 	
-	// GETS
-	public String getNombre() {
-	    return txtNombre.getText();
-	}
-
-	public String getApellido() {
-	    return txtApellido.getText();
-	}
-
-	public int getPuntos() {
-	    return (int) spinnerPuntuacion.getValue();
-	}
-
-	public RolEnum getRol() {
-	    return (RolEnum) comboRol.getSelectedItem();
-	}
-
-	public String getRutaFoto() {
-	    return rutaFoto;
+	public PersonaDto getPersona() {
+		return new PersonaDto(
+				txtNombre.getText(), 
+				txtApellido.getText(), 
+				(int) spinnerPuntuacion.getValue(), 
+				(RolEnum) comboRol.getSelectedItem(),
+				rutaFoto);
 	}
 	
-	
-	
+	public int getFilaSeleccionada() {
+		return tabla.getSelectedRow();
+	}
+
 }

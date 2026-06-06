@@ -9,9 +9,9 @@ import equipoideal.model.CalculadorSolucion;
 import equipoideal.model.IncompatibleModel;
 import equipoideal.model.Navigation;
 import equipoideal.model.Persona;
-import equipoideal.model.PersonaDialogModel;
+import equipoideal.model.PersonaModel;
 import equipoideal.model.Requerimiento;
-import equipoideal.model.RequerimientosModel;
+import equipoideal.model.RequerimientoModel;
 import equipoideal.model.SolucionWorkerModel;
 import equipoideal.model.dto.ResultadoComparativoDto;
 import equipoideal.model.event.IObserverNavigation;
@@ -19,20 +19,20 @@ import equipoideal.util.RolEnum;
 import equipoideal.util.VentanaEnum;
 import equipoideal.view.MainView;
 import equipoideal.view.dialogs.IncompatibleDialog;
-import equipoideal.view.dialogs.PersonasDialog;
-import equipoideal.view.dialogs.RequerimientosDialog;
+import equipoideal.view.dialogs.PersonaDialog;
+import equipoideal.view.dialogs.RequerimientoDialog;
 
 public class NavigationController implements IObserverNavigation {
 
 	private MainView mainView;
 	private Navigation navigation;
 
-	private PersonasDialog personasDialog;
-	private RequerimientosDialog requerimientosDialog;
+	private PersonaDialog personasDialog;
+	private RequerimientoDialog requerimientosDialog;
 	private IncompatibleDialog incompatibleDialog;
 
-	private PersonaDialogModel personaModel;
-	private RequerimientosModel requerimientoModel;
+	private PersonaModel personaModel;
+	private RequerimientoModel requerimientoModel;
 	private IncompatibleModel incompatibleModel;
 
 	private MenuController menuController;
@@ -41,9 +41,9 @@ public class NavigationController implements IObserverNavigation {
 
 	private ResultadoComparativoDto resultadoComparativoDto;
 
-	public NavigationController(MainView mainView, Navigation navigation, PersonasDialog personasDialog,
-			PersonaDialogModel personaModel, RequerimientosModel requerimientoModel,
-			RequerimientosDialog requerimientosDialog, IncompatibleModel incompatibleModel,
+	public NavigationController(MainView mainView, Navigation navigation, PersonaDialog personasDialog,
+			PersonaModel personaModel, RequerimientoModel requerimientoModel,
+			RequerimientoDialog requerimientosDialog, IncompatibleModel incompatibleModel,
 			IncompatibleDialog incompatibleDialog) {
 		this.mainView = mainView;
 		this.navigation = navigation;

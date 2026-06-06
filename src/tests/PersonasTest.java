@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import equipoideal.model.Persona;
-import equipoideal.model.PersonaDialogModel;
+import equipoideal.model.PersonaModel;
 import equipoideal.model.dto.PersonaDto;
 import equipoideal.model.repository.PersonaRepository;
 import equipoideal.model.repository.PersonaRepositoryJson;
@@ -25,7 +25,7 @@ public class PersonasTest {
 	private Persona persona2;
 	private Persona persona3;
 	
-	private PersonaDialogModel modelo;
+	private PersonaModel modelo;
 	private PersonaRepository personaRepository;
 	private File archivoJsonTemporal;
 	private File carpetaFotosTemporal;
@@ -39,7 +39,7 @@ public class PersonasTest {
 		this.archivoJsonTemporal = carpetaTemporal.newFile("personas_test.json");
 		this.carpetaFotosTemporal = carpetaTemporal.newFolder("carpeta_fotos");
 		this.personaRepository = new PersonaRepositoryJson(archivoJsonTemporal.getAbsolutePath());
-		this.modelo = new PersonaDialogModel(personaRepository, carpetaFotosTemporal.getAbsolutePath());
+		this.modelo = new PersonaModel(personaRepository, carpetaFotosTemporal.getAbsolutePath());
 		
 		personas = new ArrayList<>();
 		persona1 = new Persona("Leo", "Messi", 5, RolEnum.PROGRAMADOR);
@@ -88,14 +88,35 @@ public class PersonasTest {
 
 	    assertEquals(5, dto.getCalificacion());
 
-	    assertEquals("PROGRAMADOR", dto.getRol());
+	    assertEquals(RolEnum.PROGRAMADOR, dto.getRol());
 	}
+	
+	@Test
+	public void transformarEnDtoTest() {
+		ArrayList<PersonaDto> dtos = persona1.transformarEnDto(personas);
+		
+		assertEquals(3, dtos.size());
+		assertEquals("Leo", dtos.get(0).getNombre());
+		assertEquals("Cristiano", dtos.get(1).getNombre());
+		assertEquals("Kylian", dtos.get(2).getNombre());
+	}
+	
+	@Test
+	public void equalsPersonaTest() {
+		Persona clonMessi = new Persona("Leo", "Messi", 1, RolEnum.TESTER);
+		
+		assertEquals(true, persona1.equals(clonMessi));
+		assertEquals(false, persona1.equals(persona2));
+	}
+	
+	
 	
 	//Test PersonaDialogModel
 	
 	@Test
 	public void agregarPersonaTest() {
-		modelo.agregarPersona("Leo", "Messi", 5, RolEnum.PROGRAMADOR, "rutaFoto");
+		PersonaDto dto = new PersonaDto("Leo", "Messi", 5, RolEnum.PROGRAMADOR, "rutaFoto");
+		modelo.agregarPersona(dto);
 		Persona p = modelo.getListaPersonas().get(0);
 		
 		assertEquals(1, modelo.getListaPersonas().size());
@@ -113,8 +134,11 @@ public class PersonasTest {
 	
 	@Test
 	public void guardarEnJsonTest() {
-		modelo.agregarPersona("Leo", "Messi", 5, RolEnum.PROGRAMADOR, "rutaFoto");
-		modelo.agregarPersona("Kylian", "Mbappe", 4, RolEnum.TESTER, "rutaFoto2");
+		PersonaDto dto = new PersonaDto("Leo", "Messi", 5, RolEnum.PROGRAMADOR, "rutaFoto");
+		modelo.agregarPersona(dto);
+		PersonaDto dto2 = new PersonaDto("Kylian", "Mbappe", 4, RolEnum.TESTER, "rutaFoto2");
+		modelo.agregarPersona(dto2);
+		
 		modelo.guardarPersonaEnJSON();
 		
 		ArrayList<Persona> personasGuardadas = personaRepository.loadAll(archivoJsonTemporal.getAbsolutePath());
@@ -155,10 +179,35 @@ public class PersonasTest {
 		
 	}
 	
+	@Test
+	public void eliminarPersonaTest() {
+		modelo.agregarPersona(new PersonaDto("Leo", "Messi", 5, RolEnum.PROGRAMADOR, "foto"));
+		modelo.agregarPersona(new PersonaDto("Cristiano", "Ronaldo", 4, RolEnum.ARQUITECTO, "foto"));
+		
+		modelo.eliminarPersona(0);
+		
+		assertEquals(1, modelo.getListaPersonas().size());
+		assertEquals("Cristiano", modelo.getListaPersonas().get(0).getNombre());
+	}
+	
+	@Test
+	public void editarPersonaCorrectamenteTest() {
+		modelo.agregarPersona(new PersonaDto("Leo", "Messi", 5, RolEnum.PROGRAMADOR, "foto"));
+		
+		PersonaDto dtoEditado = new PersonaDto("Lionel", "Messi", 5, RolEnum.PROGRAMADOR, "foto_nueva");
+		modelo.editarPersona(0, dtoEditado);
+		
+		Persona editada = modelo.getListaPersonas().get(0);
+		
+		assertEquals("Lionel", editada.getNombre());
+		assertEquals("foto_nueva", editada.getRutaFoto());
+	}
+	
 
 	@Test
 	public void exportarJsonTest() {
-	modelo.agregarPersona("Leo", "Messi", 5, RolEnum.PROGRAMADOR, "rutaFoto");
+	PersonaDto dto = new PersonaDto("Leo", "Messi", 5, RolEnum.PROGRAMADOR, "rutaFoto");
+	modelo.agregarPersona(dto);
 	modelo.guardarPersonaEnJSON();
 
 	File destino = new File(carpetaTemporal.getRoot(), "exportado.json");
@@ -184,36 +233,78 @@ public class PersonasTest {
 
 	}
 	
+	@Test
+	public void obtenerNombrePorIndiceTest() {
+		modelo.agregarPersona(new PersonaDto("Leo", "Messi", 5, RolEnum.PROGRAMADOR, "foto"));
+		
+		String nombreCompleto = modelo.obtenerNombrePorIndice(0);
+		assertEquals("Leo Messi", nombreCompleto);
+		
+		assertEquals("", modelo.obtenerNombrePorIndice(5));
+		assertEquals("", modelo.obtenerNombrePorIndice(-1));
+	}
+	
 	//TEST ERRORES
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void personaConNombreVacioTest() {
-	modelo.agregarPersona("", "Messi", 5, RolEnum.PROGRAMADOR, "rutaFoto");
+	PersonaDto dto = new PersonaDto("", "Messi", 5, RolEnum.PROGRAMADOR, "rutaFoto");
+	modelo.agregarPersona(dto);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void personaConApellidoVacioTest() {
-	modelo.agregarPersona("Leo", "", 5, RolEnum.PROGRAMADOR, "rutaFoto");
+	PersonaDto dto = new PersonaDto("Leo", "", 5, RolEnum.PROGRAMADOR, "rutaFoto");
+	modelo.agregarPersona(dto);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void personaConPuntuacionInvalidaTest() {
-	modelo.agregarPersona("Leo", "Messi", 10, RolEnum.PROGRAMADOR, "rutaFoto");
+	PersonaDto dto = new PersonaDto("Leo", "Messi", 10, RolEnum.PROGRAMADOR, "rutaFoto");
+	modelo.agregarPersona(dto);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void personaConRolVacioTest() {
-	modelo.agregarPersona("Leo", "Messi", 5, null, "rutaFoto");
+	PersonaDto dto = new PersonaDto("Leo", "Messi", 5, null, "rutaFoto");
+	modelo.agregarPersona(dto);	
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void personaNombreInvalidoTest() {
-	modelo.agregarPersona("1234", "Messi", 5, RolEnum.PROGRAMADOR, "rutaFoto");
+	PersonaDto dto = new PersonaDto("1234", "Messi", 5, RolEnum.PROGRAMADOR, "rutaFoto");
+	modelo.agregarPersona(dto);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void personaApellidoInvalidoTest() {
-	modelo.agregarPersona("Leo", "1234", 5, RolEnum.PROGRAMADOR, "rutaFoto");
+	PersonaDto dto = new PersonaDto("Leo", "1234", 5, RolEnum.PROGRAMADOR, "rutaFoto");
+	modelo.agregarPersona(dto);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void agregarPersonaDuplicadaTest() {
+		PersonaDto dto1 = new PersonaDto("Leo", "Messi", 5, RolEnum.PROGRAMADOR, "foto");
+		PersonaDto dto2 = new PersonaDto("Leo", "Messi", 4, RolEnum.ARQUITECTO, "foto2"); 
+		
+		modelo.agregarPersona(dto1);
+		modelo.agregarPersona(dto2);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void editarPersonaGenerandoDuplicadoTest() {
+		modelo.agregarPersona(new PersonaDto("Leo", "Messi", 5, RolEnum.PROGRAMADOR, "foto"));
+		modelo.agregarPersona(new PersonaDto("Cristiano", "Ronaldo", 4, RolEnum.ARQUITECTO, "foto"));
+		
+		
+		PersonaDto dtoDuplicado = new PersonaDto("Leo", "Messi", 4, RolEnum.ARQUITECTO, "foto");
+		modelo.editarPersona(1, dtoDuplicado); 
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void editarPersonaIndiceInvalidoTest() {
+		PersonaDto dto = new PersonaDto("Leo", "Messi", 5, RolEnum.PROGRAMADOR, "foto");
+		modelo.editarPersona(-1, dto);
 	}
 
 	@Test(expected = IllegalArgumentException.class)

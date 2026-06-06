@@ -1,13 +1,13 @@
 package equipoideal.model.dto;
 
-public class RequerimientosDto {
+public class RequerimientoDto {
 
     private int lideres;
     private int arquitectos;
     private int programadores;
     private int testers;
 
-    public RequerimientosDto(int lideres, int arquitectos, int programadores, int testers) {
+    public RequerimientoDto(int lideres, int arquitectos, int programadores, int testers) {
         this.lideres = lideres;
         this.arquitectos = arquitectos;
         this.programadores = programadores;

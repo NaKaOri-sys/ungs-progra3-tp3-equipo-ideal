@@ -7,6 +7,5 @@ import equipoideal.model.Persona;
 public interface PersonaRepository {
 	ArrayList<Persona> loadAll(String archivo);
     void saveAll(ArrayList<Persona> personas);
-    void cleanAll();
 	void exportarJson(String destino);
 }

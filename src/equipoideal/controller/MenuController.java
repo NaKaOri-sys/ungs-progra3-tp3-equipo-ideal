@@ -3,18 +3,18 @@ package equipoideal.controller;
 import equipoideal.model.listener.IMenuListener;
 import equipoideal.view.MenuView;
 import equipoideal.view.dialogs.IncompatibleDialog;
-import equipoideal.view.dialogs.PersonasDialog;
-import equipoideal.view.dialogs.RequerimientosDialog;
+import equipoideal.view.dialogs.PersonaDialog;
+import equipoideal.view.dialogs.RequerimientoDialog;
 
 public class MenuController implements IMenuListener {
 	private NavigationController navigationController;
 	private MenuView menuView;
-	private PersonasDialog personaDialog;
-	private RequerimientosDialog requerimientosDialog;
+	private PersonaDialog personaDialog;
+	private RequerimientoDialog requerimientosDialog;
 	private IncompatibleDialog incompatibleDialog;
 
-	public MenuController(NavigationController navigationController, MenuView menuView, PersonasDialog personaDialog,
-			RequerimientosDialog requerimientosDialog, IncompatibleDialog incompatibleDialog) {
+	public MenuController(NavigationController navigationController, MenuView menuView, PersonaDialog personaDialog,
+			RequerimientoDialog requerimientosDialog, IncompatibleDialog incompatibleDialog) {
 		this.navigationController = navigationController;
 		this.menuView = menuView;
 		this.personaDialog = personaDialog;
