@@ -35,19 +35,19 @@ public class IncompatibleModel {
 			return false;
 		return matrizIncompatibilidades[indiceEmpleadoA][indiceEmpleadoB];
 	}
-	
+
 	public boolean tieneIncompatibilidades() {
-	    if (this.matrizIncompatibilidades == null) {
-	        return false;
-	    }
-	    for (int i = 0; i < matrizIncompatibilidades.length; i++) {
-	        for (int j = 0; j < matrizIncompatibilidades[i].length; j++) {
-	            if (matrizIncompatibilidades[i][j] == true) { 
-	                return true; 
-	            }
-	        }
-	    }
-	    return false; 
+		if (this.matrizIncompatibilidades == null) {
+			return false;
+		}
+		for (int i = 0; i < matrizIncompatibilidades.length; i++) {
+			for (int j = 0; j < matrizIncompatibilidades[i].length; j++) {
+				if (matrizIncompatibilidades[i][j] == true) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public boolean[][] getMatrizIncompatibilidades() {

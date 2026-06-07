@@ -94,13 +94,15 @@ public class NavigationController implements IObserverNavigation {
 
 			CalculadorBacktracking backtracking = new CalculadorBacktracking(
 					new ArrayList<>(personaModel.getListaPersonas()),
-					new LinkedHashMap<RolEnum, Integer>(requerimientoModel.getRequerimientos()), this.incompatibleModel.getMatrizIncompatibilidades());
+					new LinkedHashMap<RolEnum, Integer>(requerimientoModel.getRequerimientos()),
+					this.incompatibleModel.getMatrizIncompatibilidades());
 			CalculadorHeuristica heuristica = new CalculadorHeuristica(new ArrayList<>(personaModel.getListaPersonas()),
-					new LinkedHashMap<RolEnum, Integer>(requerimientoModel.getRequerimientos()), this.incompatibleModel.getMatrizIncompatibilidades());
+					new LinkedHashMap<RolEnum, Integer>(requerimientoModel.getRequerimientos()),
+					this.incompatibleModel.getMatrizIncompatibilidades());
 
 			CalculadorSolucion calculador = new CalculadorSolucion(backtracking, heuristica);
 			SolucionWorkerModel workerModel = new SolucionWorkerModel(this.resultadoComparativoDto);
-			
+
 			this.solucionWorkerController = new SolucionWorkerController(calculador, this.mainView.getPanelBusqueda(),
 					this.navigation, workerModel);
 			this.solucionWorkerController.execute();

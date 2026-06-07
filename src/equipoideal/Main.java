@@ -58,17 +58,20 @@ public class Main {
 		RequerimientoModel requerimientosModel = new RequerimientoModel(personaDialogModel);
 		RequerimientoDialog requerimientosDialog = new RequerimientoDialog("Gestion de Requerimientos");
 		requerimientosDialog.crearInputs();
-		RequerimientoController requerimientosController = new RequerimientoController(requerimientosDialog, requerimientosModel);
+		RequerimientoController requerimientosController = new RequerimientoController(requerimientosDialog,
+				requerimientosModel);
 		RequerimientoIntegrationController reqIntegrationController = new RequerimientoIntegrationController(
 				requerimientosDialog, personaDialogModel);
-		 // TODO este controller no tiene mucho sentido que guarde
-		
+		// TODO este controller no tiene mucho sentido que guarde
+
 		// personas, deberia simplemente cargar los requerimientos y
 		// mostrarlos en la tabla que muestra las personas
 
 		// INCOMPATIBILIDAD
 		IncompatibleDialog incompatibleDialog = new IncompatibleDialog("Gestion de Incompatibilidades");
         incompatibleDialog.crearInputs();
+		// TODO: Reemplazar el acceso a getListaPersonas().size() usando un método
+		// encapsulado como getCantidadDePersonas() en PersonaModel.
         IncompatibleModel incompatibleModel = new IncompatibleModel(personaDialogModel.getListaPersonas().size());
         IncompatibleController incompatibleController = new IncompatibleController(incompatibleDialog, personaDialogModel.getListaPersonas(), incompatibleModel, personaDialogModel);
 
@@ -76,7 +79,6 @@ public class Main {
 								personaDialogModel, requerimientosModel, incompatibleModel,
 								personaController, requerimientosController, incompatibleController);
 		navigation.updateView(VentanaEnum.MENU);
-
 		mainView.setVisible(true);
 	}
 

@@ -9,6 +9,7 @@ import equipoideal.util.Observable;
 import equipoideal.util.RequerimientoValidator;
 import equipoideal.util.RolEnum;
 
+// TODO: Evitar mantener PersonaModel como variable de instancia permanente únicamente para validar los requerimientos. Pasar la lista de personas como parámetro directo al método crearRequerimientos para reducir el acoplamiento.
 public class RequerimientoModel extends Observable<IObserverRequerimiento> {
 	private Map<RolEnum, Integer> requerimientos;
 	private PersonaModel personaModel;

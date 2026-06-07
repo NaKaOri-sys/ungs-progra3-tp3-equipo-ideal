@@ -60,22 +60,15 @@ public class MenuController implements IMenuListener {
 	public void onIncompatibilidad() {
 		// refresca la pantalla para que cargue los nuevos nombres si es que cargaron
 		// personas
-		// TODO revisar si se puede refrescar sin revisar el controller, o si el
-		// controller es el encargado de refrescar la pantalla cada vez que se abre el
-		// dialog, revisar si es necesario llamar a este metodo desde el menu cada vez
-		// que se abre la pantalla de incompatibilidades o si se puede llamar solo desde
-		// el controller de incompatibilidades cada vez que se registra una nueva
-		// incompatibilidad o se carga una nueva persona
-		//TODO no encontre forma de sacarlo de aca. Es necesario llamarlo acá porque MenuController se recrea
-        // constantemente y necesito forzar la sincronización de los JComboBox antes de mostrar la JDialog
 		if (this.incompatibleController != null) {
 			this.incompatibleController.refrescarPantalla();
 		}
 
 		if (this.personaModel.estaVacia()) {
-			this.menuView.mostrarMensajeAdvertencia("Debe cargar personas en el sistema antes de registrar incompatibilidades.");
+			this.menuView.mostrarMensajeAdvertencia(
+					"Debe cargar personas en el sistema antes de registrar incompatibilidades.");
 			return;
-		
+
 		}
 
 		incompatibleDialog.setVisible(true);
@@ -84,13 +77,15 @@ public class MenuController implements IMenuListener {
 	@Override
 	public void onBusqueda() {
 		if (this.personaModel.estaVacia()) {
-			this.menuView.mostrarMensajeAdvertencia("Debe cargar personas en el sistema antes de buscar el equipo ideal.");
+			this.menuView
+					.mostrarMensajeAdvertencia("Debe cargar personas en el sistema antes de buscar el equipo ideal.");
 			return;
 		}
 
 		if (!this.incompatibleModel.tieneIncompatibilidades()) {
-		    this.menuView.mostrarMensajeAdvertencia("Debe registrar al menos una incompatibilidad antes de buscar el equipo ideal.");
-		    return;
+			this.menuView.mostrarMensajeAdvertencia(
+					"Debe registrar al menos una incompatibilidad antes de buscar el equipo ideal.");
+			return;
 		}
 
 		// TODO faltaria validar requerimientos
