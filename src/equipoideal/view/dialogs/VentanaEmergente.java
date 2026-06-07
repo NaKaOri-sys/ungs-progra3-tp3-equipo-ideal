@@ -20,7 +20,7 @@ public class VentanaEmergente extends JDialog {
 
 
     private void inicializarComponentes(String mensaje) {
-        setSize(350, 150);
+        setSize(400, 150);
         setLayout(new BorderLayout());
 
         // (padding)
