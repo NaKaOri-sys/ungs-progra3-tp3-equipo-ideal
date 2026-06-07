@@ -8,48 +8,44 @@ import equipoideal.view.MenuView;
 import equipoideal.view.dialogs.IncompatibleDialog;
 import equipoideal.view.dialogs.PersonaDialog;
 import equipoideal.view.dialogs.RequerimientoDialog;
-import equipoideal.view.dialogs.VentanaEmergente;
-
-
 
 public class MenuController implements IMenuListener {
 	private NavigationController navigationController;
 	private MenuView menuView;
-	
+
 	private PersonaDialog personaDialog;
 	private RequerimientoDialog requerimientosDialog;
 	private IncompatibleDialog incompatibleDialog;
-	
-	private PersonaController personaController;
-	private RequerimientoController requerimientoController;
+
 	private IncompatibleController incompatibleController;
-	
+
 	private PersonaModel personaModel;
 	private RequerimientoModel requerimientoModel;
 	private IncompatibleModel incompatibleModel;
-	
 
+	// TODO Eliseo, veo que se agregaron los controllers de personas, requerimientos
+	// e incompatibilidades al constructor del NavigationController, pero no se
+	// están utilizando en ningún lado, revisar si es necesario pasarlos o si se
+	// pueden eliminar del constructor para simplificarlo
 	public MenuController(NavigationController navigationController, MenuView menuView, PersonaDialog personaDialog,
 			RequerimientoDialog requerimientosDialog, IncompatibleDialog incompatibleDialog,
-			PersonaController personaController, RequerimientoController requerimientoController, IncompatibleController incompatibleController,
-			PersonaModel personaModel, RequerimientoModel requerimientoModel, IncompatibleModel incompatibleModel) {
+			PersonaController personaController, RequerimientoController requerimientoController,
+			IncompatibleController incompatibleController, PersonaModel personaModel,
+			RequerimientoModel requerimientoModel, IncompatibleModel incompatibleModel) {
 		this.navigationController = navigationController;
 		this.menuView = menuView;
 		this.personaDialog = personaDialog;
 		this.requerimientosDialog = requerimientosDialog;
 		this.incompatibleDialog = incompatibleDialog;
-		
+
 		this.personaModel = personaModel;
 		this.requerimientoModel = requerimientoModel;
 		this.incompatibleModel = incompatibleModel;
-		
-		this.personaController = personaController;
-		this.requerimientoController = requerimientoController;
 		this.incompatibleController = incompatibleController;
 
 		this.menuView.obtenerObserver().addObserver(this);
 	}
-	
+
 	@Override
 	public void onCargarPersonas() {
 		personaDialog.setVisible(true);
@@ -60,30 +56,47 @@ public class MenuController implements IMenuListener {
 		requerimientosDialog.setVisible(true);
 	}
 
-@Override
-    public void onIncompatibilidad() {
-        
-        if (this.personaModel.getListaPersonas().isEmpty()) {
-            VentanaEmergente aviso = new VentanaEmergente(null, "Debe cargar personas en el sistema antes de registrar incompatibilidades.");
-            aviso.setVisible(true);
-            return;
-        }
-        incompatibleDialog.setVisible(true);
-    }
+	@Override
+	public void onIncompatibilidad() {
+		// refresca la pantalla para que cargue los nuevos nombres si es que cargaron
+		// personas
+		// TODO revisar si se puede refrescar sin revisar el controller, o si el
+		// controller es el encargado de refrescar la pantalla cada vez que se abre el
+		// dialog, revisar si es necesario llamar a este metodo desde el menu cada vez
+		// que se abre la pantalla de incompatibilidades o si se puede llamar solo desde
+		// el controller de incompatibilidades cada vez que se registra una nueva
+		// incompatibilidad o se carga una nueva persona
+		if (this.incompatibleController != null) {
+			this.incompatibleController.refrescarPantalla();
+		}
+
+		if (this.personaModel.getListaPersonas() == null || this.personaModel.getListaPersonas().size() == 0) {
+			this.menuView.mostrarMensajeAdvertencia(
+					"Debe cargar personas en el sistema antes de registrar incompatibilidades.");
+			return;
+		}
+
+		incompatibleDialog.setVisible(true);
+	}
 
 	@Override
 	public void onBusqueda() {
-		
-		if(this.personaModel.getListaPersonas().isEmpty())  {
-			VentanaEmergente aviso = new VentanaEmergente(null, "Debe cargar personas en el sistema antes de buscar un equipo ideal.");
-			aviso.setVisible(true);
+		if (this.personaModel.getListaPersonas() == null || this.personaModel.getListaPersonas().size() == 0) {
+			this.menuView
+					.mostrarMensajeAdvertencia("Debe cargar personas en el sistema antes de buscar el equipo ideal.");
 			return;
 		}
-		if(this.requerimientoModel.getRequerimientos().isEmpty())  {
-			VentanaEmergente aviso = new VentanaEmergente(null, "Debe cargar requerimientos en el sistema antes de buscar un equipo ideal.");
-			aviso.setVisible(true);
+
+		// Valida Incompatibilidades
+		if (this.incompatibleModel.getMatrizIncompatibilidades() == null
+				|| this.incompatibleModel.getMatrizIncompatibilidades().length == 0) {
+			this.menuView.mostrarMensajeAdvertencia(
+					"Debe registrar al menos una incompatibilidad antes de buscar el equipo ideal.");
 			return;
 		}
+
+		// TODO faltaria validar requerimientos
+
 		this.navigationController.eventSearch();
 	}
 
