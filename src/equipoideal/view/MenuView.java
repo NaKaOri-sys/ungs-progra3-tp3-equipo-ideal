@@ -6,31 +6,33 @@ import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
 
 import equipoideal.model.listener.IMenuListener;
 import equipoideal.util.Observable;
+import equipoideal.view.dialogs.VentanaEmergente;
 
 public class MenuView extends JPanel {
 	private JButton btnCargarPersona;
 	private JButton btnRequerimiento;
 	private JButton btnIncompatibilidad;
 	private JButton btnBusqueda;
-	
+
 	private URL urlCargarPersona;
 	private URL urlRequerimiento;
 	private URL urlIncompatibilidad;
 	private URL urlBusqueda;
-	
-	private Observable <IMenuListener> observable;
-	
+
+	private Observable<IMenuListener> observable;
+	private JButton btnExit;
+
 	public MenuView() {
-		
+
 		this.observable = new Observable<>();
 		initialize();
 	}
-	
+
 	public void initialize() {
 		setBounds(getBounds());
 		setBackground(Color.gray);
@@ -43,10 +45,10 @@ public class MenuView extends JPanel {
 		btnCargarPersona.setIcon(new ImageIcon(imagenUsuario));
 		btnCargarPersona.setBounds(70, 340, 140, 30);
 		btnCargarPersona.addActionListener(e -> {
-			observable.notifyObservers(listener -> listener.onCargarPersonas());	
+			observable.notifyObservers(listener -> listener.onCargarPersonas());
 		});
 		add(btnCargarPersona);
-		
+
 		btnRequerimiento = new JButton("Requerimientos");
 		urlRequerimiento = getClass().getResource("/equipoideal/resources/Requerimiento.png");
 		ImageIcon iconoGrandeRequerimiento = new ImageIcon(urlRequerimiento);
@@ -54,21 +56,22 @@ public class MenuView extends JPanel {
 		btnRequerimiento.setIcon(new ImageIcon(imagenRequerimiento));
 		btnRequerimiento.setBounds(335, 340, 140, 30);
 		btnRequerimiento.addActionListener(e -> {
-			observable.notifyObservers(listener -> listener.onRequerimientos());	
+			observable.notifyObservers(listener -> listener.onRequerimientos());
 		});
 		add(btnRequerimiento);
-		
+
 		btnIncompatibilidad = new JButton("Incompatibilidad");
 		urlIncompatibilidad = getClass().getResource("/equipoideal/resources/Incompatibilidad.png");
 		ImageIcon iconoGrandeIncompatibilidad = new ImageIcon(urlIncompatibilidad);
-		Image imagenIncompatibilidad = iconoGrandeIncompatibilidad.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+		Image imagenIncompatibilidad = iconoGrandeIncompatibilidad.getImage().getScaledInstance(20, 20,
+				Image.SCALE_SMOOTH);
 		btnIncompatibilidad.setIcon(new ImageIcon(imagenIncompatibilidad));
 		btnIncompatibilidad.setBounds(600, 340, 140, 30);
 		btnIncompatibilidad.addActionListener(e -> {
-			observable.notifyObservers(listener -> listener.onIncompatibilidad());	
+			observable.notifyObservers(listener -> listener.onIncompatibilidad());
 		});
 		add(btnIncompatibilidad);
-		
+
 		btnBusqueda = new JButton("Buscar Equipo");
 		urlBusqueda = getClass().getResource("/equipoideal/resources/Busqueda.png");
 		ImageIcon iconoGrandeBusqueda = new ImageIcon(urlBusqueda);
@@ -76,13 +79,33 @@ public class MenuView extends JPanel {
 		btnBusqueda.setIcon(new ImageIcon(imagenBusqueda));
 		btnBusqueda.setBounds(335, 430, 140, 30);
 		btnBusqueda.addActionListener(e -> {
-			observable.notifyObservers(listener -> listener.onBusqueda());	
+			observable.notifyObservers(listener -> listener.onBusqueda());
 		});
 		add(btnBusqueda);
+
+		btnExit = new JButton("Salir");
+		btnExit.setBounds(600, 10, 140, 30);
+		btnExit.addActionListener(e -> {
+			confirmarSalida();
+		});
+		add(btnExit);
 	}
-	
+
+	private void confirmarSalida() {
+		int confirm = JOptionPane.showConfirmDialog(this, "¿Está seguro de que desea salir?", "Confirmar Salida",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		if (confirm == JOptionPane.YES_OPTION) {
+			System.exit(0);
+		}
+	}
+
+	public void mostrarMensajeAdvertencia(String mensaje) {
+		VentanaEmergente aviso = new VentanaEmergente(null, mensaje);
+		aviso.setVisible(true);
+	}
+
 	public Observable<IMenuListener> obtenerObserver() {
 		return this.observable;
 	}
-	
+
 }

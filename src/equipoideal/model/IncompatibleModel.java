@@ -1,5 +1,6 @@
 package equipoideal.model;
 
+//TODO falta un observer que notifique al controller que las compatibilidades cambiaron, para que refresque la pantalla y se vean los cambios, 
 public class IncompatibleModel {
 	private boolean[][] matrizIncompatibilidades;
 
@@ -36,6 +37,20 @@ public class IncompatibleModel {
 		if (indiceEmpleadoA >= matrizIncompatibilidades.length || indiceEmpleadoB >= matrizIncompatibilidades.length)
 			return false;
 		return matrizIncompatibilidades[indiceEmpleadoA][indiceEmpleadoB];
+	}
+
+	public boolean tieneIncompatibilidades() {
+		if (this.matrizIncompatibilidades == null) {
+			return false;
+		}
+		for (int i = 0; i < matrizIncompatibilidades.length; i++) {
+			for (int j = 0; j < matrizIncompatibilidades[i].length; j++) {
+				if (matrizIncompatibilidades[i][j] == true) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public boolean[][] getMatrizIncompatibilidades() {

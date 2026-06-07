@@ -39,6 +39,7 @@ public class CalculadorBacktracking extends Observable<IObserverCalculador> {
 		this.cacheIndice = new IndexCache(this.listaPersonas);
 	}
 
+	// TODO: Si no se encuentra solución que cumpla con los requerimientos, no retornar un equipo vacío, sino lanzar una excepción específica o indicar claramente el fallo para que la interfaz pueda informarlo adecuadamente en lugar de tratarlo como un equipo válido sin integrantes.
 	public EquipoDto calcularMejorEquipo() {
 		this.contadorCasosBase = 0;
 		this.contadorPodas = 0;

@@ -33,6 +33,7 @@ public class CalculadorHeuristica extends Observable<IObserverCalculador> {
 		this.matrizIncompatibilidades = matrizIncompatibilidades;
 	}
 
+	// TODO: Al igual que en Backtracking, si la heurística no logra conformar un equipo que cumpla todos los requerimientos, no debería retornar un equipo incompleto o vacío como válido, sino indicar explícitamente la imposibilidad mediante una excepción o retorno nulo.
 	public EquipoDto ejecutarHeuristica() {
 		this.tiempoInicio = EquipoCalculadorUtil.obtenerTiempoActual();
 		this.cacheIndice = new IndexCache(listaPersonas);

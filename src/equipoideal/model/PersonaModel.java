@@ -26,7 +26,7 @@ public class PersonaModel extends Observable<IObserverPersona> {
 
 	public void agregarPersona(PersonaDto dto) {
 		PersonaValidator.validarPersona(dto);
-
+		//TODO se puede agregar el parametro de rutaFoto al constructor de Persona, y eliminar el setRutaFoto despues del add
 		Persona p = new Persona(dto.getNombre(), dto.getApellido(), dto.getCalificacion(), dto.getRol());
 		
 		if (listaPersonas.contains(p)) {
@@ -137,6 +137,7 @@ public class PersonaModel extends Observable<IObserverPersona> {
 	}
 	
 
+	// TODO: Proporcionar métodos dedicados como getCantidadDePersonas() y tienePersonas() en lugar de exponer la lista interna para llamadas de .size() o verificación de vacío. Esto mejora la encapsulación y evita la necesidad de acceder a la colección directamente.
 	public ArrayList<Persona> getListaPersonas() {
 		return listaPersonas;
 	}

@@ -42,7 +42,6 @@ public class Equipo {
 	public EquipoDto toDto() {
 		EquipoDto dto = new EquipoDto(new ArrayList<PersonaDto>());
 		for (Persona persona : integrantes) {
-			//TODO: Verificar si no es mejor usar persona.toDto()
 			PersonaDto integrante = persona.toDto();
 			dto.getIntegrantes().add(integrante);
 		}
