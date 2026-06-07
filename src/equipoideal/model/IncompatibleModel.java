@@ -1,5 +1,5 @@
 package equipoideal.model;
-
+//TODO falta un observer que notifique al controller que las compatibilidades cambiaron, para que refresque la pantalla y se vean los cambios, 
 public class IncompatibleModel {
 	private boolean[][] matrizIncompatibilidades;
 
