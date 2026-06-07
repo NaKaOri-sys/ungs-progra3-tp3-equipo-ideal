@@ -66,14 +66,16 @@ public class MenuController implements IMenuListener {
 		// que se abre la pantalla de incompatibilidades o si se puede llamar solo desde
 		// el controller de incompatibilidades cada vez que se registra una nueva
 		// incompatibilidad o se carga una nueva persona
+		//TODO no encontre forma de sacarlo de aca. Es necesario llamarlo acá porque MenuController se recrea
+        // constantemente y necesito forzar la sincronización de los JComboBox antes de mostrar la JDialog
 		if (this.incompatibleController != null) {
 			this.incompatibleController.refrescarPantalla();
 		}
 
-		if (this.personaModel.getListaPersonas() == null || this.personaModel.getListaPersonas().size() == 0) {
-			this.menuView.mostrarMensajeAdvertencia(
-					"Debe cargar personas en el sistema antes de registrar incompatibilidades.");
+		if (this.personaModel.estaVacia()) {
+			this.menuView.mostrarMensajeAdvertencia("Debe cargar personas en el sistema antes de registrar incompatibilidades.");
 			return;
+		
 		}
 
 		incompatibleDialog.setVisible(true);
@@ -81,18 +83,14 @@ public class MenuController implements IMenuListener {
 
 	@Override
 	public void onBusqueda() {
-		if (this.personaModel.getListaPersonas() == null || this.personaModel.getListaPersonas().size() == 0) {
-			this.menuView
-					.mostrarMensajeAdvertencia("Debe cargar personas en el sistema antes de buscar el equipo ideal.");
+		if (this.personaModel.estaVacia()) {
+			this.menuView.mostrarMensajeAdvertencia("Debe cargar personas en el sistema antes de buscar el equipo ideal.");
 			return;
 		}
 
-		// Valida Incompatibilidades
-		if (this.incompatibleModel.getMatrizIncompatibilidades() == null
-				|| this.incompatibleModel.getMatrizIncompatibilidades().length == 0) {
-			this.menuView.mostrarMensajeAdvertencia(
-					"Debe registrar al menos una incompatibilidad antes de buscar el equipo ideal.");
-			return;
+		if (!this.incompatibleModel.tieneIncompatibilidades()) {
+		    this.menuView.mostrarMensajeAdvertencia("Debe registrar al menos una incompatibilidad antes de buscar el equipo ideal.");
+		    return;
 		}
 
 		// TODO faltaria validar requerimientos
