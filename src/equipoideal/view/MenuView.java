@@ -11,6 +11,7 @@ import javax.swing.UIManager;
 
 import equipoideal.model.listener.IMenuListener;
 import equipoideal.util.Observable;
+import equipoideal.view.dialogs.VentanaEmergente;
 
 public class MenuView extends JPanel {
 	private JButton btnCargarPersona;
@@ -79,6 +80,11 @@ public class MenuView extends JPanel {
 			observable.notifyObservers(listener -> listener.onBusqueda());	
 		});
 		add(btnBusqueda);
+	}
+	
+	public void mostrarMensajeAdvertencia(String mensaje) {
+	    VentanaEmergente aviso = new VentanaEmergente(null, mensaje);
+	    aviso.setVisible(true);
 	}
 	
 	public Observable<IMenuListener> obtenerObserver() {

@@ -54,7 +54,6 @@ public class IncompatibleController implements IncompatiblesListener {
 
         incompatibleModel.registrarIncompatibilidad(indiceSeleccionadoA, indiceSeleccionadoB);
 
-        // cambie: Ahora busca el nombre en mi propia lista temporal
         String nombreEmpleadoA = obtenerNombrePorHistorial(indiceSeleccionadoA); 
         String nombreEmpleadoB = obtenerNombrePorHistorial(indiceSeleccionadoB);
         
@@ -68,5 +67,16 @@ public class IncompatibleController implements IncompatiblesListener {
             return p.getNombre() + " " + p.getApellido();
         }
         return "";
+    }
+    
+    public boolean tienePersonasCargadas() {
+        return this.listaPersonasTemporal != null && !this.listaPersonasTemporal.isEmpty();
+    }
+    
+    public boolean tieneIncompatibilidadesRegistradas() {
+        if (this.incompatibleModel == null) {
+            return false;
+        }
+        return this.incompatibleModel.tieneIncompatibilidades();
     }
 }

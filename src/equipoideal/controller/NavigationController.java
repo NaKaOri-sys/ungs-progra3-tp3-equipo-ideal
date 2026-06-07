@@ -76,7 +76,11 @@ public class NavigationController implements IObserverNavigation {
 				this.menuController = null;
 			}
 			this.menuController = new MenuController(this, this.mainView.getPanelMenu(), this.personasDialog,
-					this.requerimientosDialog, this.incompatibleDialog);
+			                    this.requerimientosDialog, this.incompatibleDialog, this.incompatibleController); 
+		    
+		    if (this.incompatibleController != null) {
+		        this.incompatibleController.refrescarPantalla();
+		    }
 			break;
 
 		case BUSQUEDA:
