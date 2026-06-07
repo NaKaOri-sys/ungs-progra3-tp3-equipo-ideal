@@ -2,15 +2,12 @@ package equipoideal.controller;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 import equipoideal.model.CalculadorBacktracking;
 import equipoideal.model.CalculadorHeuristica;
 import equipoideal.model.CalculadorSolucion;
 import equipoideal.model.IncompatibleModel;
 import equipoideal.model.Navigation;
-import equipoideal.model.Persona;
 import equipoideal.model.PersonaModel;
 import equipoideal.model.RequerimientoModel;
 import equipoideal.model.SolucionWorkerModel;
@@ -40,25 +37,33 @@ public class NavigationController implements IObserverNavigation {
 	private SolucionWorkerController solucionWorkerController;
 	private WorkerResultController workerResultController;
 	
+	private PersonaController personaController;
+	private RequerimientoController requerimientoController;
 	private IncompatibleController incompatibleController;
+	
 
 	private ResultadoComparativoDto resultadoComparativoDto;
 
-	public NavigationController(MainView mainView, Navigation navigation, PersonaDialog personasDialog,
-			PersonaModel personaModel, RequerimientoModel requerimientoModel,
-			RequerimientoDialog requerimientosDialog, IncompatibleModel incompatibleModel,
-			IncompatibleDialog incompatibleDialog) {
+	public NavigationController(MainView mainView, Navigation navigation,PersonaDialog personasDialog,
+							RequerimientoDialog requerimientosDialog,IncompatibleDialog incompatibleDialog,
+							PersonaModel personaModel,RequerimientoModel requerimientoModel,
+							IncompatibleModel incompatibleModel,PersonaController personaController, 
+							RequerimientoController requerimientoController, IncompatibleController incompatibleController) {
 		this.mainView = mainView;
 		this.navigation = navigation;
 		this.personasDialog = personasDialog;
 		this.requerimientosDialog = requerimientosDialog;
 		this.incompatibleDialog = incompatibleDialog;
+		
 		this.personaModel = personaModel;
 		this.requerimientoModel = requerimientoModel;
 		this.incompatibleModel = incompatibleModel;
+		
+		this.personaController = personaController;
+		this.requerimientoController = requerimientoController;
+		this.incompatibleController = incompatibleController;
+		
 		this.resultadoComparativoDto = new ResultadoComparativoDto();
-		//TODO esto no va acá ya que acopla demasiado a navigation habria que inicializarlo en main o en menuController 
-		this.incompatibleController = new IncompatibleController(this.incompatibleDialog, this.personaModel.getListaPersonas(), this.incompatibleModel);
 		this.navigation.addObserver(this);
 	}
 
@@ -76,11 +81,9 @@ public class NavigationController implements IObserverNavigation {
 				this.menuController = null;
 			}
 			this.menuController = new MenuController(this, this.mainView.getPanelMenu(), this.personasDialog,
-			                    this.requerimientosDialog, this.incompatibleDialog, this.incompatibleController); 
-		    
-		    if (this.incompatibleController != null) {
-		        this.incompatibleController.refrescarPantalla();
-		    }
+					this.requerimientosDialog, this.incompatibleDialog,
+					this.personaController,this.requerimientoController, this.incompatibleController,
+					this.personaModel, this.requerimientoModel, this.incompatibleModel);
 			break;
 
 		case BUSQUEDA:
@@ -114,6 +117,5 @@ public class NavigationController implements IObserverNavigation {
 					this.resultadoComparativoDto);
 			break;
 		}
-		// TODO Actualizar las vistas y crear los Controllers segun los casos.
 	}
 }

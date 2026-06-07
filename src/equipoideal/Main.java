@@ -66,18 +66,15 @@ public class Main {
 		// personas, deberia simplemente cargar los requerimientos y
 		// mostrarlos en la tabla que muestra las personas
 
-
-
 		// INCOMPATIBILIDAD
 		IncompatibleDialog incompatibleDialog = new IncompatibleDialog("Gestion de Incompatibilidades");
         incompatibleDialog.crearInputs();
-
         IncompatibleModel incompatibleModel = new IncompatibleModel(personaDialogModel.getListaPersonas().size());
-        
+        IncompatibleController incompatibleController = new IncompatibleController(incompatibleDialog, personaDialogModel.getListaPersonas(), incompatibleModel);
 
-
-		new NavigationController(mainView, navigation, personasDialog, personaDialogModel, requerimientosModel,
-                requerimientosDialog, incompatibleModel, incompatibleDialog);
+		new NavigationController(mainView, navigation, personasDialog, requerimientosDialog, incompatibleDialog,
+								personaDialogModel, requerimientosModel, incompatibleModel,
+								personaController, requerimientosController, incompatibleController);
 		navigation.updateView(VentanaEnum.MENU);
 
 		mainView.setVisible(true);

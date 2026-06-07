@@ -1,6 +1,5 @@
 package equipoideal.util;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -9,7 +8,7 @@ import equipoideal.model.Persona;
 
 public class EquipoCalculadorUtil {
 
-	public static boolean cumpleConLosRequerimientos(Equipo equipo, LinkedHashMap<RolEnum, Integer> requerimientos) {
+	public static boolean cumpleConLosRequerimientos(Equipo equipo, Map<RolEnum, Integer> requerimientos) {
 		for (Entry<RolEnum, Integer> req : requerimientos.entrySet()) {
 			RolEnum rol = req.getKey();
 			if (equipo.getCantidadPorRol(rol) != req.getValue()) {
@@ -39,14 +38,8 @@ public class EquipoCalculadorUtil {
 		return System.currentTimeMillis();
 	}
 	
-	public static boolean esPosibleAgregar(RolEnum rol, int cantidadRol, LinkedHashMap<RolEnum, Integer> requerimientos,boolean condicion) {
-		int maximoRequerido = 0;
-		for (Entry<RolEnum, Integer> req : requerimientos.entrySet()) {
-			RolEnum rolActual = req.getKey();
-			if (rolActual.equals(rol)) {
-				maximoRequerido = req.getValue();
-			}
-		}
+	public static boolean esPosibleAgregar(RolEnum rol, int cantidadRol, Map<RolEnum, Integer> requerimientos,boolean condicion) {
+		int maximoRequerido = requerimientos.getOrDefault(rol, 0);
 		return !(cantidadRol >= maximoRequerido) && condicion;
 	}
 }

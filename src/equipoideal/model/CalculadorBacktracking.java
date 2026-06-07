@@ -27,7 +27,7 @@ public class CalculadorBacktracking extends Observable<IObserverCalculador> {
 	private int contadorPodas;
 	private IndexCache cacheIndice;
 
-	public CalculadorBacktracking(List<Persona> personas, LinkedHashMap<RolEnum, Integer> requerimientos,
+	public CalculadorBacktracking(List<Persona> personas, Map<RolEnum, Integer> requerimientos,
 			boolean[][] matrizIncompatibilidades) {
 		SolutionValidator.solutionValidator(personas, requerimientos, matrizIncompatibilidades);
 		this.listaPersonas = new ArrayList<>(personas);
@@ -51,7 +51,7 @@ public class CalculadorBacktracking extends Observable<IObserverCalculador> {
 	}
 
 	private void ejecutarBacktracking(int indice, Equipo solucionParcial) {
-		if (RestriccionesPoda.debePodar(solucionParcial, indice, mejorEquipo, listaPersonas)) {
+		if (RestriccionesPoda.debePodar(solucionParcial, indice, mejorEquipo, listaPersonas, requerimientos)) {
 			contadorPodas++;
 			notificarProgreso();
 			return;
