@@ -23,6 +23,10 @@ public class MenuController implements IMenuListener {
 	private RequerimientoModel requerimientoModel;
 	private IncompatibleModel incompatibleModel;
 
+	// TODO Eliseo, veo que se agregaron los controllers de personas, requerimientos
+	// e incompatibilidades al constructor del NavigationController, pero no se
+	// están utilizando en ningún lado, revisar si es necesario pasarlos o si se
+	// pueden eliminar del constructor para simplificarlo
 	public MenuController(NavigationController navigationController, MenuView menuView, PersonaDialog personaDialog,
 			RequerimientoDialog requerimientosDialog, IncompatibleDialog incompatibleDialog,
 			PersonaController personaController, RequerimientoController requerimientoController,
@@ -61,9 +65,10 @@ public class MenuController implements IMenuListener {
 		}
 
 		if (this.personaModel.estaVacia()) {
-			this.menuView.mostrarMensajeAdvertencia("Debe cargar personas en el sistema antes de registrar incompatibilidades.");
+			this.menuView.mostrarMensajeAdvertencia(
+					"Debe cargar personas en el sistema antes de registrar incompatibilidades.");
 			return;
-		
+
 		}
 
 		incompatibleDialog.setVisible(true);
@@ -72,13 +77,15 @@ public class MenuController implements IMenuListener {
 	@Override
 	public void onBusqueda() {
 		if (this.personaModel.estaVacia()) {
-			this.menuView.mostrarMensajeAdvertencia("Debe cargar personas en el sistema antes de buscar el equipo ideal.");
+			this.menuView
+					.mostrarMensajeAdvertencia("Debe cargar personas en el sistema antes de buscar el equipo ideal.");
 			return;
 		}
 
 		if (!this.incompatibleModel.tieneIncompatibilidades()) {
-		    this.menuView.mostrarMensajeAdvertencia("Debe registrar al menos una incompatibilidad antes de buscar el equipo ideal.");
-		    return;
+			this.menuView.mostrarMensajeAdvertencia(
+					"Debe registrar al menos una incompatibilidad antes de buscar el equipo ideal.");
+			return;
 		}
 
 		// TODO faltaria validar requerimientos
