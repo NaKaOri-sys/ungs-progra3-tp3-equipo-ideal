@@ -3,6 +3,7 @@ package equipoideal.controller;
 import java.util.ArrayList;
 import java.util.List;
 import equipoideal.model.Persona;
+import equipoideal.model.PersonaModel;
 import equipoideal.model.IncompatibleModel;
 import equipoideal.model.listener.IncompatiblesListener;
 import equipoideal.view.dialogs.IncompatibleDialog;
@@ -13,34 +14,23 @@ public class IncompatibleController implements IncompatiblesListener {
 	private IncompatibleDialog vista;
 	private IncompatibleModel incompatibleModel;
 	private List<Persona> listaPersonasTemporal;
+	private PersonaModel personaModel;
 
 	// Ahora recibe la lista directa de personas .A
 	public IncompatibleController(IncompatibleDialog vista, List<Persona> listaPersonas,
-			IncompatibleModel incompatibleModel) {
+			IncompatibleModel incompatibleModel, PersonaModel personaModel) {
 		this.vista = vista;
 		this.listaPersonasTemporal = listaPersonas;
 		this.incompatibleModel = incompatibleModel;
+		this.personaModel = personaModel;
 
 		this.vista.setIncompatiblesListener(this);
-
-		// La primera carga se hace con lo que haya al iniciar
-		refrescarPantalla(); // TODO este metodo se llama al crear el controller, pero tambien se llama desde
-								// el menu cada vez que se abre la pantalla de incompatibilidades, revisar si es
-								// necesario llamarlo en ambos lugares o solo en uno
 	}
 
-	// Este método lo va a llamar el NavigationController .C
 	public void refrescarPantalla() {
 		// Sincroniza el tamaño de la matriz con los empleados actuales
 		this.incompatibleModel.actualizarTamañoMatriz(listaPersonasTemporal.size());
-		// TODO esto deberia ir en el modelo de incompatibilidades, el controller no
-		// deberia tener logica de negocio, solo de comunicacion entre la vista y el
-		// modelo
-		// Vuelve a llenar los comboboxes de la pantalla
-		List<String> nombresCompletos = new ArrayList<>();
-		for (Persona empleado : listaPersonasTemporal) {
-			nombresCompletos.add(empleado.getNombre() + " " + empleado.getApellido() + " (" + empleado.getRol() + ")");
-		}
+		List<String> nombresCompletos = this.personaModel.obtenerNombresFormateados();
 		vista.cargarPersonasEnSelectores(nombresCompletos);
 	}
 
@@ -59,35 +49,13 @@ public class IncompatibleController implements IncompatiblesListener {
 
 		incompatibleModel.registrarIncompatibilidad(indiceSeleccionadoA, indiceSeleccionadoB);
 
-		String nombreEmpleadoA = obtenerNombrePorHistorial(indiceSeleccionadoA);
-		String nombreEmpleadoB = obtenerNombrePorHistorial(indiceSeleccionadoB);
+		String nombreEmpleadoA = this.personaModel.obtenerNombrePorIndice(indiceSeleccionadoA);
+		String nombreEmpleadoB = this.personaModel.obtenerNombrePorIndice(indiceSeleccionadoB);
 
 		vista.agregarIncompatibilidadTabla(nombreEmpleadoA, nombreEmpleadoB);
 		vista.limpiarInputs();
 	}
 
-	// TODO todos estos metodos deben ir en el modelo de incompatibilidades, el
-	// controller no deberia tener logica de negocio, solo de comunicacion entre la
-	// vista y el modelo
-	private String obtenerNombrePorHistorial(int indice) {
-		if (indice >= 0 && indice < listaPersonasTemporal.size()) {
-			Persona p = listaPersonasTemporal.get(indice);
-			return p.getNombre() + " " + p.getApellido();
-		}
-		return "";
-	}
 
-	// TODO estos metodos se pueden borrar, el controller no deberia tener logica de
-	// negocio, solo de comunicacion entre la vista y el modelo
-	public boolean tienePersonasCargadas() {
-		return this.listaPersonasTemporal != null && !this.listaPersonasTemporal.isEmpty();
-	}
-
-	// TODO este tambien no deberia estar
-	public boolean tieneIncompatibilidadesRegistradas() {
-		if (this.incompatibleModel == null) {
-			return false;
-		}
-		return this.incompatibleModel.tieneIncompatibilidades();
-	}
+	
 }

@@ -70,7 +70,7 @@ public class Main {
 		IncompatibleDialog incompatibleDialog = new IncompatibleDialog("Gestion de Incompatibilidades");
         incompatibleDialog.crearInputs();
         IncompatibleModel incompatibleModel = new IncompatibleModel(personaDialogModel.getListaPersonas().size());
-        IncompatibleController incompatibleController = new IncompatibleController(incompatibleDialog, personaDialogModel.getListaPersonas(), incompatibleModel);
+        IncompatibleController incompatibleController = new IncompatibleController(incompatibleDialog, personaDialogModel.getListaPersonas(), incompatibleModel, personaDialogModel);
 
 		new NavigationController(mainView, navigation, personasDialog, requerimientosDialog, incompatibleDialog,
 								personaDialogModel, requerimientosModel, incompatibleModel,
