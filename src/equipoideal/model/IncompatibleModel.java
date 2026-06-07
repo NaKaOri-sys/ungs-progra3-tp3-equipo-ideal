@@ -1,5 +1,4 @@
 package equipoideal.model;
-
 //TODO falta un observer que notifique al controller que las compatibilidades cambiaron, para que refresque la pantalla y se vean los cambios, 
 public class IncompatibleModel {
 	private boolean[][] matrizIncompatibilidades;
@@ -8,8 +7,7 @@ public class IncompatibleModel {
 		this.matrizIncompatibilidades = new boolean[cantidadPersonas][cantidadPersonas];
 	}
 
-	// Cuando el NavigationController abre mi pantalla, llamo a esto para actualizar
-	// el tamaño
+	// Cuando el NavigationController abre mi pantalla, llamo a esto para actualizar el tamaño
 	public void actualizarTamañoMatriz(int cantidadActual) {
 		if (cantidadActual > matrizIncompatibilidades.length) {
 			boolean[][] nuevaMatriz = new boolean[cantidadActual][cantidadActual];
@@ -21,8 +19,7 @@ public class IncompatibleModel {
 		}
 	}
 
-	// Registra la incompatibilidad de forma directa usando los índices de la
-	// pantalla.
+	// Registra la incompatibilidad de forma directa usando los índices de la pantalla.
 	// es bidireccional, osea si A es incompatible con B, B lo es con A
 	public void registrarIncompatibilidad(int indiceEmpleadoA, int indiceEmpleadoB) {
 		if (indiceEmpleadoA >= 0 && indiceEmpleadoA < matrizIncompatibilidades.length && indiceEmpleadoB >= 0

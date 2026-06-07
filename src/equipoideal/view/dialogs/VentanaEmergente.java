@@ -13,14 +13,14 @@ public class VentanaEmergente extends JDialog {
     private static final long serialVersionUID = 1L;
 
     public VentanaEmergente(JDialog padre, String mensaje) {
-        super(padre, "Error", true); // true = Modal 
+        super(padre, "Alerta", true); // true = Modal 
         inicializarComponentes(mensaje);
         setLocationRelativeTo(padre);
     }
 
 
     private void inicializarComponentes(String mensaje) {
-        setSize(350, 150);
+        setSize(400, 150);
         setLayout(new BorderLayout());
 
         // (padding)

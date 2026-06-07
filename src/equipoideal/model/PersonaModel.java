@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import equipoideal.model.dto.PersonaDto;
 import equipoideal.model.event.IObserverPersona;
@@ -171,6 +172,18 @@ public class PersonaModel extends Observable<IObserverPersona> {
 			return p.getNombre() + " " + p.getApellido();
 		}
 		return "";
+	}
+	
+	public List<String> obtenerNombresFormateados() {
+        List<String> nombres = new ArrayList<>();
+        for (Persona empleado : this.listaPersonas) {
+            nombres.add(empleado.getNombre() + " " + empleado.getApellido() + " (" + empleado.getRol() + ")");
+        }
+        return nombres;
+    }
+	
+	public boolean estaVacia() {
+	    return this.listaPersonas == null || this.listaPersonas.isEmpty();
 	}
 	
 }

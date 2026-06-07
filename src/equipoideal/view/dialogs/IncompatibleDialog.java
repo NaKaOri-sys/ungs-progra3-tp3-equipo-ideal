@@ -13,9 +13,6 @@ import equipoideal.model.listener.IncompatiblesListener;
 
 public class IncompatibleDialog extends DialogPadre {
     
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JComboBox<String> selectorPersona1;
     private JComboBox<String> selectorPersona2;
@@ -24,8 +21,7 @@ public class IncompatibleDialog extends DialogPadre {
 
     public IncompatibleDialog(String titulo) {
         super(titulo);
-        crearInputs();
-
+        
         accionesBoton();
     }
 
@@ -120,6 +116,13 @@ public class IncompatibleDialog extends DialogPadre {
     public void mostrarMensajeError(String mensaje) {
         VentanaEmergente error = new VentanaEmergente(this, mensaje);
         error.setVisible(true);
+    }
+    
+    public boolean tieneIncompatibilidadesCargadas() {
+        if (tabla == null || tabla.getModel() == null) {
+            return false;
+        }
+        return tabla.getModel().getRowCount() > 0;
     }
     
 }

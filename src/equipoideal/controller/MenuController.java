@@ -8,9 +8,6 @@ import equipoideal.view.MenuView;
 import equipoideal.view.dialogs.IncompatibleDialog;
 import equipoideal.view.dialogs.PersonaDialog;
 import equipoideal.view.dialogs.RequerimientoDialog;
-import equipoideal.view.dialogs.VentanaEmergente;
-
-
 
 public class MenuController implements IMenuListener {
 	private NavigationController navigationController;
@@ -44,15 +41,7 @@ public class MenuController implements IMenuListener {
 
 		this.menuView.obtenerObserver().addObserver(this);
 	}
-	
-	public void setIncompatibleController(IncompatibleController incompatibleController) {
-        this.incompatibleController = incompatibleController;
-    }
 
-	// TODO agregar los controllers de los dialogs a este controllers ya que es
-	// donde más sentido tiene, los modelos deben ser inyectados desde el main y
-	// pasados a los controllers de los dialogs, para que estos puedan actualizarse
-	// entre sí
 	@Override
 	public void onCargarPersonas() {
 		personaDialog.setVisible(true);
@@ -73,25 +62,35 @@ public class MenuController implements IMenuListener {
 		// que se abre la pantalla de incompatibilidades o si se puede llamar solo desde
 		// el controller de incompatibilidades cada vez que se registra una nueva
 		// incompatibilidad o se carga una nueva persona
+		//TODO no encontre forma de sacarlo de aca. Es necesario llamarlo acá porque MenuController se recrea
+        // constantemente y necesito forzar la sincronización de los JComboBox antes de mostrar la JDialog
 		if (this.incompatibleController != null) {
 			this.incompatibleController.refrescarPantalla();
 		}
 
-		// TODO: Reemplazar la verificación de getListaPersonas().size() == 0 por un método de conveniencia en el modelo como tienePersonas().
-		if (this.personaModel.getListaPersonas() == null || this.personaModel.getListaPersonas().size() == 0) {
-			this.menuView.mostrarMensajeAdvertencia(
-					"Debe cargar personas en el sistema antes de registrar incompatibilidades.");
+		if (this.personaModel.estaVacia()) {
+			this.menuView.mostrarMensajeAdvertencia("Debe cargar personas en el sistema antes de registrar incompatibilidades.");
 			return;
+		
 		}
 
 		incompatibleDialog.setVisible(true);
 	}
 
-	// TODO si no hay personas, requerimientos o incompatibilidades cargados, debe
-	// estar bloqueada la opción de búsqueda, y mostrar un mensaje indicando que se
-	// deben cargar los datos primero
 	@Override
 	public void onBusqueda() {
+		if (this.personaModel.estaVacia()) {
+			this.menuView.mostrarMensajeAdvertencia("Debe cargar personas en el sistema antes de buscar el equipo ideal.");
+			return;
+		}
+
+		if (!this.incompatibleModel.tieneIncompatibilidades()) {
+		    this.menuView.mostrarMensajeAdvertencia("Debe registrar al menos una incompatibilidad antes de buscar el equipo ideal.");
+		    return;
+		}
+
+		// TODO faltaria validar requerimientos
+
 		this.navigationController.eventSearch();
 	}
 

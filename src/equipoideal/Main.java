@@ -69,16 +69,15 @@ public class Main {
 
 		// INCOMPATIBILIDAD
 		IncompatibleDialog incompatibleDialog = new IncompatibleDialog("Gestion de Incompatibilidades");
-		incompatibleDialog.crearInputs();
+        incompatibleDialog.crearInputs();
 		// TODO: Reemplazar el acceso a getListaPersonas().size() usando un método
 		// encapsulado como getCantidadDePersonas() en PersonaModel.
-		IncompatibleModel incompatibleModel = new IncompatibleModel(personaDialogModel.getListaPersonas().size());
-		IncompatibleController incompatibleController = new IncompatibleController(incompatibleDialog,
-				personaDialogModel.getListaPersonas(), incompatibleModel);
+        IncompatibleModel incompatibleModel = new IncompatibleModel(personaDialogModel.getListaPersonas().size());
+        IncompatibleController incompatibleController = new IncompatibleController(incompatibleDialog, personaDialogModel.getListaPersonas(), incompatibleModel, personaDialogModel);
 
 		new NavigationController(mainView, navigation, personasDialog, requerimientosDialog, incompatibleDialog,
-				personaDialogModel, requerimientosModel, incompatibleModel, personaController, requerimientosController,
-				incompatibleController);
+								personaDialogModel, requerimientosModel, incompatibleModel,
+								personaController, requerimientosController, incompatibleController);
 		navigation.updateView(VentanaEnum.MENU);
 		mainView.setVisible(true);
 	}
