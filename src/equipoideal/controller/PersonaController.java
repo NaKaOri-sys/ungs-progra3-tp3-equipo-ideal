@@ -1,7 +1,6 @@
 package equipoideal.controller;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import equipoideal.model.Persona;
 import equipoideal.model.PersonaModel;
@@ -17,7 +16,7 @@ public class PersonaController implements PersonaListener {
 	private EditarPersonaDialog editarDialog;
 	
 	
-	//TODO: Verificar si esto esta bien, tambien podria usar una clase anonima
+	
 	public PersonaController(PersonaDialog vista, PersonaModel modelo) {
 		this.vista = vista;
 		this.modelo = modelo;
@@ -109,8 +108,7 @@ public class PersonaController implements PersonaListener {
 			return;
 		}
 
-		Persona persona =
-				modelo.getListaPersonas().get(filaSeleccionada);
+		Persona persona = modelo.getListaPersonas().get(filaSeleccionada);
 
 		PersonaDto dtoPersona = persona.toDto();
 

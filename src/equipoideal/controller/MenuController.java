@@ -75,7 +75,7 @@ public class MenuController implements IMenuListener {
 					.mostrarMensajeAdvertencia("Debe cargar personas en el sistema antes de buscar el equipo ideal.");
 			return;
 		}
-
+		//TODO esta validación capaz no tiene sentido, porque el camino feliz es no tener incompatibilidades.
 		if (!this.incompatibleModel.tieneIncompatibilidades()) {
 			this.menuView.mostrarMensajeAdvertencia(
 					"Debe registrar al menos una incompatibilidad antes de buscar el equipo ideal.");

@@ -54,7 +54,7 @@ public class IncompatibleController implements IncompatiblesListener, IObserverP
 			return;
 
 		if (indiceSeleccionadoA == indiceSeleccionadoB) {
-			vista.mostrarMensajeError("Una persona no puede ser incompatible con ella misma.");
+			vista.ventanaMensaje("Una persona no puede ser incompatible con ella misma.");
 			return;
 		}
 

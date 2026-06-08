@@ -27,15 +27,14 @@ public class PersonaModel extends Observable<IObserverPersona> {
 
 	public void agregarPersona(PersonaDto dto) {
 		PersonaValidator.validarPersona(dto);
-		//TODO se puede agregar el parametro de rutaFoto al constructor de Persona, y eliminar el setRutaFoto despues del add
-		Persona p = new Persona(dto.getNombre(), dto.getApellido(), dto.getCalificacion(), dto.getRol());
+		
+		Persona p = new Persona(dto.getNombre(), dto.getApellido(), dto.getCalificacion(), dto.getRol(), dto.getRutaFoto());
 		
 		if (listaPersonas.contains(p)) {
 			 throw new IllegalArgumentException("Esta persona ya existe!");
         }
 		
 		listaPersonas.add(p);
-		p.setRutaFoto(dto.getRutaFoto());
 
 		Collections.sort(listaPersonas, Collections.reverseOrder());
 		notifyObservers(observer -> observer.onListaPersonasModificada(new ArrayList<>(listaPersonas)));
@@ -120,9 +119,8 @@ public class PersonaModel extends Observable<IObserverPersona> {
 
 		PersonaValidator.validarPersona(dto);
 
-		Persona personaEditada = new Persona(dto.getNombre(), dto.getApellido(), dto.getCalificacion(), dto.getRol());
+		Persona personaEditada = new Persona(dto.getNombre(), dto.getApellido(), dto.getCalificacion(), dto.getRol(), dto.getRutaFoto());
 		
-		personaEditada.setRutaFoto(dto.getRutaFoto());
 		
 		int indiceExistente = listaPersonas.indexOf(personaEditada);
 		
@@ -138,9 +136,17 @@ public class PersonaModel extends Observable<IObserverPersona> {
 	}
 	
 
-	// TODO: Proporcionar métodos dedicados como getCantidadDePersonas() y tienePersonas() en lugar de exponer la lista interna para llamadas de .size() o verificación de vacío. Esto mejora la encapsulación y evita la necesidad de acceder a la colección directamente.
+	
 	public ArrayList<Persona> getListaPersonas() {
 		return listaPersonas;
+	}
+	
+	public int getCantidadDePersonas() {
+		return listaPersonas.size();
+	}
+	
+	public boolean tienePersonas() {
+	    return !listaPersonas.isEmpty();
 	}
 
 

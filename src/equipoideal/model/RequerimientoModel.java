@@ -1,5 +1,6 @@
 package equipoideal.model;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -9,17 +10,14 @@ import equipoideal.util.Observable;
 import equipoideal.util.RequerimientoValidator;
 import equipoideal.util.RolEnum;
 
-// TODO: Evitar mantener PersonaModel como variable de instancia permanente únicamente para validar los requerimientos. Pasar la lista de personas como parámetro directo al método crearRequerimientos para reducir el acoplamiento.
 public class RequerimientoModel extends Observable<IObserverRequerimiento> {
 	private Map<RolEnum, Integer> requerimientos;
-	private PersonaModel personaModel;
 
-	public RequerimientoModel(PersonaModel personaModel) {
+	public RequerimientoModel() {
 		this.requerimientos = new LinkedHashMap<>();
-		this.personaModel = personaModel;
 	}
 
-	public void crearRequerimientos(RequerimientoDto dto) {
+	public void crearRequerimientos(RequerimientoDto dto, ArrayList<Persona> personas) {
 		requerimientos.clear();
 
 		requerimientos.put(RolEnum.LIDER, dto.getLideres());
@@ -30,11 +28,11 @@ public class RequerimientoModel extends Observable<IObserverRequerimiento> {
 
 		requerimientos.put(RolEnum.TESTER, dto.getTesters());
 
-		RequerimientoValidator.validarRequerimientos(requerimientos, personaModel.getListaPersonas());
+		RequerimientoValidator.validarRequerimientos(requerimientos, personas);
 
 		
 
-		notifyObservers(observer -> observer.onRequerimientosCreados(requerimientos));
+		notifyObservers(observer -> observer.onRequerimientosCreados(dto));
 	}
 
 	public Map<RolEnum, Integer> getRequerimientos() {

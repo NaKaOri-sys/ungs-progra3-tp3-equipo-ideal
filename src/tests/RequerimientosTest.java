@@ -20,7 +20,7 @@ public class RequerimientosTest {
 	@Before
 	public void setUp() throws IOException {
 		personaDialogModel = new PersonaModel(null, null);
-		modelo = new RequerimientoModel(personaDialogModel);
+		modelo = new RequerimientoModel();
 	}
 	
 	@Test
@@ -43,7 +43,7 @@ public class RequerimientosTest {
 	    
 	    RequerimientoDto reqDto = new RequerimientoDto(1, 1, 0, 0);
 	    
-	    modelo.crearRequerimientos(reqDto);
+	    modelo.crearRequerimientos(reqDto, personaDialogModel.getListaPersonas());
 	    
 	    Integer cantidadLideres = modelo.getRequerimientos().get(RolEnum.LIDER);
 	    assertEquals(Integer.valueOf(1), cantidadLideres);
@@ -53,13 +53,13 @@ public class RequerimientosTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void requerimientosVacioTest() {
 		RequerimientoDto dtoVacio = new RequerimientoDto(0, 0, 0, 0);
-		modelo.crearRequerimientos(dtoVacio);
+		modelo.crearRequerimientos(dtoVacio, personaDialogModel.getListaPersonas());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void masRequerimientosQuePersonasTest() {
 		RequerimientoDto dto = new RequerimientoDto(1, 2, 1, 2);
-		modelo.crearRequerimientos(dto);
+		modelo.crearRequerimientos(dto, personaDialogModel.getListaPersonas());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -71,7 +71,7 @@ public class RequerimientosTest {
 		personaDialogModel.agregarPersona(persona2);
 		
 		RequerimientoDto dtoInvalido = new RequerimientoDto(2, 0, 0, 0);
-		modelo.crearRequerimientos(dtoInvalido);
+		modelo.crearRequerimientos(dtoInvalido, personaDialogModel.getListaPersonas());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -82,7 +82,7 @@ public class RequerimientosTest {
 		personaDialogModel.agregarPersona(persona2);
 		
 		RequerimientoDto dtoInvalido = new RequerimientoDto(0, 3, 0, 0);
-		modelo.crearRequerimientos(dtoInvalido);
+		modelo.crearRequerimientos(dtoInvalido, personaDialogModel.getListaPersonas());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -93,7 +93,7 @@ public class RequerimientosTest {
 		personaDialogModel.agregarPersona(persona2);
 		
 		RequerimientoDto dtoInvalido = new RequerimientoDto(0, 0, 2, 0);
-		modelo.crearRequerimientos(dtoInvalido);
+		modelo.crearRequerimientos(dtoInvalido, personaDialogModel.getListaPersonas());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -104,7 +104,7 @@ public class RequerimientosTest {
 		personaDialogModel.agregarPersona(persona2);
 		
 		RequerimientoDto dtoInvalido = new RequerimientoDto(0, 0, 0, 2);
-		modelo.crearRequerimientos(dtoInvalido);
+		modelo.crearRequerimientos(dtoInvalido, personaDialogModel.getListaPersonas());
 	}
 	
 }

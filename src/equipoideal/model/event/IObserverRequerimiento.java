@@ -1,11 +1,11 @@
 package equipoideal.model.event;
 
-import java.util.Map;
 
-import equipoideal.util.RolEnum;
+
+import equipoideal.model.dto.RequerimientoDto;
 
 public interface IObserverRequerimiento {
 
-	void onRequerimientosCreados(Map<RolEnum, Integer> nuevosRequerimientos);
+	void onRequerimientosCreados(RequerimientoDto nuevosRequerimientos);
 
 }

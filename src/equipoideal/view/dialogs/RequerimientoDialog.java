@@ -1,37 +1,29 @@
 package equipoideal.view.dialogs;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.util.ArrayList;
-
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
-import javax.swing.JTable;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.table.DefaultTableModel;
-
-import equipoideal.model.dto.PersonaDto;
 import equipoideal.model.dto.RequerimientoDto;
 import equipoideal.model.listener.RequerimientoListener;
 
 public class RequerimientoDialog extends DialogPadre {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
 	private JSpinner spinnerLider;
 	private JSpinner spinnerArquitecto;
 	private JSpinner spinnerProgramador;
 	private JSpinner spinnerTester;
 	private RequerimientoListener listener;
-
-	private JTable tablaRequerimientos;
-	private DefaultTableModel modeloTRequerimientos;
+	private JLabel lblLider;
+	private JLabel lblArquitecto;
+	private JLabel lblProgramador;
+	private JLabel lblTester;
 
 	public RequerimientoDialog(String titulo) {
 		super(titulo);
@@ -40,119 +32,100 @@ public class RequerimientoDialog extends DialogPadre {
 	public void setRequerimientosListener(RequerimientoListener listener) {
 		this.listener = listener;
 	}
-	//TODO ver que le pasan a los inputs, porque no deja tipear los numeros, te obliga a usar las flechitas
+
 	@Override
 	public void crearInputs() {
 		btnAceptar.setText("Agregar/Actualizar Requerimientos");
-		panelInputs.setLayout(new GridLayout(5, 1, 10, 10));
 
-		spinnerLider = crearSpinner();
-		spinnerArquitecto = crearSpinner();
-		spinnerProgramador = crearSpinner();
-		spinnerTester = crearSpinner();
+	    panelPrincipal.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+		JPanel panelSpinners = crearPanel(new GridLayout(4, 1));
+		JPanel panelEtiquetas = new JPanel(new FlowLayout());
+		panelEtiquetas.setOpaque(false);
+		
+		
+		spinnerLider = crearSpinner(0, 99, 0, 1);
+		spinnerArquitecto = crearSpinner(0, 99, 0, 1);
+		spinnerProgramador = crearSpinner(0, 99, 0, 1);
+		spinnerTester = crearSpinner(0, 99, 0, 1);
 
-		panelInputs.add(crearFila("Lider De Equipo", spinnerLider));
-		panelInputs.add(crearFila("Arquitecto", spinnerArquitecto));
-		panelInputs.add(crearFila("Programador", spinnerProgramador));
-		panelInputs.add(crearFila("Testers", spinnerTester));
+		panelSpinners.add(crearFila("Lider De Equipo", spinnerLider));
+		panelSpinners.add(crearFila("Arquitecto", spinnerArquitecto));
+		panelSpinners.add(crearFila("Programador", spinnerProgramador));
+		panelSpinners.add(crearFila("Tester", spinnerTester));
+		
+		lblLider = crearLabel("0", 12);
+	    lblArquitecto = crearLabel("0", 12);
+	    lblProgramador = crearLabel("0", 12);
+	    lblTester = crearLabel("0", 12);
+		
+		panelEtiquetas.add(requerimientoPedido("Lider(es)", lblLider));
+		panelEtiquetas.add(requerimientoPedido("Arquitecto(s)", lblArquitecto));
+		panelEtiquetas.add(requerimientoPedido("Programador(es)", lblProgramador));
+		panelEtiquetas.add(requerimientoPedido("Tester(s)", lblTester));
 
-		crearTablaRequerimientos();
-		accionesBoton();
-
-		panelInputs.setBorder(BorderFactory.createEmptyBorder(20, 200, 20, 200));
-
-		crearTabla();
+		panelSuperior.add(panelSpinners, BorderLayout.NORTH);
+		panelSuperior.setBorder(BorderFactory.createEmptyBorder(0, 0, 50, 0));
+		panelCentral.add(panelEtiquetas, BorderLayout.CENTER);
 	}
+	
+	private JPanel requerimientoPedido(String rol, JLabel lblCantidad) {
 
-	private void crearTablaRequerimientos() {
-		String[] columnas = { "Líder", "Arquitecto", "Programador", "Tester" };
-		modeloTRequerimientos = new DefaultTableModel(columnas, 1) {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return false;
-			}
-		};
-
-		tablaRequerimientos = new JTable(modeloTRequerimientos);
-		tablaRequerimientos.getTableHeader().setReorderingAllowed(false);
-
-		JScrollPane scrollTablaReq = new JScrollPane(tablaRequerimientos);
-		scrollTablaReq.setPreferredSize(new Dimension(0, 45));
-
-		panelInputs.add(scrollTablaReq);
-
-	}
-
-	private JPanel crearFila(String nombre, JSpinner spinnerFila) {
-		JPanel fila = new JPanel();
-		fila.setLayout(new BorderLayout());
-		fila.setBackground(ColorFondo);
-
-		JLabel lblFila = new JLabel(nombre);
-		lblFila.setPreferredSize(new Dimension(140, 30));
-
-		fila.add(lblFila, BorderLayout.WEST);
-		fila.add(spinnerFila, BorderLayout.EAST);
-
-		return fila;
-	}
-
-	private JSpinner crearSpinner() {
-		JSpinner spinner = new JSpinner(new SpinnerNumberModel(0, 0, 20, 1));
-
-		((JSpinner.DefaultEditor) spinner.getEditor()).getTextField().setEditable(false);
-
-		return spinner;
+	    JPanel etiqueta = crearPanel(new FlowLayout());
+	    etiqueta.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 10));
+	    
+	    JPanel cuadroNumero = new JPanel(new BorderLayout());
+	    cuadroNumero.setBackground(new Color(60, 65, 85)); 
+	    cuadroNumero.setBorder(BorderFactory.createEmptyBorder(2, 8, 2, 8));
+	    
+	    lblCantidad.setHorizontalAlignment(JLabel.CENTER);
+	    lblCantidad.setForeground(Color.WHITE);
+	    cuadroNumero.add(lblCantidad, BorderLayout.CENTER);
+	    
+	    JLabel lblTextoRol = crearLabel(rol, 12);
+	    lblTextoRol.setForeground(new Color(200, 200, 205));
+	    
+	    etiqueta.add(cuadroNumero);
+	    etiqueta.add(lblTextoRol);
+	    
+	    return etiqueta;
 	}
 
 	@Override
 	public void accionesBoton() {
 		btnAceptar.addActionListener(e -> {
-			if (listener != null) {
-				listener.onRequerimientosAgregados();
-			}
+			if (listener != null) listener.onRequerimientosAgregados();
 		});
 	}
+
+	private JPanel crearFila(String nombre, JSpinner spinnerFila) {
+	    JPanel fila = crearPanel(new BorderLayout());
+	    
+	    JLabel lblFila = crearLabel(nombre, 12);
+	    lblFila.setPreferredSize(new Dimension(160, 30));
+	    
+	    fila.add(lblFila, BorderLayout.WEST);
+	    fila.add(spinnerFila, BorderLayout.EAST);
+	    return fila;
+	}
+	
 
 	public RequerimientoDto getRequerimientos() {
 		return new RequerimientoDto((int) spinnerLider.getValue(), (int) spinnerArquitecto.getValue(),
 				(int) spinnerProgramador.getValue(), (int) spinnerTester.getValue());
 	}
 
-	// TODO ver si se puede matar esto, porque queda muy cargada la vista y
-	// realmente no es necesario conocer las personas cargadas, solo debemos crear y
-	// mostrar los requerimientos
-	public void actualizarTablaPersonas(ArrayList<PersonaDto> personas) {
-
-		DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
-
-		modelo.setRowCount(0);
-
-		for (PersonaDto p : personas) {
-
-			modelo.addRow(new String[] { p.getNombre(), p.getApellido(), p.getRol().toString(),
-					String.valueOf(p.getCalificacion()) });
-		}
-	}
-
 	public void setRequerimientosActuales(RequerimientoDto dto) {
-		if (modeloTRequerimientos != null) {
-			modeloTRequerimientos.setValueAt(dto.getLideres(), 0, 0);
-			modeloTRequerimientos.setValueAt(dto.getArquitectos(), 0, 1);
-			modeloTRequerimientos.setValueAt(dto.getProgramadores(), 0, 2);
-			modeloTRequerimientos.setValueAt(dto.getTesters(), 0, 3);
-		}
+		lblLider.setText(String.valueOf(dto.getLideres()));
+        lblArquitecto.setText(String.valueOf(dto.getArquitectos()));
+        lblProgramador.setText(String.valueOf(dto.getProgramadores()));
+        lblTester.setText(String.valueOf(dto.getTesters()));
 	}
 
+	@Override
 	public void limpiarInputs() {
-
 		spinnerLider.setValue(0);
-
 		spinnerArquitecto.setValue(0);
-
 		spinnerProgramador.setValue(0);
-
 		spinnerTester.setValue(0);
 	}
-
 }
