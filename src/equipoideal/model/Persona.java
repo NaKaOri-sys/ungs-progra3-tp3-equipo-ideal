@@ -1,6 +1,5 @@
 package equipoideal.model;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 import equipoideal.model.dto.PersonaDto;
@@ -13,11 +12,12 @@ public class Persona implements Comparable<Persona> {
 	private RolEnum rol;
 	private String rutaFoto;
 
-	public Persona(String nombre, String apellido, int calificacion, RolEnum rol) {
+	public Persona(String nombre, String apellido, int calificacion, RolEnum rol, String rutaFoto) {
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.calificacion = calificacion;
 		this.rol = rol;
+		this.rutaFoto = rutaFoto;
 	}
 
 	public String getNombre() {
@@ -57,18 +57,6 @@ public class Persona implements Comparable<Persona> {
 		return new PersonaDto(nombre, apellido, calificacion, rol, rutaFoto);
 	}
 
-	// TODO esto debe ir en un util o un helper o algo asi, ya que esto es logica de
-	// transformacion, no de la entidad Persona, ademas el metodo se llama
-	// transformarEnDto pero recibe una lista, lo cual es confuso, revisar esto...podria ir en otro archivo y llamarse personasToDto o algo asi.
-	public ArrayList<PersonaDto> transformarEnDto(ArrayList<Persona> lista) {
-		ArrayList<PersonaDto> dto = new ArrayList<>();
-
-		for (Persona p : lista) {
-			dto.add(p.toDto());
-		}
-
-		return dto;
-	}
 
 	@Override
 	public boolean equals(Object obj) {

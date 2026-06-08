@@ -27,9 +27,9 @@ public class PersonaArchivoTest {
 	public void setUp() throws IOException {
 		personas = new ArrayList<>();
 		
-		personas.add(new Persona("Leo", "Messi", 5, RolEnum.PROGRAMADOR));
-		personas.add(new Persona("Cristiano", "Ronaldo", 4, RolEnum.ARQUITECTO));
-		personas.add(new Persona("Kylian", "Mbappe", 4, RolEnum.TESTER));
+		personas.add(new Persona("Leo", "Messi", 5, RolEnum.PROGRAMADOR, "ruta"));
+		personas.add(new Persona("Cristiano", "Ronaldo", 4, RolEnum.ARQUITECTO, "ruta"));
+		personas.add(new Persona("Kylian", "Mbappe", 4, RolEnum.TESTER, "ruta"));
 	}
 	
 	@Test

@@ -1,27 +1,22 @@
 package equipoideal.controller;
 
-import java.util.ArrayList;
 
-import equipoideal.model.Persona;
-import equipoideal.model.PersonaModel;
-import equipoideal.model.dto.PersonaDto;
-import equipoideal.model.event.IObserverPersona;
+import equipoideal.model.RequerimientoModel;
+import equipoideal.model.dto.RequerimientoDto;
+import equipoideal.model.event.IObserverRequerimiento;
 import equipoideal.view.dialogs.RequerimientoDialog;
 
-public class RequerimientoIntegrationController implements IObserverPersona {
+public class RequerimientoIntegrationController implements IObserverRequerimiento {
 
 	private RequerimientoDialog vista;
 
-	public RequerimientoIntegrationController(RequerimientoDialog vista, PersonaModel modelo) {
+	public RequerimientoIntegrationController(RequerimientoDialog vista, RequerimientoModel modelo) {
 		this.vista = vista;
-		modelo.addObserver(this);
-		
+		modelo.addObserver(this);		
 	}
-
 	@Override
-	public void onListaPersonasModificada(ArrayList<Persona> nuevaLista) {
-		ArrayList<PersonaDto> dto = nuevaLista.get(0).transformarEnDto(nuevaLista);
-		vista.actualizarTablaPersonas(dto);
+	public void onRequerimientosCreados(RequerimientoDto nuevosRequerimientos) {
+        vista.setRequerimientosActuales(nuevosRequerimientos);
 	}
 
 }
