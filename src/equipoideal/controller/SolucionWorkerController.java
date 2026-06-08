@@ -37,9 +37,8 @@ public class SolucionWorkerController extends SwingWorker<ResultadoComparativoDt
 		try {
 			return this.facade.calcularSolucionGlobal();
 		} catch (Exception e) {
-			System.err.println("Hubo un error al procesar el worker, error: " + e.getMessage());
-			e.printStackTrace();
-			throw e;
+			Throwable cause = e.getCause();
+			throw new RuntimeException(cause.getMessage());
 		}
 	}
 
@@ -61,7 +60,8 @@ public class SolucionWorkerController extends SwingWorker<ResultadoComparativoDt
 		try {
 			this.model.setResultado(get());
 		} catch (Exception e) {
-			System.err.println(">>> WORKER DONE ERROR: " + e.getMessage());
+			Throwable cause = e.getCause();
+			error(cause.getMessage());
 		}
 	}
 
@@ -81,8 +81,7 @@ public class SolucionWorkerController extends SwingWorker<ResultadoComparativoDt
 		viewPanel.actualizarMensaje("Tiempo transcurrido (backtracking): " + progress.getTiempo() + "ms.");
 	}
 
-	@Override
-	public void onError(String error) {
+	private void error(String error) {
 		viewPanel.mostrarError(error);
 		this.navigation.updateView(VentanaEnum.MENU);
 	}

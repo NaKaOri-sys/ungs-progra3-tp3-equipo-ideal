@@ -39,7 +39,6 @@ public class CalculadorBacktracking extends Observable<IObserverCalculador> {
 		this.cacheIndice = new IndexCache(this.listaPersonas);
 	}
 
-	// TODO: Si no se encuentra solución que cumpla con los requerimientos, no retornar un equipo vacío, sino lanzar una excepción específica o indicar claramente el fallo para que la interfaz pueda informarlo adecuadamente en lugar de tratarlo como un equipo válido sin integrantes.
 	public EquipoDto calcularMejorEquipo() {
 		this.contadorCasosBase = 0;
 		this.contadorPodas = 0;
@@ -47,6 +46,9 @@ public class CalculadorBacktracking extends Observable<IObserverCalculador> {
 		this.ultimoTiempoNotificado = this.tiempoInicio;
 		Equipo solucionParcialInicial = new Equipo(new ArrayList<Persona>());
 		ejecutarBacktracking(0, solucionParcialInicial);
+		if (this.mejorEquipo.obtenerIntegrantes().isEmpty() || !cumpleExactamenteConLosRoles(this.mejorEquipo)) {
+			throw new RuntimeException("No se encontró un equipo que cumpla con los requerimientos.");
+		}
 		notificarObserver(contadorCasosBase, EquipoCalculadorUtil.obtenerTiempoActual(), tiempoInicio, contadorPodas);
 		return this.mejorEquipo.toDto();
 	}
