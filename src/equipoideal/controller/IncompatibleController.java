@@ -7,9 +7,9 @@ import equipoideal.model.PersonaModel;
 import equipoideal.model.IncompatibleModel;
 import equipoideal.model.listener.IncompatiblesListener;
 import equipoideal.view.dialogs.IncompatibleDialog;
-import equipoideal.view.dialogs.VentanaEmergente;
+import equipoideal.model.event.IObserverPersona;
 
-public class IncompatibleController implements IncompatiblesListener {
+public class IncompatibleController implements IncompatiblesListener, IObserverPersona {
 
 	private IncompatibleDialog vista;
 	private IncompatibleModel incompatibleModel;
@@ -25,9 +25,20 @@ public class IncompatibleController implements IncompatiblesListener {
 		this.personaModel = personaModel;
 
 		this.vista.setIncompatiblesListener(this);
-	}
+		
+		this.personaModel.addObserver(this);
+		
 
-	public void refrescarPantalla() {
+	}
+	
+	@Override
+	public void onListaPersonasModificada(ArrayList<Persona> nuevaLista) {
+		sincronizarDatos();
+	}
+	
+
+
+	public void sincronizarDatos() {
 		// Sincroniza el tamaño de la matriz con los empleados actuales
 		this.incompatibleModel.actualizarTamañoMatriz(listaPersonasTemporal.size());
 		List<String> nombresCompletos = this.personaModel.obtenerNombresFormateados();
@@ -55,6 +66,8 @@ public class IncompatibleController implements IncompatiblesListener {
 		vista.agregarIncompatibilidadTabla(nombreEmpleadoA, nombreEmpleadoB);
 		vista.limpiarInputs();
 	}
+
+	
 
 
 	
