@@ -1,5 +1,9 @@
 package equipoideal.model;
-//TODO falta un observer que notifique al controller que las compatibilidades cambiaron, para que refresque la pantalla y se vean los cambios, 
+
+
+
+//TODO  para que se vean los cambios necesitaba observar a personamodel. implemente eso  y ahora si se actualiza
+
 public class IncompatibleModel {
 	private boolean[][] matrizIncompatibilidades;
 
@@ -16,6 +20,8 @@ public class IncompatibleModel {
 				System.arraycopy(matrizIncompatibilidades[i], 0, nuevaMatriz[i], 0, matrizIncompatibilidades[i].length);
 			}
 			this.matrizIncompatibilidades = nuevaMatriz;
+			
+
 		}
 	}
 
@@ -27,6 +33,7 @@ public class IncompatibleModel {
 
 			matrizIncompatibilidades[indiceEmpleadoA][indiceEmpleadoB] = true;
 			matrizIncompatibilidades[indiceEmpleadoB][indiceEmpleadoA] = true;
+			
 		}
 	}
 

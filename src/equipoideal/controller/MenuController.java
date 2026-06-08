@@ -58,12 +58,6 @@ public class MenuController implements IMenuListener {
 
 	@Override
 	public void onIncompatibilidad() {
-		// refresca la pantalla para que cargue los nuevos nombres si es que cargaron
-		// personas
-		if (this.incompatibleController != null) {
-			this.incompatibleController.refrescarPantalla();
-		}
-
 		if (this.personaModel.estaVacia()) {
 			this.menuView.mostrarMensajeAdvertencia(
 					"Debe cargar personas en el sistema antes de registrar incompatibilidades.");
