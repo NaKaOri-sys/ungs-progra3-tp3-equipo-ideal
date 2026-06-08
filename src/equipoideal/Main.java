@@ -49,27 +49,22 @@ public class Main {
 		PersonaModel personaDialogModel = new PersonaModel(repository, FOLDER_PATH);
 		// PERSONAS
 		PersonaDialog personasDialog = new PersonaDialog("Gestion de Personas");
-		personasDialog.crearInputs();
 		PersonaController personaController = new PersonaController(personasDialog, personaDialogModel);
 		PersonaIntegrationController personaIntegrationController = new PersonaIntegrationController(personasDialog,
 				personaDialogModel);
 
 		// REQUERIMIENTOS
-		RequerimientoModel requerimientosModel = new RequerimientoModel(personaDialogModel);
+		RequerimientoModel requerimientosModel = new RequerimientoModel();
 		RequerimientoDialog requerimientosDialog = new RequerimientoDialog("Gestion de Requerimientos");
-		requerimientosDialog.crearInputs();
 		RequerimientoController requerimientosController = new RequerimientoController(requerimientosDialog,
 				requerimientosModel);
+		requerimientosController.setListaPersonas(personaDialogModel.getListaPersonas());
 		RequerimientoIntegrationController reqIntegrationController = new RequerimientoIntegrationController(
-				requerimientosDialog, personaDialogModel);
-		// TODO este controller no tiene mucho sentido que guarde
-
-		// personas, deberia simplemente cargar los requerimientos y
-		// mostrarlos en la tabla que muestra las personas
+				requerimientosDialog, requerimientosModel);
+		
 
 		// INCOMPATIBILIDAD
 		IncompatibleDialog incompatibleDialog = new IncompatibleDialog("Gestion de Incompatibilidades");
-        incompatibleDialog.crearInputs();
 		// TODO: Reemplazar el acceso a getListaPersonas().size() usando un método
 		// encapsulado como getCantidadDePersonas() en PersonaModel.
         IncompatibleModel incompatibleModel = new IncompatibleModel(personaDialogModel.getListaPersonas().size());

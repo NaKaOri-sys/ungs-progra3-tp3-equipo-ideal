@@ -7,6 +7,7 @@ import equipoideal.model.Persona;
 import equipoideal.model.PersonaModel;
 import equipoideal.model.dto.PersonaDto;
 import equipoideal.model.event.IObserverPersona;
+import equipoideal.util.PersonaUtil;
 import equipoideal.view.dialogs.PersonaDialog;
 
 
@@ -20,7 +21,7 @@ public class PersonaIntegrationController implements IObserverPersona {
 
     @Override
 	public void onListaPersonasModificada(ArrayList<Persona> nuevaLista) {
-		ArrayList<PersonaDto> dto = nuevaLista.get(0).transformarEnDto(nuevaLista);
+		ArrayList<PersonaDto> dto = PersonaUtil.personasToDto(nuevaLista);
 		vista.actualizarTablaPersonas(dto);
 	}
 

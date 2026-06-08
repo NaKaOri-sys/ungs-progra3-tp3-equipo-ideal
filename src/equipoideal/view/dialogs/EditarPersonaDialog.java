@@ -10,7 +10,6 @@ public class EditarPersonaDialog extends PersonaDialog {
 
 	public EditarPersonaDialog(String titulo) {
 		super(titulo);
-		crearInputs();
 
 	}
 
@@ -22,9 +21,10 @@ public class EditarPersonaDialog extends PersonaDialog {
 	public void crearInputs() {
 
 		btnAceptar.setText("Guardar cambios");
+		
 		crearFormularioPersonas();
+		
 		btnCargarDesde.setText("EditarFoto");
-		accionesBoton();
 	}
 
 	@Override

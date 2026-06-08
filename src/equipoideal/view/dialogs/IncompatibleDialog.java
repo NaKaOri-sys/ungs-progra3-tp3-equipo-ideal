@@ -1,11 +1,9 @@
 package equipoideal.view.dialogs;
 
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
@@ -22,7 +20,6 @@ public class IncompatibleDialog extends DialogPadre {
     public IncompatibleDialog(String titulo) {
         super(titulo);
         
-        accionesBoton();
     }
 
     public void setIncompatiblesListener(IncompatiblesListener listener) {
@@ -31,36 +28,27 @@ public class IncompatibleDialog extends DialogPadre {
 
     @Override
     public void crearInputs() {
-        panelInputs.setLayout(new GridLayout(2, 2, 10, 10));
-        
-        JLabel lblPersona1 = new JLabel("Persona 1:");
-        JLabel lblPersona2 = new JLabel("Persona 2:");
+    	btnAceptar.setText("Registrar Incompatibilidad");
+
+        panelSuperior.setLayout(new GridLayout(2, 2, 10, 10));
+        JPanel panelSeleccion = crearPanel(new GridLayout(2,1, 10, 10));
+    	
+        JLabel lblPersona1 = crearLabel("Persona 1:", 12);
+        JLabel lblPersona2 = crearLabel("Persona 2:", 12);
         
         selectorPersona1 = new JComboBox<>();
         selectorPersona2 = new JComboBox<>();
         
-        panelInputs.add(lblPersona1);
-        panelInputs.add(lblPersona2);
-        panelInputs.add(selectorPersona1);
-        panelInputs.add(selectorPersona2);
         
-        panelBotones.removeAll(); 
+        panelSeleccion.add(lblPersona1);
+        panelSeleccion.add(lblPersona2);
+        panelSeleccion.add(selectorPersona1);
+        panelSeleccion.add(selectorPersona2);
        
-        btnAceptar.setText("Registrar Incompatibilidad"); 
+        panelSuperior.add(panelSeleccion);
         
-        JPanel filaSuperior = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        filaSuperior.setOpaque(false);
-        filaSuperior.add(btnAceptar);
-        
-        JPanel filaInferior = new JPanel(new FlowLayout(FlowLayout.CENTER)); 
-        filaInferior.setOpaque(false);
-        filaInferior.add(btnCerrar);
-        
-        panelBotones.setLayout(new GridLayout(2, 1, 0, 5));
-        panelBotones.add(filaSuperior);
-        panelBotones.add(filaInferior);
-
-        crearTabla();
+        String[] columnas = {"Persona1", "Persona2"};
+		configurarTabla(columnas, panelCentral);
         configurarColumnasTabla();
     }
 
@@ -111,11 +99,6 @@ public class IncompatibleDialog extends DialogPadre {
     
     public JButton getBtnAceptar() {
         return btnAceptar; 
-    }
-    
-    public void mostrarMensajeError(String mensaje) {
-        VentanaEmergente error = new VentanaEmergente(this, mensaje);
-        error.setVisible(true);
     }
     
     public boolean tieneIncompatibilidadesCargadas() {

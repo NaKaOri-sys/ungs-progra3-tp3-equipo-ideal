@@ -9,7 +9,6 @@ import java.awt.Image;
 import java.io.File;
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -18,7 +17,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.SpinnerNumberModel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
@@ -40,7 +38,6 @@ public class PersonaDialog extends DialogPadre{
 	private JButton btnLimpiarCache;
 	private JButton btnEditarPersona;
 	private JButton btnEliminarPersona;
-	private JPanel panelBotonesNuevos;
 	protected PersonaListener listener;
 	private JLabel lblImagen;
 	protected JPanel panelFoto;
@@ -59,99 +56,107 @@ public class PersonaDialog extends DialogPadre{
 	@Override
 	public void crearInputs() {
 
+		btnAceptar.setText("Agregar Persona");
 		crearFormularioPersonas();
+		
+		String[] columnas = { "Nombre", "Apellido", "Puesto", "Puntos"};
+		configurarTabla(columnas, panelCentral);
 
-		btnExportar = new JButton("Descargar JSON");
-		panelBotones.add(btnExportar);
+		btnEditarPersona = crearBoton("Editar");
+		btnEliminarPersona = crearBoton("Eliminar");
 
-		btnLimpiarCache = new JButton("Limpiar cache imagenes");
-		panelBotones.add(btnLimpiarCache);
+		JPanel panelAcciones = new JPanel(new GridLayout(2, 1, 0, 15));
 
-		crearTabla();
+		panelAcciones.setOpaque(false);
 
-		btnEditarPersona = new JButton("Editar");
-		btnEliminarPersona = new JButton("Eliminar");
+		panelAcciones.add(btnEditarPersona);
+		panelAcciones.add(btnEliminarPersona);
 
-		JPanel panelAccionesTabla = new JPanel();
-		panelAccionesTabla.setLayout(new GridLayout(2, 1, 0, 10));
-
-		panelAccionesTabla.add(btnEditarPersona);
-		panelAccionesTabla.add(btnEliminarPersona);
-
-		panelLista.add(panelAccionesTabla, BorderLayout.EAST);
-
-		accionesBoton();
+		panelCentral.add(panelAcciones, BorderLayout.EAST);
+		
+		btnExportar = crearBoton("Exportar JSON");
+		btnLimpiarCache = crearBoton("Limpiar Cache de Imagenes");
+		
+		grillaBotones.add(btnExportar);
+		grillaBotones.add(btnLimpiarCache);
+		
+		
 	}
-	
+
 	protected void crearFormularioPersonas() {
-
-		panelInputs.setLayout(new BorderLayout(0, 10));
-
-		panelBotonesNuevos = new JPanel(new BorderLayout());
-		panelBotonesNuevos.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-		panelBotonesNuevos.setOpaque(false);
+		JPanel panelFormulario = new JPanel(new BorderLayout(15, 0));
+		panelFormulario.setOpaque(false);
 		
-		btnCargarDesde = new JButton("Cargar Personas");
-		btnCargarDesde.setPreferredSize(new Dimension(180, 40));
+		JPanel panelIzquierdo = crearPanel(new BorderLayout());
 		
-		JPanel panelDerecho = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		panelDerecho.setOpaque(false);
-		panelDerecho.add(btnCargarDesde);
-
-		panelBotonesNuevos.add(panelDerecho, BorderLayout.EAST);
-
 		panelFoto = new JPanel(new CardLayout());
-		panelFoto.setPreferredSize(new Dimension(120, 120));
-
-		btnFoto = new JButton("Foto");
-
+		panelFoto.setOpaque(false);
+		
+		btnFoto = crearBoton("Seleccionar Foto");
+		btnFoto.setPreferredSize(new Dimension(140, 140));
+		
 		lblImagen = new JLabel();
 		lblImagen.setHorizontalAlignment(JLabel.CENTER);
-
+		
 		panelFoto.add(btnFoto, "BTN");
 		panelFoto.add(lblImagen, "IMG");
-
-		panelBotonesNuevos.add(panelFoto, BorderLayout.WEST);
-
-		JPanel nuevosInputs = new JPanel(new GridLayout(4, 2, 10, 10));
-		nuevosInputs.setOpaque(false);
-
-		JLabel lblNombre = new JLabel("Nombre:");
-		txtNombre = new JTextField();
-
-		JLabel lblApellido = new JLabel("Apellido:");
-		txtApellido = new JTextField();
-
-		JLabel lblPuntuacion = new JLabel("Puntos:");
-
-		spinnerPuntuacion =new JSpinner(new SpinnerNumberModel(1, 1, 5, 1));
-
-		((JSpinner.DefaultEditor)spinnerPuntuacion.getEditor()).getTextField().setEditable(false);
-
-		JLabel lblRol = new JLabel("Puesto:");
-
-		comboRol = new JComboBox<>(RolEnum.values());
-
-		nuevosInputs.add(lblNombre);
-		nuevosInputs.add(lblApellido);
-
-		nuevosInputs.add(txtNombre);
-		nuevosInputs.add(txtApellido);
-
-		nuevosInputs.add(lblPuntuacion);
-		nuevosInputs.add(lblRol);
-
-		nuevosInputs.add(spinnerPuntuacion);
-		nuevosInputs.add(comboRol);
-
-		panelInputs.add(panelBotonesNuevos, BorderLayout.NORTH);
-		panelInputs.add(nuevosInputs, BorderLayout.CENTER);
-
-		panelBotonesNuevos.setBorder(BorderFactory.createEmptyBorder(10, 40, 20, 40));
+		
+		panelIzquierdo.add(panelFoto, BorderLayout.CENTER);
+		
+		
+		JPanel panelDerecho = new JPanel(new BorderLayout(0, 8));
+		panelDerecho.setOpaque(false);
+		
+		JPanel panelTopDerecho = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+		panelTopDerecho.setOpaque(false);
+		
+		
+		JPanel panelInputsGrid = crearPanel(new GridLayout(4, 2, 10, 8));
+		
+		JLabel lblNombre = crearLabel("Nombre:", 12);
+		txtNombre = crearTextField(20);
+		
+		JLabel lblApellido = crearLabel("Apellido:", 12);
+		txtApellido = crearTextField(20);
+		
+		JLabel lblPuntuacion = crearLabel("Puntos:", 12);
+		spinnerPuntuacion = crearSpinner(1, 5, 1, 1);
+		
+		JLabel lblRol = crearLabel("Puesto:", 12);
+		comboRol = new JComboBox<RolEnum>(RolEnum.values());
+		
+		
+		panelInputsGrid.add(lblNombre);
+		panelInputsGrid.add(lblApellido);
+		
+		panelInputsGrid.add(txtNombre);
+		panelInputsGrid.add(txtApellido);
+		
+		panelInputsGrid.add(lblPuntuacion);
+		panelInputsGrid.add(lblRol);
+	
+		panelInputsGrid.add(spinnerPuntuacion);
+		panelInputsGrid.add(comboRol);
+		
+		btnCargarDesde = crearBoton("Cargar Desde JSON");
+		panelTopDerecho.add(btnCargarDesde);
+		
+		panelDerecho.add(panelTopDerecho, BorderLayout.NORTH);
+		panelDerecho.add(panelInputsGrid, BorderLayout.CENTER);
+		
+		
+		panelFormulario.add(panelIzquierdo, BorderLayout.WEST);
+		
+		panelFormulario.add(panelDerecho, BorderLayout.CENTER);
+		
+		panelSuperior.add(panelFormulario, BorderLayout.CENTER);
+		
 	}
 
 	@Override
 	public void accionesBoton() {
+		
+	
 		btnAceptar.addActionListener(e -> {
 			if (listener != null) {
 				listener.onPersonaAgregada();

@@ -16,7 +16,6 @@ import equipoideal.model.PersonaModel;
 import equipoideal.model.dto.PersonaDto;
 import equipoideal.model.repository.PersonaRepository;
 import equipoideal.model.repository.PersonaRepositoryJson;
-import equipoideal.util.PersonaValidator;
 import equipoideal.util.RolEnum;
 
 public class PersonasTest {
@@ -42,9 +41,9 @@ public class PersonasTest {
 		this.modelo = new PersonaModel(personaRepository, carpetaFotosTemporal.getAbsolutePath());
 		
 		personas = new ArrayList<>();
-		persona1 = new Persona("Leo", "Messi", 5, RolEnum.PROGRAMADOR);
-		persona2 = new Persona("Cristiano", "Ronaldo", 4, RolEnum.ARQUITECTO);
-		persona3 = new Persona("Kylian", "Mbappe", 4, RolEnum.TESTER);
+		persona1 = new Persona("Leo", "Messi", 5, RolEnum.PROGRAMADOR, "ruta");
+		persona2 = new Persona("Cristiano", "Ronaldo", 4, RolEnum.ARQUITECTO,  "ruta");
+		persona3 = new Persona("Kylian", "Mbappe", 4, RolEnum.TESTER,  "ruta");
 		
 		personas.add(persona1);
 		personas.add(persona2);
@@ -91,19 +90,10 @@ public class PersonasTest {
 	    assertEquals(RolEnum.PROGRAMADOR, dto.getRol());
 	}
 	
-	@Test
-	public void transformarEnDtoTest() {
-		ArrayList<PersonaDto> dtos = persona1.transformarEnDto(personas);
-		
-		assertEquals(3, dtos.size());
-		assertEquals("Leo", dtos.get(0).getNombre());
-		assertEquals("Cristiano", dtos.get(1).getNombre());
-		assertEquals("Kylian", dtos.get(2).getNombre());
-	}
 	
 	@Test
 	public void equalsPersonaTest() {
-		Persona clonMessi = new Persona("Leo", "Messi", 1, RolEnum.TESTER);
+		Persona clonMessi = new Persona("Leo", "Messi", 1, RolEnum.TESTER, "ruta");
 		
 		assertEquals(true, persona1.equals(clonMessi));
 		assertEquals(false, persona1.equals(persona2));
