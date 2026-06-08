@@ -7,13 +7,15 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
-import equipoideal.model.listener.IncompatiblesListener; 
+import equipoideal.model.listener.IncompatiblesListener;
+import equipoideal.view.components.DialogStyleHelper; 
 
 public class IncompatibleDialog extends DialogPadre {
     
 	private static final long serialVersionUID = 1L;
 	private JComboBox<String> selectorPersona1;
     private JComboBox<String> selectorPersona2;
+    private JButton btnEliminar;
     private IncompatiblesListener listener;
 
 
@@ -29,6 +31,9 @@ public class IncompatibleDialog extends DialogPadre {
     @Override
     public void crearInputs() {
     	btnAceptar.setText("Registrar Incompatibilidad");
+    	
+    	btnEliminar = crearBoton("Eliminar Incompatibilidad");
+        grillaBotones.add(btnEliminar);
 
         panelSuperior.setLayout(new GridLayout(2, 2, 10, 10));
         JPanel panelSeleccion = crearPanel(new GridLayout(2,1, 10, 10));
@@ -50,17 +55,46 @@ public class IncompatibleDialog extends DialogPadre {
         String[] columnas = {"Persona1", "Persona2"};
 		configurarTabla(columnas, panelCentral);
         configurarColumnasTabla();
+        
+        JLabel lblTituloTabla = crearLabel("Personas Incompatibles", 12);
+        lblTituloTabla.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTituloTabla.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
+        lblTituloTabla.setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 0, 5, 0));
+        
+        lblTituloTabla.setBorder(javax.swing.BorderFactory.createCompoundBorder(
+        	    javax.swing.BorderFactory.createEmptyBorder(30, 0, 5, 0),
+        	    javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, DialogStyleHelper.ColorBorde)));
+        
+        JPanel contenedorNorte = new JPanel();
+        contenedorNorte.setOpaque(false);
+        contenedorNorte.setLayout(new javax.swing.BoxLayout(contenedorNorte, javax.swing.BoxLayout.Y_AXIS));
+        
+        contenedorNorte.add(panelBotonesMedio);
+        contenedorNorte.add(lblTituloTabla);
+        
+        //contenedor completo al NORTH del panel central
+        panelCentral.add(contenedorNorte, java.awt.BorderLayout.NORTH);
+    }
+    
+    private void configurarColumnasTabla() {
+      tabla.setTableHeader(null); 
+    }
+    
+    public int getFilaSeleccionada() {
+        return tabla.getSelectedRow(); // Devuelve -1 si no tocó ninguna fila
     }
 
-    private void configurarColumnasTabla() {
-        String[] columnasIncompatibles = {"Persona 1", "Persona 2"};
-        DefaultTableModel modeloCustom = new DefaultTableModel(columnasIncompatibles, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        tabla.setModel(modeloCustom);
+    public String getNombrePersona1DeTabla(int fila) {
+        return tabla.getValueAt(fila, 0).toString();
+    }
+
+    public String getNombrePersona2DeTabla(int fila) {
+        return tabla.getValueAt(fila, 1).toString();
+    }
+
+    public void eliminarFilaTabla(int fila) {
+        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+        modelo.removeRow(fila);
     }
 
     public void cargarPersonasEnSelectores(List<String> nombresPersonas) {
@@ -89,6 +123,10 @@ public class IncompatibleDialog extends DialogPadre {
         btnAceptar.addActionListener(e -> {
             if (listener != null) listener.onIncompatibilidadRegistrada();
         }); 
+        
+        btnEliminar.addActionListener(e -> {
+            if (listener != null) listener.onIncompatibilidadEliminada();
+        });
     }
 
     @Override

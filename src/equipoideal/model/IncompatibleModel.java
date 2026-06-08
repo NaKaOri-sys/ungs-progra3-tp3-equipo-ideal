@@ -1,9 +1,6 @@
 package equipoideal.model;
 
 
-
-//TODO  para que se vean los cambios necesitaba observar a personamodel. implemente eso  y ahora si se actualiza
-
 public class IncompatibleModel {
 	private boolean[][] matrizIncompatibilidades;
 
@@ -36,6 +33,17 @@ public class IncompatibleModel {
 			
 		}
 	}
+	
+
+	public void eliminarIncompatibilidad(int indiceEmpleadoA, int indiceEmpleadoB) {
+		if (indiceEmpleadoA >= 0 && indiceEmpleadoA < matrizIncompatibilidades.length && 
+		    indiceEmpleadoB >= 0 && indiceEmpleadoB < matrizIncompatibilidades.length) {
+
+			matrizIncompatibilidades[indiceEmpleadoA][indiceEmpleadoB] = false;
+			matrizIncompatibilidades[indiceEmpleadoB][indiceEmpleadoA] = false;
+		}
+	}
+	
 
 	public boolean sonIncompatibles(int indiceEmpleadoA, int indiceEmpleadoB) {
 		if (indiceEmpleadoA >= matrizIncompatibilidades.length || indiceEmpleadoB >= matrizIncompatibilidades.length)
