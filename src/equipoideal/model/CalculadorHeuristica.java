@@ -33,7 +33,6 @@ public class CalculadorHeuristica extends Observable<IObserverCalculador> {
 		this.matrizIncompatibilidades = matrizIncompatibilidades;
 	}
 
-	// TODO: Al igual que en Backtracking, si la heurística no logra conformar un equipo que cumpla todos los requerimientos, no debería retornar un equipo incompleto o vacío como válido, sino indicar explícitamente la imposibilidad mediante una excepción o retorno nulo.
 	public EquipoDto ejecutarHeuristica() {
 		this.tiempoInicio = EquipoCalculadorUtil.obtenerTiempoActual();
 		this.cacheIndice = new IndexCache(listaPersonas);
@@ -47,10 +46,13 @@ public class CalculadorHeuristica extends Observable<IObserverCalculador> {
 					break;
 				}
 			}
+			if (equipoResultante.obtenerIntegrantes().isEmpty() || !cumpleConTodosLosRequerimientos(equipoResultante)) {
+				throw new RuntimeException("No se encontró un equipo que cumpla con los requerimientos.");
+			}
 			notificarObserver(EquipoCalculadorUtil.obtenerTiempoActual(), tiempoInicio);
 			return equipoResultante.toDto();
 		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -71,8 +73,8 @@ public class CalculadorHeuristica extends Observable<IObserverCalculador> {
 	}
 
 	private void notificarObserver(long tiempoActual, long tiempoInicio) {
-		ProgresoEventoDto evento = new ProgresoEventoDto(0, tiempoActual - tiempoInicio,
-				0, OrigenCalculadorEnum.HEURISTICA);
+		ProgresoEventoDto evento = new ProgresoEventoDto(0, tiempoActual - tiempoInicio, 0,
+				OrigenCalculadorEnum.HEURISTICA);
 		notifyObservers(o -> o.alCambiarProgreso(evento));
 	}
 }

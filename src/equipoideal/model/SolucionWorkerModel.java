@@ -2,6 +2,8 @@ package equipoideal.model;
 
 import java.util.List;
 
+import javax.management.RuntimeErrorException;
+
 import equipoideal.model.dto.ProgresoEventoDto;
 import equipoideal.model.dto.ResultadoComparativoDto;
 import equipoideal.model.event.IWorkerObserver;
@@ -30,17 +32,14 @@ public class SolucionWorkerModel extends Observable<IWorkerObserver> {
 			}
 
 		} catch (Exception e) {
-				System.err.println("Hubo un error al procesar el progreso, error: " + e.getMessage());
-				e.printStackTrace();
-			notifyObservers(observer -> observer.onError("Hubo un error al procesar el progreso, error: " + e.getMessage()));
+			throw new RuntimeException("Hubo un error al procesar el progreso, error: " + e.getMessage());
 		}
 	}
 
 	public void setResultado(ResultadoComparativoDto resultadoDto) {
 		if (resultadoDto == null || resultadoDto.getEquipoHeuristica() == null
 				|| resultadoDto.getEquipoBacktracking() == null) {
-			notifyObservers(o -> o.onError("El equipo resultante no es valido, vuelva a intentarlo"));
-			return;
+			throw new RuntimeException("El equipo resultante no es valido, vuelva a intentarlo");
 		}
 		this.resultado.setEquipoHeuristica(resultadoDto.getEquipoHeuristica());
 		this.resultado.setEquipoBacktracking(resultadoDto.getEquipoBacktracking());
