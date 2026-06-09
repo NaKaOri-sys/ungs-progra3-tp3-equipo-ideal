@@ -7,6 +7,9 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
+
+import equipoideal.model.Persona;
+import equipoideal.model.dto.PersonaDto;
 import equipoideal.model.listener.IncompatiblesListener;
 import equipoideal.view.components.DialogStyleHelper; 
 
@@ -38,8 +41,8 @@ public class IncompatibleDialog extends DialogPadre {
         panelSuperior.setLayout(new GridLayout(2, 2, 10, 10));
         JPanel panelSeleccion = crearPanel(new GridLayout(2,1, 10, 10));
     	
-        JLabel lblPersona1 = crearLabel("Persona 1:", 12);
-        JLabel lblPersona2 = crearLabel("Persona 2:", 12);
+        JLabel lblPersona1 = crearLabel("Persona:", 12);
+        JLabel lblPersona2 = crearLabel("Persona Incompatible:", 12);
         
         selectorPersona1 = new JComboBox<>();
         selectorPersona2 = new JComboBox<>();
@@ -52,7 +55,7 @@ public class IncompatibleDialog extends DialogPadre {
        
         panelSuperior.add(panelSeleccion);
         
-        String[] columnas = {"Persona1", "Persona2"};
+        String[] columnas = {"Persona", "Persona"};
 		configurarTabla(columnas, panelCentral);
         configurarColumnasTabla();
         
@@ -83,26 +86,26 @@ public class IncompatibleDialog extends DialogPadre {
     public int getFilaSeleccionada() {
         return tabla.getSelectedRow(); // Devuelve -1 si no tocó ninguna fila
     }
-
-    public String getNombrePersona1DeTabla(int fila) {
-        return tabla.getValueAt(fila, 0).toString();
+    
+    public Persona getPersona1DeTabla(int fila) {
+        return (Persona) tabla.getValueAt(fila, 0);
     }
-
-    public String getNombrePersona2DeTabla(int fila) {
-        return tabla.getValueAt(fila, 1).toString();
+    
+    public Persona getPersona2DeTabla(int fila) {
+        return (Persona) tabla.getValueAt(fila, 1);
     }
-
+    
     public void eliminarFilaTabla(int fila) {
         DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
         modelo.removeRow(fila);
     }
 
-    public void cargarPersonasEnSelectores(List<String> nombresPersonas) {
+    public void cargarPersonasEnSelectores(List<PersonaDto> personas) {
     	selectorPersona1.removeAllItems();
     	selectorPersona2.removeAllItems();
-        for (String nombre : nombresPersonas) {
-        	selectorPersona1.addItem(nombre);
-        	selectorPersona2.addItem(nombre);
+        for (PersonaDto p : personas) {
+        	selectorPersona1.addItem(p.toString());
+        	selectorPersona2.addItem(p.toString());
         }
     }
 
@@ -113,9 +116,9 @@ public class IncompatibleDialog extends DialogPadre {
     	return selectorPersona2.getSelectedIndex();
     	}
 
-    public void agregarIncompatibilidadTabla(String p1, String p2) {
+    public void agregarIncompatibilidadTabla(Persona p1, Persona p2) {
         DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
-        modelo.addRow(new Object[]{p1, p2});
+        modelo.addRow(new Persona[]{p1, p2});
     }
 
     @Override
@@ -125,7 +128,7 @@ public class IncompatibleDialog extends DialogPadre {
         }); 
         
         btnEliminar.addActionListener(e -> {
-            if (listener != null) listener.onIncompatibilidadEliminada();
+            if (listener != null) listener.alBorrarIncompatibilidad();
         });
     }
 

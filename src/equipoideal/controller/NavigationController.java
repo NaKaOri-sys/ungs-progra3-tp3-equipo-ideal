@@ -77,8 +77,8 @@ public class NavigationController implements IObserverNavigation {
 				this.menuController = null;
 			}
 			this.menuController = new MenuController(this, this.mainView.getPanelMenu(), this.personasDialog,
-					this.requerimientosDialog, this.incompatibleDialog, this.personaController,
-					this.requerimientoController, this.personaModel, this.requerimientoModel, this.incompatibleModel);
+					this.requerimientosDialog, this.incompatibleDialog, this.personaModel, this.requerimientoModel,
+					this.incompatibleModel);
 			break;
 
 		case BUSQUEDA:
@@ -86,7 +86,9 @@ public class NavigationController implements IObserverNavigation {
 				this.solucionWorkerController.dispose();
 				this.solucionWorkerController = null;
 			}
-
+			if (!this.incompatibleModel.hayIncompatibilidades()) {
+				this.incompatibleModel.crearMapIncompatibilidades(personaModel.getListaPersonas());
+			}
 			CalculadorBacktracking backtracking = new CalculadorBacktracking(
 					new ArrayList<>(personaModel.getListaPersonas()),
 					new LinkedHashMap<RolEnum, Integer>(requerimientoModel.getRequerimientos()),

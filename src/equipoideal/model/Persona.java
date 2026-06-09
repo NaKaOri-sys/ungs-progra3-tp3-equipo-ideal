@@ -76,5 +76,9 @@ public class Persona implements Comparable<Persona> {
 	public int hashCode() {
 		return Objects.hash(nombre, apellido);
 	}
-
+	
+	@Override
+	public String toString() {
+		return this.nombre + " " + this.apellido + "(" + this.rol + ")";
+	}
 }

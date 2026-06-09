@@ -38,5 +38,9 @@ public class RequerimientoModel extends Observable<IObserverRequerimiento> {
 	public Map<RolEnum, Integer> getRequerimientos() {
 		return requerimientos;
 	}
+	
+	public boolean hayRequerimientosCargados() {
+		return requerimientos.size() > 0;
+	}
 
 }

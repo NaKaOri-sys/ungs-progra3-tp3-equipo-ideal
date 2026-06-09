@@ -26,7 +26,7 @@ public class PersonaDto {
 	public String getNombre() {
 		return this.nombre;
 	}
-	
+
 	public String getApellido() {
 		return this.apellido;
 	}
@@ -37,5 +37,10 @@ public class PersonaDto {
 
 	public int getCalificacion() {
 		return this.calificacion;
+	}
+
+	@Override
+	public String toString() {
+		return this.nombre + " " + this.apellido + "(" + this.rol + ")";
 	}
 }

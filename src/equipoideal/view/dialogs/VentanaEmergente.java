@@ -21,7 +21,7 @@ public class VentanaEmergente extends JDialog {
     }
 
     private void inicializarComponentes(String mensaje) {
-        setSize(420, 160);
+        setSize(520, 160);
         setLayout(new BorderLayout());
         setResizable(false);
         
