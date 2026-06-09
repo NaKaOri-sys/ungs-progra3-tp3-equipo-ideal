@@ -38,34 +38,36 @@ public class PersonaController implements PersonaListener {
 
 	@Override
 	public void onCargaDesdeJson(String ruta) {
-
 		try {
 			modelo.cargarDesdeJSON(ruta);
 			vista.ventanaMensaje("Personas agregadas correctamente!!");
 		} catch (IllegalArgumentException e) {
 			vista.ventanaMensaje(e.getMessage());
+		} catch (RuntimeException e) {
+			vista.ventanaMensaje("Error al leer el archivo: " + e.getMessage());
 		}
 	}
 
 	@Override
 	public void onFotoSeleccionada(File imagen) {
-	    try {
-	        if (imagen == null || !imagen.exists() || imagen.isDirectory()) {
-	            throw new IllegalArgumentException("El archivo seleccionado no es válido o no existe.");
-	        }
+		try {
+			if (imagen == null || !imagen.exists() || imagen.isDirectory()) {
+				throw new IllegalArgumentException("El archivo seleccionado no es válido o no existe.");
+			}
 
-	        String ruta = modelo.guardarFoto(imagen);
+			String ruta = modelo.guardarFoto(imagen);
 
-	        
-	        if (editarDialog != null && editarDialog.isVisible()) {
-	            editarDialog.mostrarImagen(ruta);
-	        } else {
-	            vista.mostrarImagen(ruta);
-	        }
+			if (editarDialog != null && editarDialog.isVisible()) {
+				editarDialog.mostrarImagen(ruta);
+			} else {
+				vista.mostrarImagen(ruta);
+			}
 
-	    } catch (IllegalArgumentException e) {
-	        vista.ventanaMensaje(e.getMessage());
-	    }
+		} catch (IllegalArgumentException e) {
+			vista.ventanaMensaje(e.getMessage());
+		} catch (RuntimeException e) {
+			vista.ventanaMensaje("Error al guardar la foto: " + e.getMessage());
+		}
 	}
 
 	@Override
