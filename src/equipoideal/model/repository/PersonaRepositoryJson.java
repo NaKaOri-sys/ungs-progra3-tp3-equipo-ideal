@@ -6,10 +6,8 @@ import equipoideal.model.Persona;
 import equipoideal.model.dao.PersonaArchivo;
 
 public class PersonaRepositoryJson implements PersonaRepository{
-	private String archivo;
 	
-	public PersonaRepositoryJson(String archivo) {
-		this.archivo = archivo;
+	public PersonaRepositoryJson() {
 	}
 	@Override
 	public ArrayList<Persona> loadAll(String archivoJSON) {
@@ -17,14 +15,8 @@ public class PersonaRepositoryJson implements PersonaRepository{
 	}
 
 	@Override
-	public void saveAll(ArrayList<Persona> personas) {
-		PersonaArchivo.generarJsonPersona(archivo, personas);
-		
-	}
-
-	@Override
-	public void exportarJson(String destino) {
-		PersonaArchivo.exportarArchivoJSON(archivo, destino);
+	public void exportarJson(String destino, ArrayList<Persona> personas) {
+		PersonaArchivo.exportarArchivoJSON(destino, personas);
 	}
 
 }

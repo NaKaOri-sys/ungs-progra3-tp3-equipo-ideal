@@ -111,7 +111,7 @@ public class PersonaDialog extends DialogPadre{
 		panelTopDerecho.setOpaque(false);
 		
 		
-		JPanel panelInputsGrid = crearPanel(new GridLayout(4, 2, 10, 8));
+		JPanel panelInputsGrid = crearPanelConBordeEspecial(new GridLayout(4, 2, 10, 8), colorFondo);
 		
 		JLabel lblNombre = crearLabel("Nombre:", 12);
 		txtNombre = crearTextField(20);

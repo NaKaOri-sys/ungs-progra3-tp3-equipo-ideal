@@ -70,7 +70,6 @@ public class PersonaController implements PersonaListener {
 
 	@Override
 	public void onExportarJson(String ruta) {
-		modelo.guardarPersonaEnJSON();
 		modelo.exportarJson(ruta);
 		vista.ventanaMensaje("JSON descardo correctamente!!");
 	}

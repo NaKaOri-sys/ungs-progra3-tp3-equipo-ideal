@@ -12,8 +12,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 
 import equipoideal.model.Persona;
 import equipoideal.model.dto.PersonaDto;
@@ -21,7 +19,7 @@ import equipoideal.util.PersonaValidator;
 
 public class PersonaArchivo {
 
-	public static void generarJsonPersona(String archivo, ArrayList<Persona> personas) {
+	private static void generarJsonPersona(String archivo, ArrayList<Persona> personas) {
 		if (archivo == null || archivo.trim().isEmpty()) {
 			throw new IllegalArgumentException("El nombre del archivo no puede estar vacío.");
 		}
@@ -92,20 +90,8 @@ public class PersonaArchivo {
 	// los otros podrian ser privados, ya que el cliente solo podría exportarse un
 	// JSON
 
-	public static void exportarArchivoJSON(String archivo, String destino) {
-		File origen = new File(archivo);
-
-	    File archivoDestino = new File(destino);
-
-	    try {
-
-	        Files.copy(origen.toPath(), archivoDestino.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-	    } catch (IOException e) {
-
-
-			throw new RuntimeException("No se pudo exportar el JSON: " + e.getMessage());
-		}
+	public static void exportarArchivoJSON(String destino, ArrayList<Persona> personas) {
+		generarJsonPersona(destino, personas);
 	}
 	
 	

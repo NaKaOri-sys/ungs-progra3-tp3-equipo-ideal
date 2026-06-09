@@ -66,9 +66,9 @@ public class PersonaModel extends Observable<IObserverPersona> {
 	    }
 	}
 
-	public void guardarPersonaEnJSON() {
-		repository.saveAll(listaPersonas);
-	}
+//	public void guardarPersonaEnJSON() {
+//		repository.saveAll(listaPersonas);
+//	}
 
 	public void cargarDesdeJSON(String ruta) {
 
@@ -96,8 +96,7 @@ public class PersonaModel extends Observable<IObserverPersona> {
 	}
 
 	public void exportarJson(String destino) {
-
-	    repository.exportarJson(destino);
+	    repository.exportarJson(destino, listaPersonas);
 	}
 
 

@@ -19,7 +19,8 @@ import equipoideal.util.RolEnum;
 
 public class PersonaArchivoTest {
 	private ArrayList<Persona> personas;
-	
+
+	File destino;
 	@Rule
 	public TemporaryFolder carpetaTemporal = new TemporaryFolder();
 	
@@ -30,60 +31,52 @@ public class PersonaArchivoTest {
 		personas.add(new Persona("Leo", "Messi", 5, RolEnum.PROGRAMADOR, "ruta"));
 		personas.add(new Persona("Cristiano", "Ronaldo", 4, RolEnum.ARQUITECTO, "ruta"));
 		personas.add(new Persona("Kylian", "Mbappe", 4, RolEnum.TESTER, "ruta"));
+		
+		destino = carpetaTemporal.newFile("destino.json");
 	}
 	
 	@Test
 	public void generarJsonPersonaTest() throws IOException {
+		File archivoTemporal = carpetaTemporal.newFile("JSON_Nuevo.json");
 
-	    File archivoTemporal = carpetaTemporal.newFile("JSON_Nuevo.json");
+		PersonaArchivo.exportarArchivoJSON(archivoTemporal.getAbsolutePath(), personas);
 
-	    PersonaArchivo.generarJsonPersona(archivoTemporal.getAbsolutePath(), personas);
-
-	    assertTrue(archivoTemporal.exists());
-
-	    assertTrue(archivoTemporal.length() > 0);
+		assertTrue(archivoTemporal.exists());
+		assertTrue(archivoTemporal.length() > 0);
 	}
 	
 	@Test
 	public void cargarJsonPersonaTest() throws IOException {
+		File archivoTemporal = carpetaTemporal.newFile("JSON_Nuevo.json");
 
-	    File archivoTemporal = carpetaTemporal.newFile("JSON_Nuevo.json");
+		PersonaArchivo.exportarArchivoJSON(archivoTemporal.getAbsolutePath(), personas);
 
-	    PersonaArchivo.generarJsonPersona( archivoTemporal.getAbsolutePath(), personas);
+		ArrayList<Persona> personasEnArchivo = PersonaArchivo.cargarJSON(archivoTemporal.getAbsolutePath());
 
-	    ArrayList<Persona> personasEnArchivo = PersonaArchivo.cargarJSON(archivoTemporal.getAbsolutePath());
-
-	    assertEquals(3, personasEnArchivo.size());
-
-	    assertEquals("Leo", personasEnArchivo.get(0).getNombre());
-
-	    assertEquals("Cristiano", personasEnArchivo.get(1).getNombre());
+		assertEquals(3, personasEnArchivo.size());
+		assertEquals("Leo", personasEnArchivo.get(0).getNombre());
+		assertEquals("Cristiano", personasEnArchivo.get(1).getNombre());
 	}
 	
 	@Test
 	public void exportarArchivoJsonTest() throws IOException {
+		File destinoExportar = carpetaTemporal.newFile("destino_exportar.json");
 		
-		File origen = carpetaTemporal.newFile("origen.json");
 		
-		File destino = carpetaTemporal.newFile("destino.json");
+		PersonaArchivo.exportarArchivoJSON(destinoExportar.getAbsolutePath(), personas);
 		
-		PersonaArchivo.generarJsonPersona(origen.getAbsolutePath(), personas);
-		
-		PersonaArchivo.exportarArchivoJSON(origen.getAbsolutePath(), destino.getAbsolutePath());
-		
-		assertTrue(destino.exists());
-		
-		assertTrue(destino.length() > 0);
+		assertTrue(destinoExportar.exists());
+		assertTrue(destinoExportar.length() > 0);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void generarJsonConRutaVaciaTest() {
-		PersonaArchivo.generarJsonPersona("", personas);
+		PersonaArchivo.exportarArchivoJSON("", personas);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void generarJsonConListaVaciaTest() {
-		PersonaArchivo.generarJsonPersona("archivo.json", null);
+		PersonaArchivo.exportarArchivoJSON("archivo.json", null);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
@@ -98,13 +91,10 @@ public class PersonaArchivoTest {
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void cargarJsonConSintaxisInvalidaTest() throws IOException {
-		
 		File archivoTemporal = carpetaTemporal.newFile("invalido.json");
 		
 		FileWriter writer = new FileWriter(archivoTemporal);
-		
 		writer.write("{ JSON INVALIDO }");
-		
 		writer.close();
 		
 		PersonaArchivo.cargarJSON(archivoTemporal.getAbsolutePath());
@@ -112,13 +102,10 @@ public class PersonaArchivoTest {
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void cargarJsonConPersonaInvalidaTest() throws IOException {
-		
 		File archivoTemporal = carpetaTemporal.newFile("invalido.json");
 		
 		FileWriter writer = new FileWriter(archivoTemporal);
-		
 		writer.write("[{\"nombre\":\"Leo\",\"apellido\":\"Messi\",\"calificacion\":5,\"rol\":\"Jugador\"}]");
-		
 		writer.close();
 		
 		PersonaArchivo.cargarJSON(archivoTemporal.getAbsolutePath());

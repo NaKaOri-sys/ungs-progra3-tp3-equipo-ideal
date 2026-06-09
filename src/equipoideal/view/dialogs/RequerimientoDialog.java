@@ -57,20 +57,23 @@ public class RequerimientoDialog extends DialogPadre {
 	    lblArquitecto = crearLabel("0", 12);
 	    lblProgramador = crearLabel("0", 12);
 	    lblTester = crearLabel("0", 12);
-		
-		panelEtiquetas.add(requerimientoPedido("Lider(es)", lblLider));
-		panelEtiquetas.add(requerimientoPedido("Arquitecto(s)", lblArquitecto));
-		panelEtiquetas.add(requerimientoPedido("Programador(es)", lblProgramador));
-		panelEtiquetas.add(requerimientoPedido("Tester(s)", lblTester));
+	    
+	    JPanel etiquetaLider = requerimientoPedido("Lider(es)", lblLider, new Color(99, 102, 241));
+	   
+	
+		panelEtiquetas.add(etiquetaLider);
+		panelEtiquetas.add(requerimientoPedido("Arquitecto(s)", lblArquitecto,  new Color(59, 130, 246)));
+		panelEtiquetas.add(requerimientoPedido("Programador(es)", lblProgramador,  new Color(16, 185, 129)));
+		panelEtiquetas.add(requerimientoPedido("Tester(s)", lblTester,  new Color(245, 101, 59)));
 
 		panelSuperior.add(panelSpinners, BorderLayout.NORTH);
 		panelSuperior.setBorder(BorderFactory.createEmptyBorder(0, 0, 50, 0));
 		panelCentral.add(panelEtiquetas, BorderLayout.CENTER);
 	}
 	
-	private JPanel requerimientoPedido(String rol, JLabel lblCantidad) {
+	private JPanel requerimientoPedido(String rol, JLabel lblCantidad, Color color) {
 
-	    JPanel etiqueta = crearPanel(new FlowLayout());
+	    JPanel etiqueta = crearPanelConBordeEspecial(new FlowLayout(), color);
 	    etiqueta.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 10));
 	    
 	    JPanel cuadroNumero = new JPanel(new BorderLayout());
@@ -82,7 +85,7 @@ public class RequerimientoDialog extends DialogPadre {
 	    cuadroNumero.add(lblCantidad, BorderLayout.CENTER);
 	    
 	    JLabel lblTextoRol = crearLabel(rol, 12);
-	    lblTextoRol.setForeground(new Color(200, 200, 205));
+	    lblTextoRol.setForeground(color);
 	    
 	    etiqueta.add(cuadroNumero);
 	    etiqueta.add(lblTextoRol);
