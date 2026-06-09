@@ -1,7 +1,10 @@
 package equipoideal.view.dialogs;
 
+import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.util.List;
+
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -35,9 +38,12 @@ public class IncompatibleDialog extends DialogPadre {
     public void crearInputs() {
     	btnAceptar.setText("Registrar Incompatibilidad");
     	
-    	btnEliminar = crearBoton("Eliminar Incompatibilidad");
-        grillaBotones.add(btnEliminar);
-
+    	btnEliminar = crearBoton("Eliminar Incompatibilidad Seleccionada");
+    	
+    	panelBotonesMedio.setLayout(new GridLayout(2, 1, 10, 10));
+    	panelBotonesMedio.setBorder(BorderFactory.createEmptyBorder(10, 200, 0, 200));
+    	JPanel panelFormulario = crearPanelConBordeEspecial(new BorderLayout(), DialogStyleHelper.ColorFondoPrincipal);
+    	
         panelSuperior.setLayout(new GridLayout(2, 2, 10, 10));
         JPanel panelSeleccion = crearPanel(new GridLayout(2,1, 10, 10));
     	
@@ -55,28 +61,22 @@ public class IncompatibleDialog extends DialogPadre {
        
         panelSuperior.add(panelSeleccion);
         
-        String[] columnas = {"Persona", "Persona"};
+        String[] columnas = {"Persona", "Conector", "Persona"};
 		configurarTabla(columnas, panelCentral);
         configurarColumnasTabla();
         
         JLabel lblTituloTabla = crearLabel("Personas Incompatibles", 12);
         lblTituloTabla.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblTituloTabla.setAlignmentX(java.awt.Component.CENTER_ALIGNMENT);
-        lblTituloTabla.setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 0, 5, 0));
         
+        //Subrayado
         lblTituloTabla.setBorder(javax.swing.BorderFactory.createCompoundBorder(
-        	    javax.swing.BorderFactory.createEmptyBorder(30, 0, 5, 0),
-        	    javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, DialogStyleHelper.ColorBorde)));
+                javax.swing.BorderFactory.createEmptyBorder(0, 0, 5, 0), 
+                javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, DialogStyleHelper.ColorBorde)));
         
-        JPanel contenedorNorte = new JPanel();
-        contenedorNorte.setOpaque(false);
-        contenedorNorte.setLayout(new javax.swing.BoxLayout(contenedorNorte, javax.swing.BoxLayout.Y_AXIS));
+        panelFormulario.add(btnEliminar, BorderLayout.NORTH);
+        panelFormulario.add(lblTituloTabla, BorderLayout.SOUTH);
         
-        contenedorNorte.add(panelBotonesMedio);
-        contenedorNorte.add(lblTituloTabla);
-        
-        //contenedor completo al NORTH del panel central
-        panelCentral.add(contenedorNorte, java.awt.BorderLayout.NORTH);
+        panelBotonesMedio.add(panelFormulario);
     }
     
     private void configurarColumnasTabla() {
@@ -92,7 +92,7 @@ public class IncompatibleDialog extends DialogPadre {
     }
     
     public Persona getPersona2DeTabla(int fila) {
-        return (Persona) tabla.getValueAt(fila, 1);
+        return (Persona) tabla.getValueAt(fila, 2);
     }
     
     public void eliminarFilaTabla(int fila) {
@@ -118,7 +118,7 @@ public class IncompatibleDialog extends DialogPadre {
 
     public void agregarIncompatibilidadTabla(Persona p1, Persona p2) {
         DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
-        modelo.addRow(new Persona[]{p1, p2});
+        modelo.addRow(new Object[]{p1, "con", p2});
     }
 
     @Override

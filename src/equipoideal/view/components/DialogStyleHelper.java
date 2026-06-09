@@ -20,12 +20,12 @@ public class DialogStyleHelper {
 
 	public static final Color ColorFondoPrincipal = new Color(22, 25, 34);
 	public static final Color ColorFondoBotones = new Color(30, 34, 45);
-	public static final Color ColorBorde = new Color(112, 84, 37);
+	public static final Color ColorBorde = new Color(55, 62, 80);
 	public static final Color ColorLetra = new Color(240, 230, 210);
 	public static final Color ColorBotonHover =new Color(30, 40, 45);
 	public static final Font fuentePrincipal = new Font("SansSerif", Font.BOLD, 12);
 
-	public static JPanel crearPanelEstilizado(LayoutManager layout) {
+	public static JPanel crearPanelEstilizado(LayoutManager layout, Color colorBorde) {
 	    JPanel panel = new JPanel(layout) {
 	        private static final long serialVersionUID = 1L;
 	        @Override
@@ -36,7 +36,7 @@ public class DialogStyleHelper {
 	            g2.setColor(getBackground());
 	            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 12, 12);
 	            
-	            g2.setColor(ColorBorde);
+	            g2.setColor(colorBorde);
 	            g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 12, 12);
 	            
 	            g2.dispose();

@@ -137,7 +137,11 @@ public abstract class DialogPadre extends JDialog {
 	}
 	
 	public static JPanel crearPanel(LayoutManager layout) {
-	   return DialogStyleHelper.crearPanelEstilizado(layout);
+	   return DialogStyleHelper.crearPanelEstilizado(layout, DialogStyleHelper.ColorBorde);
+	}
+	
+	public static JPanel crearPanelConBordeEspecial(LayoutManager layout, Color colorBorde) {
+	    return DialogStyleHelper.crearPanelEstilizado(layout, colorBorde);
 	}
 	
 	protected static JLabel crearLabel(String texto, int tamanoLetra) {

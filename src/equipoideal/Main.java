@@ -26,8 +26,6 @@ import equipoideal.view.dialogs.PersonaDialog;
 import equipoideal.view.dialogs.RequerimientoDialog;
 
 public class Main {
-	private static final String FILE_PATH = "personas.json";
-
 	private static final String FOLDER_PATH = "data/fotos";
 
 	public static void main(String[] args) {
@@ -39,7 +37,7 @@ public class Main {
 		MainView mainView = new MainView();
 		Navigation navigation = new Navigation();
 
-		PersonaRepository repository = new PersonaRepositoryJson(FILE_PATH);
+		PersonaRepository repository = new PersonaRepositoryJson();
 		PersonaModel personaDialogModel = new PersonaModel(repository, FOLDER_PATH);
 		// PERSONAS
 		PersonaDialog personasDialog = new PersonaDialog("Gestion de Personas");
