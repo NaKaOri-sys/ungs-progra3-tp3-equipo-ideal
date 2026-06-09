@@ -16,12 +16,6 @@ public class IncompatibleModel extends Observable<IObserverIncompatible> {
 		this.incompatibilidades = new HashMap<Persona, Set<Persona>>();
 	}
 
-	public void crearMapIncompatibilidades(List<Persona> personas) {
-		for (Persona persona : personas) {
-			this.incompatibilidades.put(persona, new HashSet<Persona>());
-		}
-	}
-
 	// Agrega al mapa solo las personas que aun no estan, sin borrar las incompatibilidades ya registradas
 	public void sincronizarPersonasEnMapa(List<Persona> personas) {
 		for (Persona persona : personas) {
@@ -62,6 +56,6 @@ public class IncompatibleModel extends Observable<IObserverIncompatible> {
 	}
 	
 	public boolean hayIncompatibilidades() {
-		return this.incompatibilidades.size() > 0;
+		return this.incompatibilidades.values().stream().anyMatch(set -> !set.isEmpty());
 	}
 }
