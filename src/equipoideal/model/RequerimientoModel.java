@@ -1,7 +1,7 @@
 package equipoideal.model;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import equipoideal.model.dto.RequerimientoDto;
@@ -17,8 +17,8 @@ public class RequerimientoModel extends Observable<IObserverRequerimiento> {
 		this.requerimientos = new LinkedHashMap<>();
 	}
 
-	public void crearRequerimientos(RequerimientoDto dto, ArrayList<Persona> personas) {
-		requerimientos.clear();
+	public void crearRequerimientos(RequerimientoDto dto, List<Persona> personas) {
+		Map<RolEnum, Integer> temp = new LinkedHashMap<>();
 
 		requerimientos.put(RolEnum.LIDER, dto.getLideres());
 
@@ -28,9 +28,8 @@ public class RequerimientoModel extends Observable<IObserverRequerimiento> {
 
 		requerimientos.put(RolEnum.TESTER, dto.getTesters());
 
-		RequerimientoValidator.validarRequerimientos(requerimientos, personas);
-
-		
+		RequerimientoValidator.validarRequerimientos(temp, personas);
+		this.requerimientos = temp;
 
 		notifyObservers(observer -> observer.onRequerimientosCreados(dto));
 	}
@@ -38,7 +37,7 @@ public class RequerimientoModel extends Observable<IObserverRequerimiento> {
 	public Map<RolEnum, Integer> getRequerimientos() {
 		return requerimientos;
 	}
-	
+
 	public boolean hayRequerimientosCargados() {
 		return requerimientos.size() > 0;
 	}

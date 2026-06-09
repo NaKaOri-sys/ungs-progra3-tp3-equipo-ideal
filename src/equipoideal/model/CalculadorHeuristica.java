@@ -4,7 +4,6 @@ import equipoideal.model.dto.EquipoDto;
 import equipoideal.model.dto.ProgresoEventoDto;
 import equipoideal.model.event.IObserverCalculador;
 import equipoideal.util.EquipoCalculadorUtil;
-import equipoideal.util.IndexCache;
 import equipoideal.util.Observable;
 import equipoideal.util.OrigenCalculadorEnum;
 import equipoideal.util.RolEnum;

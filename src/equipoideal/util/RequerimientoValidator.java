@@ -1,13 +1,13 @@
 package equipoideal.util;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import equipoideal.model.Persona;
 
 public class RequerimientoValidator {
 	
-	public static void validarRequerimientos(Map<RolEnum, Integer> requerimientos, ArrayList<Persona> personas) {
+	public static void validarRequerimientos(Map<RolEnum, Integer> requerimientos, List<Persona> personas) {
 		
 		if (sumaRequerimientos(requerimientos) == 0) {
 			throw new IllegalArgumentException("Debe haber al menos un rol seleccionado.");
@@ -40,7 +40,7 @@ public class RequerimientoValidator {
 		return suma;
 	}
 	
-	private static int cantPersonasConRol(ArrayList<Persona> personas, RolEnum rol) { 
+	private static int cantPersonasConRol(List<Persona> personas, RolEnum rol) { 
 		int contador = 0; 
 		
 		for (Persona p : personas) {

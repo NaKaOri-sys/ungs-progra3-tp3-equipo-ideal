@@ -3,8 +3,6 @@ package equipoideal.util;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import equipoideal.model.Equipo;
 import equipoideal.model.Persona;
 
@@ -18,7 +16,7 @@ public class RestriccionesPoda {
 			return false;
 		}
 		int puntajePosible = solucionParcial.getCalificacionTotal()
-				+ calcularRemanenteMaximo(indice, personas, mejorEquipo, requerimientos);
+				+ calcularRemanenteMaximo(indice, personas, solucionParcial, requerimientos);
 		return puntajePosible <= mejorEquipo.getCalificacionTotal();
 	}
 

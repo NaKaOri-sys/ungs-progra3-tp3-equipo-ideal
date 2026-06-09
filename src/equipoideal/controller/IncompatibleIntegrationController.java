@@ -3,7 +3,6 @@ package equipoideal.controller;
 import equipoideal.view.dialogs.IncompatibleDialog;
 import equipoideal.model.IncompatibleModel;
 import equipoideal.model.Persona;
-import equipoideal.model.dto.PersonaDto;
 import equipoideal.model.event.IObserverIncompatible;
 
 public class IncompatibleIntegrationController implements IObserverIncompatible {
@@ -25,10 +24,7 @@ public class IncompatibleIntegrationController implements IObserverIncompatible 
 	}
 
 	@Override
-	public void alEliminarIncompatibilidad() {
-		int fila = vista.getFilaSeleccionada();
-		if (fila != -1) {
-			vista.eliminarFilaTabla(fila);
-		}
+	public void alEliminarIncompatibilidad(Persona persona, Persona incompatible) {
+		vista.eliminarFilaDeTabla(persona, incompatible);
 	}
 }

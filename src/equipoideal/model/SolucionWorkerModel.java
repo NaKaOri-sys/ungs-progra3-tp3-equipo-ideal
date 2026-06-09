@@ -2,8 +2,6 @@ package equipoideal.model;
 
 import java.util.List;
 
-import javax.management.RuntimeErrorException;
-
 import equipoideal.model.dto.ProgresoEventoDto;
 import equipoideal.model.dto.ResultadoComparativoDto;
 import equipoideal.model.event.IWorkerObserver;

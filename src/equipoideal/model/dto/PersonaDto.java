@@ -41,6 +41,6 @@ public class PersonaDto {
 
 	@Override
 	public String toString() {
-		return this.nombre + " " + this.apellido + "(" + this.rol + ")";
+		return this.nombre + " " + this.apellido + " (" + this.rol + ")";
 	}
 }

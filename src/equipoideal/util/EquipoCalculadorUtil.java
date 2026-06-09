@@ -22,8 +22,10 @@ public class EquipoCalculadorUtil {
 	public static boolean esIncompatibleConEquipo(Persona personaActual, Equipo equipoParcial,
 			Map<Persona, Set<Persona>> incompatibilidades) {
 		for (Persona integrante : equipoParcial.obtenerIntegrantes()) {
-			if (incompatibilidades.get(personaActual).contains(integrante)
-					|| incompatibilidades.get(integrante).contains(personaActual)) {
+			Set<Persona> incompActual = incompatibilidades.get(personaActual);
+			Set<Persona> incompIntegrante = incompatibilidades.get(integrante);
+			if ((incompActual != null && incompActual.contains(integrante))
+					|| (incompIntegrante != null && incompIntegrante.contains(personaActual))) {
 				return true;
 			}
 		}

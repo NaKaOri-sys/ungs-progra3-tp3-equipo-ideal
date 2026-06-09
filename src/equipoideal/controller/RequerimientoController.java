@@ -1,6 +1,6 @@
 package equipoideal.controller;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import equipoideal.model.Persona;
 import equipoideal.model.RequerimientoModel;
@@ -11,7 +11,7 @@ import equipoideal.view.dialogs.RequerimientoDialog;
 public class RequerimientoController implements RequerimientoListener {
 	private RequerimientoDialog vista;
 	private RequerimientoModel modelo;
-	private ArrayList<Persona> listaPersonasAuxiliar;
+	private List<Persona> listaPersonasAuxiliar;
 	
 	public RequerimientoController(RequerimientoDialog vista, RequerimientoModel modelo) {
 		this.vista = vista;
@@ -34,7 +34,7 @@ public class RequerimientoController implements RequerimientoListener {
 	    }
 	}
 	
-	public void setListaPersonas(ArrayList<Persona> nuevaLista) {
+	public void setListaPersonas(List<Persona> nuevaLista) {
 		this.listaPersonasAuxiliar = nuevaLista;
 	}
 	

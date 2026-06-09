@@ -15,7 +15,6 @@ import org.junit.Test;
 import equipoideal.model.CalculadorBacktracking;
 import equipoideal.model.Persona;
 import equipoideal.model.dto.EquipoDto;
-import equipoideal.model.dto.PersonaDto;
 import equipoideal.util.RolEnum;
 
 public class CalculadorBacktrackingTest {
@@ -91,16 +90,26 @@ public class CalculadorBacktrackingTest {
 
 	@Test
 	public void testBacktracking_RespetaIncompatibilidades() {
-		Set<Persona> incompatibleMaguire = new HashSet<Persona>();
-		incompatibleMaguire.add(maguire);
+		// Escenario: messi (unico LIDER) es incompatible con cristiano (PROGRAMADOR cal=4).
+		// Como messi debe estar (es el unico lider), cristiano no puede estar.
+		// El algoritmo debe elegir maguire (PROGRAMADOR cal=2) como alternativa.
+		// Registrar bidireccional, igual que lo hace IncompatibleModel.registrarIncompatibilidad
+		Set<Persona> incompatiblesConMessi = new HashSet<Persona>();
+		incompatiblesConMessi.add(cristiano);
+		incompatibilidades.put(messi, incompatiblesConMessi);
 
-		incompatibilidades.put(cristiano, incompatibleMaguire);
+		Set<Persona> incompatiblesConCristiano = new HashSet<Persona>();
+		incompatiblesConCristiano.add(messi);
+		incompatibilidades.put(cristiano, incompatiblesConCristiano);
 
 		calc = new CalculadorBacktracking(personas, requerimientos, incompatibilidades);
 		EquipoDto resultado = calc.calcularMejorEquipo();
 
+		boolean tieneCristiano = resultado.getIntegrantes().stream().anyMatch(p -> "Ronaldo".equals(p.getApellido()));
+		assertFalse("No debe estar Cristiano al ser incompatible con el unico Lider", tieneCristiano);
+
 		boolean tieneMaguire = resultado.getIntegrantes().stream().anyMatch(p -> "Maguire".equals(p.getApellido()));
-		assertFalse("No debe estar Maguire en el equipo al ser incompatible con cristiano", tieneMaguire);
+		assertTrue("Debe elegir a Maguire como programador ya que Cristiano es incompatible con Messi", tieneMaguire);
 	}
 
 }
