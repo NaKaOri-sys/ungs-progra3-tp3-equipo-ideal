@@ -81,7 +81,6 @@ public class CalculadorHeuristicaTest {
 
 	@Test
 	public void testHeuristica_RespetaIncompatibilidades() {
-		// Registrar bidireccional, igual que lo hace IncompatibleModel.registrarIncompatibilidad
 		Set<Persona> incompatiblesConMessi = new HashSet<Persona>();
 		incompatiblesConMessi.add(cristiano);
 		incompatibilidades.put(messi, incompatiblesConMessi);

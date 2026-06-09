@@ -20,13 +20,13 @@ public class RequerimientoModel extends Observable<IObserverRequerimiento> {
 	public void crearRequerimientos(RequerimientoDto dto, List<Persona> personas) {
 		Map<RolEnum, Integer> temp = new LinkedHashMap<>();
 
-		requerimientos.put(RolEnum.LIDER, dto.getLideres());
+		temp.put(RolEnum.LIDER, dto.getLideres());
 
-		requerimientos.put(RolEnum.ARQUITECTO, dto.getArquitectos());
+		temp.put(RolEnum.ARQUITECTO, dto.getArquitectos());
 
-		requerimientos.put(RolEnum.PROGRAMADOR, dto.getProgramadores());
+		temp.put(RolEnum.PROGRAMADOR, dto.getProgramadores());
 
-		requerimientos.put(RolEnum.TESTER, dto.getTesters());
+		temp.put(RolEnum.TESTER, dto.getTesters());
 
 		RequerimientoValidator.validarRequerimientos(temp, personas);
 		this.requerimientos = temp;

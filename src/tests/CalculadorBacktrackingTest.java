@@ -90,10 +90,6 @@ public class CalculadorBacktrackingTest {
 
 	@Test
 	public void testBacktracking_RespetaIncompatibilidades() {
-		// Escenario: messi (unico LIDER) es incompatible con cristiano (PROGRAMADOR cal=4).
-		// Como messi debe estar (es el unico lider), cristiano no puede estar.
-		// El algoritmo debe elegir maguire (PROGRAMADOR cal=2) como alternativa.
-		// Registrar bidireccional, igual que lo hace IncompatibleModel.registrarIncompatibilidad
 		Set<Persona> incompatiblesConMessi = new HashSet<Persona>();
 		incompatiblesConMessi.add(cristiano);
 		incompatibilidades.put(messi, incompatiblesConMessi);
@@ -106,10 +102,9 @@ public class CalculadorBacktrackingTest {
 		EquipoDto resultado = calc.calcularMejorEquipo();
 
 		boolean tieneCristiano = resultado.getIntegrantes().stream().anyMatch(p -> "Ronaldo".equals(p.getApellido()));
-		assertFalse("No debe estar Cristiano al ser incompatible con el unico Lider", tieneCristiano);
-
 		boolean tieneMaguire = resultado.getIntegrantes().stream().anyMatch(p -> "Maguire".equals(p.getApellido()));
-		assertTrue("Debe elegir a Maguire como programador ya que Cristiano es incompatible con Messi", tieneMaguire);
+		
+		assertTrue("Debe elegir a Maguire como programador ya que Cristiano es incompatible con Messi", tieneMaguire && !tieneCristiano);
 	}
 
 }
