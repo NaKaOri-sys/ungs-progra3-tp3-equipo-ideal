@@ -45,7 +45,7 @@ public class MenuView extends JPanel {
         btnCargarPersona = crearBoton("Cargar Personas");
         urlCargarPersona = getClass().getResource("/equipoideal/resources/Usuario.png");
         asignarIcono(btnCargarPersona, urlCargarPersona);
-        btnCargarPersona.setBounds(70, 180, 190, 45); // Un poco más alto
+        btnCargarPersona.setBounds(55, 180, 190, 45); // Un poco más alto
         btnCargarPersona.addActionListener(e -> {observable.notifyObservers(listener -> listener.onCargarPersonas());});
         panelCentral.add(btnCargarPersona);
 
@@ -53,7 +53,7 @@ public class MenuView extends JPanel {
         btnRequerimiento = crearBoton("Requerimientos");
         urlRequerimiento = getClass().getResource("/equipoideal/resources/Requerimiento.png");
         asignarIcono(btnRequerimiento, urlRequerimiento);
-        btnRequerimiento.setBounds(315, 180, 190, 45);
+        btnRequerimiento.setBounds(295, 180, 190, 45);
         btnRequerimiento.addActionListener(e -> {
             observable.notifyObservers(listener -> listener.onRequerimientos());
         });
@@ -63,7 +63,7 @@ public class MenuView extends JPanel {
         btnIncompatibilidad = crearBoton("Incompatibilidad");
         urlIncompatibilidad = getClass().getResource("/equipoideal/resources/Incompatibilidad.png");
         asignarIcono(btnIncompatibilidad, urlIncompatibilidad);
-        btnIncompatibilidad.setBounds(560, 180, 190, 45);
+        btnIncompatibilidad.setBounds(535, 180, 190, 45);
         btnIncompatibilidad.addActionListener(e -> {
             observable.notifyObservers(listener -> listener.onIncompatibilidad());
         });
@@ -73,7 +73,7 @@ public class MenuView extends JPanel {
         btnBusqueda = crearBotonBusqueda("Buscar Equipo", UiStyleHelper.BTN_VERDE);           
         urlBusqueda = getClass().getResource("/equipoideal/resources/Busqueda.png");
         asignarIcono(btnBusqueda, urlBusqueda);
-        btnBusqueda.setBounds(315, 270, 190, 45);
+        btnBusqueda.setBounds(295, 270, 190, 45);
         btnBusqueda.addActionListener(e -> {
             observable.notifyObservers(listener -> listener.onBusqueda());
         });
@@ -157,11 +157,9 @@ public class MenuView extends JPanel {
     }
 
     private void confirmarSalida() {
-        int confirm = JOptionPane.showConfirmDialog(this, "¿Está seguro de que desea salir?", "Confirmar Salida",
-                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        if (confirm == JOptionPane.YES_OPTION) {
-            System.exit(0);
-        }
+        VentanaEmergente aviso = new VentanaEmergente(null, "¿Está seguro de que desea salir del sistema?", true);
+        aviso.setLocationRelativeTo(this);
+        aviso.setVisible(true);
     }
 
     public void mostrarMensajeAdvertencia(String mensaje) {

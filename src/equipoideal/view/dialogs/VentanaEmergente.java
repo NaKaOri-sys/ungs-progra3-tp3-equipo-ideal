@@ -15,14 +15,22 @@ import equipoideal.view.components.DialogStyleHelper;
 public class VentanaEmergente extends JDialog {
     private static final long serialVersionUID = 1L;
 
+    // Constructor común de un solo botón
     public VentanaEmergente(JDialog padre, String mensaje) {
         super(padre, "Alerta", true); 
-        inicializarComponentes(mensaje);
+        inicializarComponentes(mensaje, false);
         setLocationRelativeTo(padre);
     }
     
-    private void inicializarComponentes(String mensaje) { 
-    	setSize(600, 180);
+    
+    public VentanaEmergente(JDialog padre, String mensaje, boolean esConfirmacion) {
+        super(padre, "Confirmar Acción", true); 
+        inicializarComponentes(mensaje, esConfirmacion);
+        setLocationRelativeTo(padre);
+    }
+    
+    private void inicializarComponentes(String mensaje, boolean esConfirmacion) { 
+        setSize(600, 180);
         setLayout(new BorderLayout());
         setResizable(false);
         
@@ -36,23 +44,41 @@ public class VentanaEmergente extends JDialog {
         lblMensaje.setHorizontalAlignment(SwingConstants.CENTER);
         panelContenedor.add(lblMensaje, BorderLayout.CENTER);
 
-
-        JButton btnEntendido = equipoideal.view.components.UiStyleHelper.crearBotonCustom( "Entendido", 
-            new Color(45, 50, 68),
-            new Color(55, 62, 80),
-            new Color(210, 220, 240)
-        );
-        
-        //tamaño para que no se deforme
-        btnEntendido.setPreferredSize(new java.awt.Dimension(130, 36));
-        btnEntendido.addActionListener(e -> dispose()); 
-
-        // Panel inferior para centrar el botón
-        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        // Panel inferior para los botones
+        JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
         panelBoton.setOpaque(false);
-        panelBoton.add(btnEntendido);
-        panelContenedor.add(panelBoton, BorderLayout.SOUTH);
 
+        if (esConfirmacion) {
+            JButton btnConfirmar = equipoideal.view.components.UiStyleHelper.crearBotonCustom("Confirmar", 
+                new Color(220, 53, 69),
+                new Color(200, 45, 60),
+                Color.WHITE
+            );
+            btnConfirmar.setPreferredSize(new java.awt.Dimension(130, 36));
+            btnConfirmar.addActionListener(e -> System.exit(0));
+
+            JButton btnCancelar = equipoideal.view.components.UiStyleHelper.crearBotonCustom("Cancelar", 
+                new Color(45, 50, 68),
+                new Color(55, 62, 80),
+                new Color(210, 220, 240)
+            );
+            btnCancelar.setPreferredSize(new java.awt.Dimension(130, 36));
+            btnCancelar.addActionListener(e -> dispose());
+
+            panelBoton.add(btnConfirmar);
+            panelBoton.add(btnCancelar);
+        } else {
+            JButton btnEntendido = equipoideal.view.components.UiStyleHelper.crearBotonCustom("Entendido", 
+                new Color(45, 50, 68),
+                new Color(55, 62, 80),
+                new Color(210, 220, 240)
+            );
+            btnEntendido.setPreferredSize(new java.awt.Dimension(130, 36));
+            btnEntendido.addActionListener(e -> dispose()); 
+            panelBoton.add(btnEntendido);
+        }
+
+        panelContenedor.add(panelBoton, BorderLayout.SOUTH);
         add(panelContenedor);
     }     
 }
