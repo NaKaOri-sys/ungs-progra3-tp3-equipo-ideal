@@ -86,10 +86,6 @@ public class PersonaArchivo {
 		}
 	}
 
-	// TODO con los cambios propuestos, quizas este sería el único metodo publico y
-	// los otros podrian ser privados, ya que el cliente solo podría exportarse un
-	// JSON
-
 	public static void exportarArchivoJSON(String destino, ArrayList<Persona> personas) {
 		generarJsonPersona(destino, personas);
 	}
