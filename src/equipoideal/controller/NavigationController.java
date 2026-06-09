@@ -31,13 +31,8 @@ public class NavigationController implements IObserverNavigation {
 	private SolucionWorkerController solucionWorkerController;
 	private WorkerResultController workerResultController;
 
-	private PersonaController personaController;
-	private RequerimientoController requerimientoController;
-
 	private ResultadoComparativoDto resultadoComparativoDto;
 	private IncompatibleController incompatibleController;
-	private IncompatibleIntegrationController incompatibleIntegrationController;
-
 	public NavigationController(MainView mainView, Navigation navigation, PersonaDialog personasDialog,
 			RequerimientoDialog requerimientosDialog, IncompatibleDialog incompatibleDialog, PersonaModel personaModel,
 			RequerimientoModel requerimientoModel, IncompatibleModel incompatibleModel,
@@ -54,12 +49,7 @@ public class NavigationController implements IObserverNavigation {
 		this.requerimientoModel = requerimientoModel;
 		this.incompatibleModel = incompatibleModel;
 
-		this.personaController = personaController;
-		this.requerimientoController = requerimientoController;
-
 		this.incompatibleController = incompatibleController;
-		this.incompatibleIntegrationController = incompatibleIntegrationController;
-
 		this.resultadoComparativoDto = new ResultadoComparativoDto();
 		this.navigation.addObserver(this);
 	}

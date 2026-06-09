@@ -38,8 +38,7 @@ public class Main {
 		// PERSONAS
 		PersonaDialog personasDialog = new PersonaDialog("Gestion de Personas");
 		PersonaController personaController = new PersonaController(personasDialog, personaDialogModel);
-		PersonaIntegrationController personaIntegrationController = new PersonaIntegrationController(personasDialog,
-				personaDialogModel);
+		new PersonaIntegrationController(personasDialog, personaDialogModel);
 
 		// REQUERIMIENTOS
 		RequerimientoModel requerimientosModel = new RequerimientoModel();
@@ -47,8 +46,7 @@ public class Main {
 		RequerimientoController requerimientosController = new RequerimientoController(requerimientosDialog,
 				requerimientosModel);
 		requerimientosController.setListaPersonas(personaDialogModel.getListaPersonas());
-		RequerimientoIntegrationController reqIntegrationController = new RequerimientoIntegrationController(
-				requerimientosDialog, requerimientosModel);
+		new RequerimientoIntegrationController(requerimientosDialog, requerimientosModel);
 
 		// INCOMPATIBILIDAD
 		IncompatibleDialog incompatibleDialog = new IncompatibleDialog("Gestion de Incompatibilidades");
@@ -59,8 +57,8 @@ public class Main {
 				incompatibleDialog, incompatibleModel);
 
 		new NavigationController(mainView, navigation, personasDialog, requerimientosDialog, incompatibleDialog,
-				personaDialogModel, requerimientosModel, incompatibleModel, personaController,
-				requerimientosController, incompatibleController, incompatibleIntegrationController);
+				personaDialogModel, requerimientosModel, incompatibleModel, personaController, requerimientosController,
+				incompatibleController, incompatibleIntegrationController);
 		navigation.updateView(VentanaEnum.MENU);
 		mainView.setVisible(true);
 	}
