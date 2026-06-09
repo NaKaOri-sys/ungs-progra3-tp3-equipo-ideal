@@ -7,7 +7,6 @@ import equipoideal.model.CalculadorSolucion;
 import equipoideal.model.Navigation;
 import equipoideal.model.SolucionWorkerModel;
 import equipoideal.model.dto.ProgresoEventoDto;
-import equipoideal.util.OrigenCalculadorEnum;
 import equipoideal.model.dto.ResultadoComparativoDto;
 import equipoideal.model.event.IObserverCalculador;
 import equipoideal.model.event.IWorkerObserver;
@@ -37,8 +36,8 @@ public class SolucionWorkerController extends SwingWorker<ResultadoComparativoDt
 		try {
 			return this.facade.calcularSolucionGlobal();
 		} catch (Exception e) {
-			Throwable cause = e.getCause();
-			throw new RuntimeException(cause.getMessage());
+			String msg = (e.getCause() != null) ? e.getCause().getMessage() : e.getMessage();
+		    throw new RuntimeException(msg); 
 		}
 	}
 
@@ -60,8 +59,8 @@ public class SolucionWorkerController extends SwingWorker<ResultadoComparativoDt
 		try {
 			this.model.setResultado(get());
 		} catch (Exception e) {
-			Throwable cause = e.getCause();
-			error(cause.getMessage());
+			String msg = (e.getCause() != null) ? e.getCause().getMessage() : e.getMessage(); 
+			error(msg);
 		}
 	}
 

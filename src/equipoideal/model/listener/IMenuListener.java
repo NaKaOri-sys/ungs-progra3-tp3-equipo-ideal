@@ -1,7 +1,5 @@
 package equipoideal.model.listener;
 
-import java.awt.event.ActionEvent;
-
 public interface IMenuListener {
 	 /**
      * Este método se dispara cuando el usuario hace clic en "Cargar Personas" en el menú.

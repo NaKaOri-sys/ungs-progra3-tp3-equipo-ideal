@@ -1,5 +1,8 @@
 package equipoideal.model;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+
 import equipoideal.model.dto.ResultadoComparativoDto;
 import equipoideal.model.event.IObserverCalculador;
 
@@ -32,5 +35,13 @@ public class CalculadorSolucion {
 		res.setEquipoBacktracking(this.backtracking.calcularMejorEquipo());
 
 		return res;
+	}
+
+	public static CalculadorSolucion crearDesdeModelos(PersonaModel pm, RequerimientoModel rm, IncompatibleModel im) {
+		CalculadorBacktracking bt = new CalculadorBacktracking(new ArrayList<>(pm.getListaPersonas()),
+				new LinkedHashMap<>(rm.getRequerimientos()), im.obtenerIncompatibilidades());
+		CalculadorHeuristica h = new CalculadorHeuristica(new ArrayList<>(pm.getListaPersonas()),
+				new LinkedHashMap<>(rm.getRequerimientos()), im.obtenerIncompatibilidades());
+		return new CalculadorSolucion(bt, h);
 	}
 }

@@ -20,10 +20,12 @@ public class MenuController implements IMenuListener {
 	private PersonaModel personaModel;
 	private RequerimientoModel requerimientoModel;
 	private IncompatibleModel incompatibleModel;
+	private IncompatibleController incompatibleController;
 
 	public MenuController(NavigationController navigationController, MenuView menuView, PersonaDialog personaDialog,
 			RequerimientoDialog requerimientosDialog, IncompatibleDialog incompatibleDialog, PersonaModel personaModel,
-			RequerimientoModel requerimientoModel, IncompatibleModel incompatibleModel) {
+			RequerimientoModel requerimientoModel, IncompatibleModel incompatibleModel,
+			IncompatibleController incompatibleController) {
 		this.navigationController = navigationController;
 		this.menuView = menuView;
 		this.personaDialog = personaDialog;
@@ -32,6 +34,7 @@ public class MenuController implements IMenuListener {
 		this.incompatibleModel = incompatibleModel;
 		this.personaModel = personaModel;
 		this.requerimientoModel = requerimientoModel;
+		this.incompatibleController = incompatibleController;
 
 		this.menuView.obtenerObserver().addObserver(this);
 	}
@@ -52,11 +55,9 @@ public class MenuController implements IMenuListener {
 			this.menuView.mostrarMensajeAdvertencia(
 					"Debe cargar personas en el sistema antes de registrar incompatibilidades.");
 			return;
-
 		}
-		this.incompatibleModel.crearMapIncompatibilidades(personaModel.getListaPersonas());
-		new IncompatibleController(incompatibleDialog, personaModel.getListaPersonas(), incompatibleModel);
-		new IncompatibleIntegrationController(incompatibleDialog, this.incompatibleModel);
+		this.incompatibleModel.sincronizarPersonasEnMapa(personaModel.getListaPersonas());
+		this.incompatibleController.sincronizarDatos();
 		incompatibleDialog.setVisible(true);
 	}
 

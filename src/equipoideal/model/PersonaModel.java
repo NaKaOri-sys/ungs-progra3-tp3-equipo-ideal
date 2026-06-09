@@ -112,7 +112,7 @@ public class PersonaModel extends Observable<IObserverPersona> {
 
 	public void editarPersona(int fila, PersonaDto dto) {
 
-		if (fila < 0 || fila > listaPersonas.size()) {
+		if (fila < 0 || fila >= listaPersonas.size()) {
 			throw new IllegalArgumentException("Indice inválido.");
 		}
 
@@ -188,7 +188,7 @@ public class PersonaModel extends Observable<IObserverPersona> {
     }
 	
 	public boolean estaVacia() {
-	    return this.listaPersonas == null || this.listaPersonas.isEmpty();
+	    return this.listaPersonas.isEmpty();
 	}
 	
 }

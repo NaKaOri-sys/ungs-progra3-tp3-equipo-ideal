@@ -9,14 +9,10 @@ import equipoideal.controller.PersonaController;
 import equipoideal.controller.PersonaIntegrationController;
 import equipoideal.controller.RequerimientoController;
 import equipoideal.controller.RequerimientoIntegrationController;
-import equipoideal.model.CalculadorBacktracking;
-import equipoideal.model.CalculadorHeuristica;
-import equipoideal.model.CalculadorSolucion;
 import equipoideal.model.IncompatibleModel;
 import equipoideal.model.Navigation;
 import equipoideal.model.PersonaModel;
 import equipoideal.model.RequerimientoModel;
-import equipoideal.model.dto.ResultadoComparativoDto;
 import equipoideal.model.repository.PersonaRepository;
 import equipoideal.model.repository.PersonaRepositoryJson;
 import equipoideal.util.VentanaEnum;
@@ -57,9 +53,14 @@ public class Main {
 		// INCOMPATIBILIDAD
 		IncompatibleDialog incompatibleDialog = new IncompatibleDialog("Gestion de Incompatibilidades");
 		IncompatibleModel incompatibleModel = new IncompatibleModel();
-		
+		IncompatibleController incompatibleController = new IncompatibleController(incompatibleDialog,
+				personaDialogModel.getListaPersonas(), incompatibleModel);
+		IncompatibleIntegrationController incompatibleIntegrationController = new IncompatibleIntegrationController(
+				incompatibleDialog, incompatibleModel);
+
 		new NavigationController(mainView, navigation, personasDialog, requerimientosDialog, incompatibleDialog,
-				personaDialogModel, requerimientosModel, incompatibleModel, personaController, requerimientosController);
+				personaDialogModel, requerimientosModel, incompatibleModel, personaController,
+				requerimientosController, incompatibleController, incompatibleIntegrationController);
 		navigation.updateView(VentanaEnum.MENU);
 		mainView.setVisible(true);
 	}

@@ -1,10 +1,5 @@
 package equipoideal.controller;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
-import equipoideal.model.CalculadorBacktracking;
-import equipoideal.model.CalculadorHeuristica;
 import equipoideal.model.CalculadorSolucion;
 import equipoideal.model.IncompatibleModel;
 import equipoideal.model.Navigation;
@@ -13,7 +8,6 @@ import equipoideal.model.RequerimientoModel;
 import equipoideal.model.SolucionWorkerModel;
 import equipoideal.model.dto.ResultadoComparativoDto;
 import equipoideal.model.event.IObserverNavigation;
-import equipoideal.util.RolEnum;
 import equipoideal.util.VentanaEnum;
 import equipoideal.view.MainView;
 import equipoideal.view.dialogs.IncompatibleDialog;
@@ -41,11 +35,15 @@ public class NavigationController implements IObserverNavigation {
 	private RequerimientoController requerimientoController;
 
 	private ResultadoComparativoDto resultadoComparativoDto;
+	private IncompatibleController incompatibleController;
+	private IncompatibleIntegrationController incompatibleIntegrationController;
 
 	public NavigationController(MainView mainView, Navigation navigation, PersonaDialog personasDialog,
 			RequerimientoDialog requerimientosDialog, IncompatibleDialog incompatibleDialog, PersonaModel personaModel,
 			RequerimientoModel requerimientoModel, IncompatibleModel incompatibleModel,
-			PersonaController personaController, RequerimientoController requerimientoController) {
+			PersonaController personaController, RequerimientoController requerimientoController,
+			IncompatibleController incompatibleController,
+			IncompatibleIntegrationController incompatibleIntegrationController) {
 		this.mainView = mainView;
 		this.navigation = navigation;
 		this.personasDialog = personasDialog;
@@ -58,6 +56,9 @@ public class NavigationController implements IObserverNavigation {
 
 		this.personaController = personaController;
 		this.requerimientoController = requerimientoController;
+
+		this.incompatibleController = incompatibleController;
+		this.incompatibleIntegrationController = incompatibleIntegrationController;
 
 		this.resultadoComparativoDto = new ResultadoComparativoDto();
 		this.navigation.addObserver(this);
@@ -78,7 +79,7 @@ public class NavigationController implements IObserverNavigation {
 			}
 			this.menuController = new MenuController(this, this.mainView.getPanelMenu(), this.personasDialog,
 					this.requerimientosDialog, this.incompatibleDialog, this.personaModel, this.requerimientoModel,
-					this.incompatibleModel);
+					this.incompatibleModel, this.incompatibleController);
 			break;
 
 		case BUSQUEDA:
@@ -86,18 +87,11 @@ public class NavigationController implements IObserverNavigation {
 				this.solucionWorkerController.dispose();
 				this.solucionWorkerController = null;
 			}
-			if (!this.incompatibleModel.hayIncompatibilidades()) {
-				this.incompatibleModel.crearMapIncompatibilidades(personaModel.getListaPersonas());
-			}
-			CalculadorBacktracking backtracking = new CalculadorBacktracking(
-					new ArrayList<>(personaModel.getListaPersonas()),
-					new LinkedHashMap<RolEnum, Integer>(requerimientoModel.getRequerimientos()),
-					this.incompatibleModel.obtenerIncompatibilidades());
-			CalculadorHeuristica heuristica = new CalculadorHeuristica(new ArrayList<>(personaModel.getListaPersonas()),
-					new LinkedHashMap<RolEnum, Integer>(requerimientoModel.getRequerimientos()),
-					this.incompatibleModel.obtenerIncompatibilidades());
+			// Sincroniza personas nuevas al mapa sin borrar incompatibilidades registradas
+			this.incompatibleModel.sincronizarPersonasEnMapa(personaModel.getListaPersonas());
 
-			CalculadorSolucion calculador = new CalculadorSolucion(backtracking, heuristica);
+			CalculadorSolucion calculador = CalculadorSolucion.crearDesdeModelos(personaModel, requerimientoModel,
+					incompatibleModel);
 			SolucionWorkerModel workerModel = new SolucionWorkerModel(this.resultadoComparativoDto);
 
 			this.solucionWorkerController = new SolucionWorkerController(calculador, this.mainView.getPanelBusqueda(),

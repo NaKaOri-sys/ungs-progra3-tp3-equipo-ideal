@@ -41,7 +41,7 @@ public class PersonaController implements PersonaListener {
 
 		try {
 			modelo.cargarDesdeJSON(ruta);
-			vista.ventanaMensaje("Personas agregada correctamente!!");
+			vista.ventanaMensaje("Personas agregadas correctamente!!");
 		} catch (IllegalArgumentException e) {
 			vista.ventanaMensaje(e.getMessage());
 		}
@@ -71,7 +71,7 @@ public class PersonaController implements PersonaListener {
 	@Override
 	public void onExportarJson(String ruta) {
 		modelo.exportarJson(ruta);
-		vista.ventanaMensaje("JSON descardo correctamente!!");
+		vista.ventanaMensaje("JSON descargado correctamente!!");
 	}
 
 	@Override

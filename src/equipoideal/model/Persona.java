@@ -79,6 +79,6 @@ public class Persona implements Comparable<Persona> {
 	
 	@Override
 	public String toString() {
-		return this.nombre + " " + this.apellido + "(" + this.rol + ")";
+		return this.nombre + " " + this.apellido + " (" + this.rol + ")";
 	}
 }

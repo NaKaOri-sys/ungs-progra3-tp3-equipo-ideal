@@ -22,6 +22,13 @@ public class IncompatibleModel extends Observable<IObserverIncompatible> {
 		}
 	}
 
+	// Agrega al mapa solo las personas que aun no estan, sin borrar las incompatibilidades ya registradas
+	public void sincronizarPersonasEnMapa(List<Persona> personas) {
+		for (Persona persona : personas) {
+			this.incompatibilidades.putIfAbsent(persona, new HashSet<Persona>());
+		}
+	}
+
 	// Registra la incompatibilidad de forma directa usando los índices de la
 	// pantalla.
 	// es bidireccional, osea si A es incompatible con B, B lo es con A
@@ -39,7 +46,7 @@ public class IncompatibleModel extends Observable<IObserverIncompatible> {
 			throw new IllegalArgumentException("Las personas a analizar no se encuentran registradas en el sistema.");
 		this.incompatibilidades.get(persona).remove(incompatible);
 		this.incompatibilidades.get(incompatible).remove(persona);
-		notifyObservers(o -> o.alEliminarIncompatibilidad());
+		notifyObservers(o -> o.alEliminarIncompatibilidad(persona, incompatible));
 	}
 
 	public boolean sonIncompatibles(Persona persona, Persona incompatible) {

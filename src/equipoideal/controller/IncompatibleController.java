@@ -2,10 +2,8 @@ package equipoideal.controller;
 
 import java.util.List;
 import equipoideal.model.Persona;
-import equipoideal.model.dto.PersonaDto;
 import equipoideal.model.IncompatibleModel;
 import equipoideal.model.listener.IncompatiblesListener;
-import equipoideal.util.IncompatibleValidator;
 import equipoideal.util.PersonaUtil;
 import equipoideal.view.dialogs.IncompatibleDialog;
 
@@ -17,7 +15,6 @@ public class IncompatibleController implements IncompatiblesListener {
 
 	public IncompatibleController(IncompatibleDialog vista, List<Persona> listaPersonas,
 			IncompatibleModel incompatibleModel) {
-		IncompatibleValidator.validarIncompatible(listaPersonas);
 		this.vista = vista;
 		this.personas = listaPersonas;
 		this.incompatibleModel = incompatibleModel;

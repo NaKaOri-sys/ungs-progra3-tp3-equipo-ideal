@@ -15,7 +15,6 @@ import org.junit.Test;
 import equipoideal.model.CalculadorHeuristica;
 import equipoideal.model.Persona;
 import equipoideal.model.dto.EquipoDto;
-import equipoideal.model.dto.PersonaDto;
 import equipoideal.util.RolEnum;
 
 public class CalculadorHeuristicaTest {
@@ -82,16 +81,19 @@ public class CalculadorHeuristicaTest {
 
 	@Test
 	public void testHeuristica_RespetaIncompatibilidades() {
-		Set<Persona> incompatibleRonaldo = new HashSet<Persona>();
-		incompatibleRonaldo.add(cristiano);
+		Set<Persona> incompatiblesConMessi = new HashSet<Persona>();
+		incompatiblesConMessi.add(cristiano);
+		incompatibilidades.put(messi, incompatiblesConMessi);
 
-		incompatibilidades.put(messi, incompatibleRonaldo);
+		Set<Persona> incompatiblesConCristiano = new HashSet<Persona>();
+		incompatiblesConCristiano.add(messi);
+		incompatibilidades.put(cristiano, incompatiblesConCristiano);
 
 		calc = new CalculadorHeuristica(personas, requerimientos, incompatibilidades);
 		EquipoDto resultado = calc.ejecutarHeuristica();
 
-		boolean tieneMbappe = resultado.getIntegrantes().stream().anyMatch(p -> "Ronaldo".equals(p.getApellido()));
-		assertFalse("No debe estar Ronaldo en el equipo al ser incompatible con Messi", tieneMbappe);
+		boolean tieneRonaldo = resultado.getIntegrantes().stream().anyMatch(p -> "Ronaldo".equals(p.getApellido()));
+		assertFalse("No debe estar Ronaldo en el equipo al ser incompatible con Messi", tieneRonaldo);
 	}
 
 	@Test

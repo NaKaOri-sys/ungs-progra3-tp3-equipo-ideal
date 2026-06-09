@@ -95,9 +95,16 @@ public class IncompatibleDialog extends DialogPadre {
         return (Persona) tabla.getValueAt(fila, 2);
     }
     
-    public void eliminarFilaTabla(int fila) {
+    public void eliminarFilaDeTabla(Persona p1, Persona p2) {
         DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
-        modelo.removeRow(fila);
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            Persona col0 = (Persona) modelo.getValueAt(i, 0);
+            Persona col2 = (Persona) modelo.getValueAt(i, 2);
+            if (col0.equals(p1) && col2.equals(p2)) {
+                modelo.removeRow(i);
+                return;
+            }
+        }
     }
 
     public void cargarPersonasEnSelectores(List<PersonaDto> personas) {
@@ -148,5 +155,4 @@ public class IncompatibleDialog extends DialogPadre {
         }
         return tabla.getModel().getRowCount() > 0;
     }
-    
 }
