@@ -3,6 +3,7 @@ package equipoideal.util;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import equipoideal.model.Equipo;
 import equipoideal.model.Persona;
@@ -11,11 +12,13 @@ import equipoideal.model.Persona;
  * Clase utilitaria donde se aplican las restricciones para el backtracking.
  */
 public class RestriccionesPoda {
-	public static boolean debePodar(Equipo solucionParcial, int indice, Equipo mejorEquipo, List<Persona> personas, Map<RolEnum, Integer> requerimientos) {
+	public static boolean debePodar(Equipo solucionParcial, int indice, Equipo mejorEquipo, List<Persona> personas,
+			Map<RolEnum, Integer> requerimientos) {
 		if (mejorEquipo.obtenerIntegrantes().isEmpty()) {
 			return false;
 		}
-		int puntajePosible = solucionParcial.getCalificacionTotal() + calcularRemanenteMaximo(indice, personas, mejorEquipo, requerimientos);
+		int puntajePosible = solucionParcial.getCalificacionTotal()
+				+ calcularRemanenteMaximo(indice, personas, mejorEquipo, requerimientos);
 		return puntajePosible <= mejorEquipo.getCalificacionTotal();
 	}
 
@@ -39,17 +42,5 @@ public class RestriccionesPoda {
 			}
 		}
 		return suma;
-	}
-
-	public static boolean esIncompatibleConEquipo(int indicePersona, Equipo solucionMomentanea,
-			List<Persona> listaPersonas, boolean[][] matrizIncompatibilidades, Map<Persona, Integer> indiceCache) {
-		boolean esIncompatible = false;
-		for (Persona integrante : solucionMomentanea.obtenerIntegrantes()) {
-			Integer indiceIntegrante = indiceCache.get(integrante);
-			if (indiceIntegrante != null) {
-				esIncompatible = esIncompatible || matrizIncompatibilidades[indicePersona][indiceIntegrante];
-			}
-		}
-		return esIncompatible;
 	}
 }

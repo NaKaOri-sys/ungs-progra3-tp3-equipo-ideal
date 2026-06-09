@@ -87,7 +87,7 @@ public class IncompatibleDialog extends DialogPadre {
     @Override
     public void accionesBoton() {
         btnAceptar.addActionListener(e -> {
-            if (listener != null) listener.onIncompatibilidadRegistrada();
+            if (listener != null) listener.alRegistrarIncompatibilidad();
         }); 
     }
 

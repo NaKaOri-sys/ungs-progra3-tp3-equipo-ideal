@@ -17,8 +17,6 @@ public class MenuController implements IMenuListener {
 	private RequerimientoDialog requerimientosDialog;
 	private IncompatibleDialog incompatibleDialog;
 
-	private IncompatibleController incompatibleController;
-
 	private PersonaModel personaModel;
 	private RequerimientoModel requerimientoModel;
 	private IncompatibleModel incompatibleModel;
@@ -30,18 +28,15 @@ public class MenuController implements IMenuListener {
 	public MenuController(NavigationController navigationController, MenuView menuView, PersonaDialog personaDialog,
 			RequerimientoDialog requerimientosDialog, IncompatibleDialog incompatibleDialog,
 			PersonaController personaController, RequerimientoController requerimientoController,
-			IncompatibleController incompatibleController, PersonaModel personaModel,
-			RequerimientoModel requerimientoModel, IncompatibleModel incompatibleModel) {
+			PersonaModel personaModel, RequerimientoModel requerimientoModel, IncompatibleModel incompatibleModel) {
 		this.navigationController = navigationController;
 		this.menuView = menuView;
 		this.personaDialog = personaDialog;
 		this.requerimientosDialog = requerimientosDialog;
 		this.incompatibleDialog = incompatibleDialog;
-
+		this.incompatibleModel = incompatibleModel;
 		this.personaModel = personaModel;
 		this.requerimientoModel = requerimientoModel;
-		this.incompatibleModel = incompatibleModel;
-		this.incompatibleController = incompatibleController;
 
 		this.menuView.obtenerObserver().addObserver(this);
 	}
@@ -64,7 +59,10 @@ public class MenuController implements IMenuListener {
 			return;
 
 		}
-
+		this.incompatibleModel.crearMapIncompatibilidades(personaModel.getListaPersonas());
+		new IncompatibleController(incompatibleDialog, personaModel.getListaPersonas(), incompatibleModel,
+				personaModel.obtenerNombresFormateados());
+		new IncompatibleIntegrationController(incompatibleDialog, this.incompatibleModel);
 		incompatibleDialog.setVisible(true);
 	}
 
@@ -73,12 +71,6 @@ public class MenuController implements IMenuListener {
 		if (this.personaModel.estaVacia()) {
 			this.menuView
 					.mostrarMensajeAdvertencia("Debe cargar personas en el sistema antes de buscar el equipo ideal.");
-			return;
-		}
-		//TODO esta validación capaz no tiene sentido, porque el camino feliz es no tener incompatibilidades.
-		if (!this.incompatibleModel.tieneIncompatibilidades()) {
-			this.menuView.mostrarMensajeAdvertencia(
-					"Debe registrar al menos una incompatibilidad antes de buscar el equipo ideal.");
 			return;
 		}
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import equipoideal.model.dto.EquipoDto;
 import equipoideal.model.dto.ProgresoEventoDto;
@@ -19,24 +20,22 @@ import equipoideal.util.SolutionValidator;
 public class CalculadorBacktracking extends Observable<IObserverCalculador> {
 	private List<Persona> listaPersonas;
 	private LinkedHashMap<RolEnum, Integer> requerimientos;
-	private boolean[][] matrizIncompatibilidades;
+	private Map<Persona, Set<Persona>> incompatibilidades;
 	private long tiempoInicio = 0;
 	private long ultimoTiempoNotificado = 0;
 	private Equipo mejorEquipo;
 	private int contadorCasosBase;
 	private int contadorPodas;
-	private IndexCache cacheIndice;
 
 	public CalculadorBacktracking(List<Persona> personas, Map<RolEnum, Integer> requerimientos,
-			boolean[][] matrizIncompatibilidades) {
-		SolutionValidator.solutionValidator(personas, requerimientos, matrizIncompatibilidades);
+			Map<Persona, Set<Persona>> incompatibilidades) {
+		SolutionValidator.solutionValidator(personas, requerimientos, incompatibilidades);
 		this.listaPersonas = new ArrayList<>(personas);
 		this.requerimientos = new LinkedHashMap<RolEnum, Integer>(requerimientos);
-		this.matrizIncompatibilidades = matrizIncompatibilidades;
+		this.incompatibilidades = incompatibilidades;
 		this.mejorEquipo = new Equipo(new ArrayList<Persona>());
 		this.contadorCasosBase = 0;
 		this.contadorPodas = 0;
-		this.cacheIndice = new IndexCache(this.listaPersonas);
 	}
 
 	public EquipoDto calcularMejorEquipo() {
@@ -70,7 +69,7 @@ public class CalculadorBacktracking extends Observable<IObserverCalculador> {
 		}
 
 		Persona personaActual = listaPersonas.get(indice);
-		if (esPosibleAgregar(indice, personaActual, solucionParcial)) {
+		if (esPosibleAgregar(personaActual, solucionParcial)) {
 			solucionParcial.obtenerIntegrantes().add(personaActual);
 			ejecutarBacktracking(indice + 1, solucionParcial);
 			solucionParcial.obtenerIntegrantes().remove(personaActual);
@@ -78,11 +77,11 @@ public class CalculadorBacktracking extends Observable<IObserverCalculador> {
 		ejecutarBacktracking(indice + 1, solucionParcial);
 	}
 
-	private boolean esPosibleAgregar(int indicePersona, Persona persona, Equipo solucionParcial) {
+	private boolean esPosibleAgregar(Persona persona, Equipo solucionParcial) {
 		int cantidadActual = solucionParcial.getCantidadPorRol((persona.getRol()));
 		return EquipoCalculadorUtil.esPosibleAgregar((persona.getRol()), cantidadActual, requerimientos,
-				!RestriccionesPoda.esIncompatibleConEquipo(indicePersona, solucionParcial, listaPersonas,
-						matrizIncompatibilidades, this.cacheIndice.obtenerIndiceCache()));
+				!EquipoCalculadorUtil.esIncompatibleConEquipo(persona, solucionParcial,
+						incompatibilidades));
 	}
 
 	private boolean cumpleExactamenteConLosRoles(Equipo equipo) {

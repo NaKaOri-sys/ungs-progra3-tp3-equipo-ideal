@@ -2,6 +2,7 @@ package equipoideal.util;
 
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import equipoideal.model.Equipo;
 import equipoideal.model.Persona;
@@ -19,11 +20,10 @@ public class EquipoCalculadorUtil {
 	}
 
 	public static boolean esIncompatibleConEquipo(Persona personaActual, Equipo equipoParcial,
-			boolean[][] matrizIncompatibilidades, Map<Persona, Integer> cacheIndice) {
-		int idxActual = cacheIndice.get(personaActual);
+			Map<Persona, Set<Persona>> incompatibilidades) {
 		for (Persona integrante : equipoParcial.obtenerIntegrantes()) {
-			int idxIntegrante = cacheIndice.get(integrante);
-			if (matrizIncompatibilidades[idxActual][idxIntegrante]) {
+			if (incompatibilidades.get(personaActual).contains(integrante)
+					|| incompatibilidades.get(integrante).contains(personaActual)) {
 				return true;
 			}
 		}
@@ -31,14 +31,15 @@ public class EquipoCalculadorUtil {
 	}
 
 	public static boolean debeNotificarProgreso(long tiempoActual, long ultimoTiempoNotificado, long umbralMs) {
-	    return (tiempoActual - ultimoTiempoNotificado) > umbralMs;
+		return (tiempoActual - ultimoTiempoNotificado) > umbralMs;
 	}
 
 	public static long obtenerTiempoActual() {
 		return System.currentTimeMillis();
 	}
-	
-	public static boolean esPosibleAgregar(RolEnum rol, int cantidadRol, Map<RolEnum, Integer> requerimientos,boolean condicion) {
+
+	public static boolean esPosibleAgregar(RolEnum rol, int cantidadRol, Map<RolEnum, Integer> requerimientos,
+			boolean condicion) {
 		int maximoRequerido = requerimientos.getOrDefault(rol, 0);
 		return !(cantidadRol >= maximoRequerido) && condicion;
 	}
