@@ -4,10 +4,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
-import equipoideal.model.dto.PersonaDto;
 import equipoideal.model.event.IObserverIncompatible;
 import equipoideal.util.Observable;
 
@@ -33,7 +31,15 @@ public class IncompatibleModel extends Observable<IObserverIncompatible> {
 
 		this.incompatibilidades.get(persona).add(incompatible);
 		this.incompatibilidades.get(incompatible).add(persona);
-		notifyObservers(o -> o.alCrearIncompatibilidad(persona.getNombre(), incompatible.getNombre()));
+		notifyObservers(o -> o.alCrearIncompatibilidad(persona, incompatible));
+	}
+
+	public void eliminarIncompatibilidad(Persona persona, Persona incompatible) {
+		if (!this.incompatibilidades.containsKey(persona) || !this.incompatibilidades.containsKey(incompatible))
+			throw new IllegalArgumentException("Las personas a analizar no se encuentran registradas en el sistema.");
+		this.incompatibilidades.get(persona).remove(incompatible);
+		this.incompatibilidades.get(incompatible).remove(persona);
+		notifyObservers(o -> o.alEliminarIncompatibilidad());
 	}
 
 	public boolean sonIncompatibles(Persona persona, Persona incompatible) {
@@ -46,5 +52,9 @@ public class IncompatibleModel extends Observable<IObserverIncompatible> {
 
 	public Map<Persona, Set<Persona>> obtenerIncompatibilidades() {
 		return this.incompatibilidades;
+	}
+	
+	public boolean hayIncompatibilidades() {
+		return this.incompatibilidades.size() > 0;
 	}
 }

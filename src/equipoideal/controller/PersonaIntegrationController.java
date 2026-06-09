@@ -21,7 +21,7 @@ public class PersonaIntegrationController implements IObserverPersona {
 
     @Override
 	public void onListaPersonasModificada(ArrayList<Persona> nuevaLista) {
-		ArrayList<PersonaDto> dto = PersonaUtil.personasToDto(nuevaLista);
+		ArrayList<PersonaDto> dto = (ArrayList<PersonaDto>) PersonaUtil.personasToDto(nuevaLista);
 		vista.actualizarTablaPersonas(dto);
 	}
 

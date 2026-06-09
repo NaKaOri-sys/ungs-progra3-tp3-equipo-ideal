@@ -9,35 +9,38 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import equipoideal.view.components.DialogStyleHelper;
+
 public class VentanaEmergente extends JDialog {
     private static final long serialVersionUID = 1L;
 
     public VentanaEmergente(JDialog padre, String mensaje) {
-        super(padre, "Alerta", true); // true = Modal 
+        super(padre, "Alerta", true); 
         inicializarComponentes(mensaje);
         setLocationRelativeTo(padre);
     }
 
-
     private void inicializarComponentes(String mensaje) {
-        setSize(400, 150);
+        setSize(520, 160);
         setLayout(new BorderLayout());
+        setResizable(false);
+        
+        getContentPane().setBackground(DialogStyleHelper.ColorFondoPrincipal);
 
-        // (padding)
         JPanel panelContenedor = new JPanel(new BorderLayout());
-        panelContenedor.setBorder(new EmptyBorder(15, 15, 15, 15));
+        panelContenedor.setOpaque(false); 
+        panelContenedor.setBorder(new EmptyBorder(20, 20, 15, 20));
 
-        // Texto del mensaje de error
-        JLabel lblMensaje = new JLabel(mensaje);
+        JLabel lblMensaje = DialogStyleHelper.crearLabelEstilizado(mensaje, 13);
         lblMensaje.setHorizontalAlignment(SwingConstants.CENTER);
         panelContenedor.add(lblMensaje, BorderLayout.CENTER);
 
-        // Botón para cerrar 
-        JButton btnEntendido = new JButton("Entendido");
+        JButton btnEntendido = DialogStyleHelper.crearBotonEstilizado("Entendido");
         btnEntendido.addActionListener(e -> dispose()); 
 
-        // Panel del boton de abajo
+        // Panel del botón abajo
         JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panelBoton.setOpaque(false);
         panelBoton.add(btnEntendido);
         panelContenedor.add(panelBoton, BorderLayout.SOUTH);
 

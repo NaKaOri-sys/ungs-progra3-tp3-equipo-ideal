@@ -21,14 +21,9 @@ public class MenuController implements IMenuListener {
 	private RequerimientoModel requerimientoModel;
 	private IncompatibleModel incompatibleModel;
 
-	// TODO Eliseo, veo que se agregaron los controllers de personas, requerimientos
-	// e incompatibilidades al constructor del NavigationController, pero no se
-	// están utilizando en ningún lado, revisar si es necesario pasarlos o si se
-	// pueden eliminar del constructor para simplificarlo
 	public MenuController(NavigationController navigationController, MenuView menuView, PersonaDialog personaDialog,
-			RequerimientoDialog requerimientosDialog, IncompatibleDialog incompatibleDialog,
-			PersonaController personaController, RequerimientoController requerimientoController,
-			PersonaModel personaModel, RequerimientoModel requerimientoModel, IncompatibleModel incompatibleModel) {
+			RequerimientoDialog requerimientosDialog, IncompatibleDialog incompatibleDialog, PersonaModel personaModel,
+			RequerimientoModel requerimientoModel, IncompatibleModel incompatibleModel) {
 		this.navigationController = navigationController;
 		this.menuView = menuView;
 		this.personaDialog = personaDialog;
@@ -60,8 +55,7 @@ public class MenuController implements IMenuListener {
 
 		}
 		this.incompatibleModel.crearMapIncompatibilidades(personaModel.getListaPersonas());
-		new IncompatibleController(incompatibleDialog, personaModel.getListaPersonas(), incompatibleModel,
-				personaModel.obtenerNombresFormateados());
+		new IncompatibleController(incompatibleDialog, personaModel.getListaPersonas(), incompatibleModel);
 		new IncompatibleIntegrationController(incompatibleDialog, this.incompatibleModel);
 		incompatibleDialog.setVisible(true);
 	}
@@ -74,7 +68,11 @@ public class MenuController implements IMenuListener {
 			return;
 		}
 
-		// TODO faltaria validar requerimientos
+		if (!this.requerimientoModel.hayRequerimientosCargados()) {
+			this.menuView.mostrarMensajeAdvertencia(
+					"Debe cargar requerimientos en el sistema antes de buscar el equipo ideal.");
+			return;
+		}
 
 		this.navigationController.eventSearch();
 	}

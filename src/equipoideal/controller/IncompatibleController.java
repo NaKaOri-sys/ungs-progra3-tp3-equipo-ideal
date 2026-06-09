@@ -2,9 +2,11 @@ package equipoideal.controller;
 
 import java.util.List;
 import equipoideal.model.Persona;
+import equipoideal.model.dto.PersonaDto;
 import equipoideal.model.IncompatibleModel;
 import equipoideal.model.listener.IncompatiblesListener;
 import equipoideal.util.IncompatibleValidator;
+import equipoideal.util.PersonaUtil;
 import equipoideal.view.dialogs.IncompatibleDialog;
 
 public class IncompatibleController implements IncompatiblesListener {
@@ -12,21 +14,19 @@ public class IncompatibleController implements IncompatiblesListener {
 	private IncompatibleDialog vista;
 	private IncompatibleModel incompatibleModel;
 	private List<Persona> personas;
-	private List<String> nombresFormateados;
 
 	public IncompatibleController(IncompatibleDialog vista, List<Persona> listaPersonas,
-			IncompatibleModel incompatibleModel, List<String> nombresFormateados) {
-		IncompatibleValidator.validarIncompatible(listaPersonas, nombresFormateados);
+			IncompatibleModel incompatibleModel) {
+		IncompatibleValidator.validarIncompatible(listaPersonas);
 		this.vista = vista;
 		this.personas = listaPersonas;
 		this.incompatibleModel = incompatibleModel;
-		this.nombresFormateados = nombresFormateados;
 		this.vista.setIncompatiblesListener(this);
 		sincronizarDatos();
 	}
 
 	public void sincronizarDatos() {
-		vista.cargarPersonasEnSelectores(this.nombresFormateados);
+		vista.cargarPersonasEnSelectores(PersonaUtil.personasToDto(this.personas));
 	}
 
 	@Override
@@ -42,8 +42,28 @@ public class IncompatibleController implements IncompatiblesListener {
 			return;
 		}
 
-		incompatibleModel.registrarIncompatibilidad(this.personas.get(indiceSeleccionadoA),
-				this.personas.get(indiceSeleccionadoB));
+		Persona persona = this.personas.get(indiceSeleccionadoA);
+		Persona incompatible = this.personas.get(indiceSeleccionadoB);
+
+		if (this.incompatibleModel.sonIncompatibles(persona, incompatible)) {
+			vista.ventanaMensaje("Esta incompatibilidad ya se encuentra registrada.");
+			return;
+		}
+
+		incompatibleModel.registrarIncompatibilidad(persona, incompatible);
 	}
 
+	@Override
+	public void alBorrarIncompatibilidad() {
+		int filaSeleccionada = vista.getFilaSeleccionada();
+		if (filaSeleccionada == -1) {
+			vista.ventanaMensaje("Debe seleccionar una fila de la tabla para eliminar la incompatibilidad.");
+			return;
+		}
+
+		Persona persona = vista.getPersona1DeTabla(filaSeleccionada);
+		Persona incompatible = vista.getPersona2DeTabla(filaSeleccionada);
+		
+		this.incompatibleModel.eliminarIncompatibilidad(persona, incompatible);
+	}
 }

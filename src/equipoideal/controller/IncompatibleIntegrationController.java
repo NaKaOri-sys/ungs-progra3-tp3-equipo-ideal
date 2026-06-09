@@ -2,6 +2,8 @@ package equipoideal.controller;
 
 import equipoideal.view.dialogs.IncompatibleDialog;
 import equipoideal.model.IncompatibleModel;
+import equipoideal.model.Persona;
+import equipoideal.model.dto.PersonaDto;
 import equipoideal.model.event.IObserverIncompatible;
 
 public class IncompatibleIntegrationController implements IObserverIncompatible {
@@ -12,14 +14,21 @@ public class IncompatibleIntegrationController implements IObserverIncompatible 
 	public IncompatibleIntegrationController(IncompatibleDialog vista, IncompatibleModel model) {
 		this.vista = vista;
 		this.model = model;
-		
+
 		this.model.addObserver(this);
 	}
 
 	@Override
-	public void alCrearIncompatibilidad(String persona, String incompatible) {
-
+	public void alCrearIncompatibilidad(Persona persona, Persona incompatible) {
 		vista.agregarIncompatibilidadTabla(persona, incompatible);
 		vista.limpiarInputs();
+	}
+
+	@Override
+	public void alEliminarIncompatibilidad() {
+		int fila = vista.getFilaSeleccionada();
+		if (fila != -1) {
+			vista.eliminarFilaTabla(fila);
+		}
 	}
 }
