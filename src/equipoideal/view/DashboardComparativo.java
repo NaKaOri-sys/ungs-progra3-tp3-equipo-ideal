@@ -98,6 +98,10 @@ public class DashboardComparativo extends JPanel {
 
 	public void renderizarResultados(ResultadoComparativoDto res) {
 		panelBacktracking.actualizar(res.getEquipoBacktracking(), res.getStatsBacktracking());
+		if (res.getEquipoHeuristica() == null) {
+			panelHeuristica.mostrarSinSolucion();
+			return;
+		}
 		panelHeuristica.actualizar(res.getEquipoHeuristica(), res.getStatsHeuristica());
 	}
 

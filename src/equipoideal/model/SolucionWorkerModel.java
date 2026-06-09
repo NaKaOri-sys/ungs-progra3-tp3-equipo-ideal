@@ -35,12 +35,12 @@ public class SolucionWorkerModel extends Observable<IWorkerObserver> {
 	}
 
 	public void setResultado(ResultadoComparativoDto resultadoDto) {
-		if (resultadoDto == null || resultadoDto.getEquipoHeuristica() == null
-				|| resultadoDto.getEquipoBacktracking() == null) {
+		if (resultadoDto == null || resultadoDto.getEquipoBacktracking() == null) {
 			throw new RuntimeException("El equipo resultante no es valido, vuelva a intentarlo");
 		}
-		this.resultado.setEquipoHeuristica(resultadoDto.getEquipoHeuristica());
 		this.resultado.setEquipoBacktracking(resultadoDto.getEquipoBacktracking());
+		// La heuristica puede ser null si no encontro solucion (caso de incompatibilidades bloqueantes)
+		this.resultado.setEquipoHeuristica(resultadoDto.getEquipoHeuristica());
 		notifyObservers(observer -> observer.onFinish());
 	}
 	

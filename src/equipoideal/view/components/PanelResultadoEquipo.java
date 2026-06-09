@@ -120,9 +120,23 @@ public class PanelResultadoEquipo extends JPanel {
 			listaIntegrantes.add(new FichaIntegrante(p));
 			listaIntegrantes.add(Box.createVerticalStrut(6));
 		}
-		lblTiempo.setText("⏱  Tiempo: " + stats.getTiempo() + " ms");
-		if (!stats.getOrigen().equals(OrigenCalculadorEnum.HEURISTICA))
-			lblCasos.setText("⚙  Casos base: " + stats.getCasosBaseProcesados());
+		if (stats != null) {
+			lblTiempo.setText("⏱  Tiempo: " + stats.getTiempo() + " ms");
+			if (!stats.getOrigen().equals(OrigenCalculadorEnum.HEURISTICA))
+				lblCasos.setText("⚙  Casos base: " + stats.getCasosBaseProcesados());
+		}
+		revalidate();
+		repaint();
+	}
+
+	public void mostrarSinSolucion() {
+		listaIntegrantes.removeAll();
+		JLabel lbl = new JLabel("La heurística no encontró solución para las incompatibilidades dadas.");
+		lbl.setForeground(TEXT_STATS);
+		lbl.setFont(new Font("SansSerif", Font.ITALIC, 12));
+		lbl.setBorder(BorderFactory.createEmptyBorder(10, 5, 0, 5));
+		listaIntegrantes.add(lbl);
+		lblTiempo.setText("⏱  Tiempo: —");
 		revalidate();
 		repaint();
 	}

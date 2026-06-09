@@ -31,8 +31,14 @@ public class CalculadorSolucion {
 
 	public ResultadoComparativoDto calcularSolucionGlobal() {
 		ResultadoComparativoDto res = new ResultadoComparativoDto();
-		res.setEquipoHeuristica(this.heuristica.ejecutarHeuristica());
 		res.setEquipoBacktracking(this.backtracking.calcularMejorEquipo());
+
+		// La heuristica puede fallar por como está pensada con las incompatibilidades, por lo tanto se omite para mostrar un mensaje del porque fallo.
+		try {
+			res.setEquipoHeuristica(this.heuristica.ejecutarHeuristica());
+		} catch (RuntimeException e) {
+			// Se omite: el dashboard mostrara que la heuristica no encontro solucion
+		}
 
 		return res;
 	}
