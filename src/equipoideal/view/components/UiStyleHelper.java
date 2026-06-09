@@ -1,6 +1,8 @@
 package equipoideal.view.components;
 
 import java.awt.*;
+import java.awt.geom.RoundRectangle2D;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
@@ -14,6 +16,7 @@ public class UiStyleHelper {
 	public static final Color ROL_ARQUITECTO = new Color(59, 130, 246);
 	private static final Color ROL_DEFAULT = new Color(107, 114, 128);
 	public static final Color WHITE_TEXT = new Color(255, 255, 255);
+	public static final Color BTN_VERDE = new Color(16, 185, 129);
 
 	/**
 	 * Activa suavizado de gráficos y renderizado de calidad
@@ -63,6 +66,43 @@ public class UiStyleHelper {
 		return ic.getIconWidth() > 0 ? ic.getImage() : null;
 
 	}
+	
+	public static JButton crearBotonCustom(String texto, Color colorFondo, Color colorHover, Color colorTexto) {
+        JButton btn = new JButton(texto) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                activarAntiAliasing(g2);
+                
+                Color bg;
+                if (getModel().isRollover()) {
+                    bg = colorHover; 
+                } else {
+                    bg = colorFondo; }
+                g2.setColor(bg);
+                g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 12, 12));
+                
+                // Borde sutil estándar
+                g2.setColor(new Color(55, 62, 80));
+                g2.setStroke(new BasicStroke(1f));
+                g2.draw(new RoundRectangle2D.Float(0.5f, 0.5f, getWidth() - 1, getHeight() - 1, 12, 12));
+                g2.dispose();
+                
+                super.paintComponent(g);
+            }
+        };
+        
+        // bloquea el boton default
+        btn.setFont(new Font("SansSerif", Font.BOLD, 13));
+        btn.setForeground(colorTexto);
+        btn.setOpaque(false);
+        btn.setContentAreaFilled(false);
+        btn.setBorderPainted(false);
+        btn.setFocusPainted(false);
+        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        
+        return btn;
+    }
 
 	
 }

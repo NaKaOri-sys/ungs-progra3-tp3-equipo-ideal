@@ -1,6 +1,7 @@
 package equipoideal.view.dialogs;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -19,9 +20,9 @@ public class VentanaEmergente extends JDialog {
         inicializarComponentes(mensaje);
         setLocationRelativeTo(padre);
     }
-
-    private void inicializarComponentes(String mensaje) {
-        setSize(520, 160);
+    
+    private void inicializarComponentes(String mensaje) { 
+    	setSize(600, 180);
         setLayout(new BorderLayout());
         setResizable(false);
         
@@ -29,21 +30,29 @@ public class VentanaEmergente extends JDialog {
 
         JPanel panelContenedor = new JPanel(new BorderLayout());
         panelContenedor.setOpaque(false); 
-        panelContenedor.setBorder(new EmptyBorder(20, 20, 15, 20));
+        panelContenedor.setBorder(new EmptyBorder(25, 25, 15, 25));
 
         JLabel lblMensaje = DialogStyleHelper.crearLabelEstilizado(mensaje, 13);
         lblMensaje.setHorizontalAlignment(SwingConstants.CENTER);
         panelContenedor.add(lblMensaje, BorderLayout.CENTER);
 
-        JButton btnEntendido = DialogStyleHelper.crearBotonEstilizado("Entendido");
+
+        JButton btnEntendido = equipoideal.view.components.UiStyleHelper.crearBotonCustom( "Entendido", 
+            new Color(45, 50, 68),
+            new Color(55, 62, 80),
+            new Color(210, 220, 240)
+        );
+        
+        //tamaño para que no se deforme
+        btnEntendido.setPreferredSize(new java.awt.Dimension(130, 36));
         btnEntendido.addActionListener(e -> dispose()); 
 
-        // Panel del botón abajo
+        // Panel inferior para centrar el botón
         JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panelBoton.setOpaque(false);
         panelBoton.add(btnEntendido);
         panelContenedor.add(panelBoton, BorderLayout.SOUTH);
 
         add(panelContenedor);
-    }
+    }     
 }
