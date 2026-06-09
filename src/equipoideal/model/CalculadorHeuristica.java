@@ -14,32 +14,30 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class CalculadorHeuristica extends Observable<IObserverCalculador> {
 
 	private List<Persona> listaPersonas;
 	private LinkedHashMap<RolEnum, Integer> requerimientos;
-	private boolean[][] matrizIncompatibilidades;
-	private List<Persona> listaOrdenadaPersonas;
-	private IndexCache cacheIndice;
 	private long tiempoInicio = 0;
+	private Map<Persona, Set<Persona>> incompatibilidades;
 
 	public CalculadorHeuristica(List<Persona> listaPersonas, LinkedHashMap<RolEnum, Integer> requerimientos,
-			boolean[][] matrizIncompatibilidades) {
-		SolutionValidator.solutionValidator(listaPersonas, requerimientos, matrizIncompatibilidades);
+			Map<Persona, Set<Persona>> incompatibilidades) {
+		SolutionValidator.solutionValidator(listaPersonas, requerimientos, incompatibilidades);
 		this.listaPersonas = new ArrayList<>(listaPersonas);
-		this.listaOrdenadaPersonas = new ArrayList<>(listaPersonas);
 		this.requerimientos = new LinkedHashMap<RolEnum, Integer>(requerimientos);
-		this.matrizIncompatibilidades = matrizIncompatibilidades;
+		this.incompatibilidades = incompatibilidades;
 	}
 
 	public EquipoDto ejecutarHeuristica() {
 		this.tiempoInicio = EquipoCalculadorUtil.obtenerTiempoActual();
-		this.cacheIndice = new IndexCache(listaPersonas);
 		Equipo equipoResultante = new Equipo(new ArrayList<Persona>());
-		Collections.sort(listaOrdenadaPersonas, (p1, p2) -> p2.compareTo(p1));
+		Collections.sort(listaPersonas, (p1, p2) -> p2.compareTo(p1));
 		try {
-			for (Persona personaActual : listaOrdenadaPersonas) {
+			for (Persona personaActual : listaPersonas) {
 				if (esPosibleAgregar(personaActual, equipoResultante))
 					equipoResultante.obtenerIntegrantes().add(personaActual);
 				if (cumpleConTodosLosRequerimientos(equipoResultante)) {
@@ -64,8 +62,7 @@ public class CalculadorHeuristica extends Observable<IObserverCalculador> {
 	}
 
 	private boolean esIncompatibleConEquipo(Persona personaActual, Equipo equipoParcial) {
-		return EquipoCalculadorUtil.esIncompatibleConEquipo(personaActual, equipoParcial, matrizIncompatibilidades,
-				this.cacheIndice.obtenerIndiceCache());
+		return EquipoCalculadorUtil.esIncompatibleConEquipo(personaActual, equipoParcial, incompatibilidades);
 	}
 
 	private boolean cumpleConTodosLosRequerimientos(Equipo equipo) {

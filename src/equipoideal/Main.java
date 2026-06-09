@@ -3,6 +3,7 @@ package equipoideal;
 import javax.swing.UIManager;
 
 import equipoideal.controller.IncompatibleController;
+import equipoideal.controller.IncompatibleIntegrationController;
 import equipoideal.controller.NavigationController;
 import equipoideal.controller.PersonaController;
 import equipoideal.controller.PersonaIntegrationController;
@@ -37,13 +38,6 @@ public class Main {
 		}
 		MainView mainView = new MainView();
 		Navigation navigation = new Navigation();
-		// TODO los nombres de los controladores, modelos y vistas, revisar si son
-		// adecuados o si se pueden mejorar para que sean mas descriptivos
-
-		// TODO si los controllers no se instancian en otro lugar, entonces hacer única
-		// instancia por ej PersonaIntegracionController,
-		// RequerimientoIntegrationController, IncompatibleController,
-		// NavigationController, PersonasController, RequerimientosController
 
 		PersonaRepository repository = new PersonaRepositoryJson(FILE_PATH);
 		PersonaModel personaDialogModel = new PersonaModel(repository, FOLDER_PATH);
@@ -61,18 +55,13 @@ public class Main {
 		requerimientosController.setListaPersonas(personaDialogModel.getListaPersonas());
 		RequerimientoIntegrationController reqIntegrationController = new RequerimientoIntegrationController(
 				requerimientosDialog, requerimientosModel);
-		
 
 		// INCOMPATIBILIDAD
 		IncompatibleDialog incompatibleDialog = new IncompatibleDialog("Gestion de Incompatibilidades");
-		// TODO: Reemplazar el acceso a getListaPersonas().size() usando un método
-		// encapsulado como getCantidadDePersonas() en PersonaModel.
-        IncompatibleModel incompatibleModel = new IncompatibleModel(personaDialogModel.getListaPersonas().size());
-        IncompatibleController incompatibleController = new IncompatibleController(incompatibleDialog, personaDialogModel.getListaPersonas(), incompatibleModel, personaDialogModel);
-
+		IncompatibleModel incompatibleModel = new IncompatibleModel();
+		
 		new NavigationController(mainView, navigation, personasDialog, requerimientosDialog, incompatibleDialog,
-								personaDialogModel, requerimientosModel, incompatibleModel,
-								personaController, requerimientosController, incompatibleController);
+				personaDialogModel, requerimientosModel, incompatibleModel, personaController, requerimientosController);
 		navigation.updateView(VentanaEnum.MENU);
 		mainView.setVisible(true);
 	}
