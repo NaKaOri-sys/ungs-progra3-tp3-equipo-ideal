@@ -37,7 +37,7 @@ public class PersonasTest {
 		
 		this.archivoJsonTemporal = carpetaTemporal.newFile("personas_test.json");
 		this.carpetaFotosTemporal = carpetaTemporal.newFolder("carpeta_fotos");
-		this.personaRepository = new PersonaRepositoryJson();
+		this.personaRepository = new PersonaRepositoryJson(archivoJsonTemporal.getAbsolutePath());
 		this.modelo = new PersonaModel(personaRepository, carpetaFotosTemporal.getAbsolutePath());
 		
 		personas = new ArrayList<>();
@@ -129,7 +129,7 @@ public class PersonasTest {
 		PersonaDto dto2 = new PersonaDto("Kylian", "Mbappe", 4, RolEnum.TESTER, "rutaFoto2");
 		modelo.agregarPersona(dto2);
 		
-		modelo.exportarJson(archivoJsonTemporal.getAbsolutePath());
+		modelo.guardarPersonaEnJSON();
 		
 		ArrayList<Persona> personasGuardadas = personaRepository.loadAll(archivoJsonTemporal.getAbsolutePath());
 		
@@ -143,6 +143,19 @@ public class PersonasTest {
 		
 	}
 	
+	@Test
+	public void cargarPersonasDesdeJsonTest() {
+		personaRepository.saveAll(personas);
+		modelo.cargarDesdeJSON(archivoJsonTemporal.getAbsolutePath());
+		
+		ArrayList<Persona> personasGuardadas = modelo.getListaPersonas();		
+		Persona primera = personasGuardadas.get(0);
+		
+		assertEquals("Leo", primera.getNombre());
+	    assertEquals("Messi", primera.getApellido());
+	    assertEquals(5, primera.getCalificacion());
+	    assertEquals(RolEnum.PROGRAMADOR, primera.getRol());
+	}
 
 	@Test
 	public void guardarFotoTest() throws IOException {
@@ -180,6 +193,21 @@ public class PersonasTest {
 		assertEquals("foto_nueva", editada.getRutaFoto());
 	}
 	
+
+	@Test
+	public void exportarJsonTest() {
+	PersonaDto dto = new PersonaDto("Leo", "Messi", 5, RolEnum.PROGRAMADOR, "rutaFoto");
+	modelo.agregarPersona(dto);
+	modelo.guardarPersonaEnJSON();
+
+	File destino = new File(carpetaTemporal.getRoot(), "exportado.json");
+
+	modelo.exportarJson(destino.getAbsolutePath());
+
+	assertEquals(true, destino.exists());
+	assertEquals(true, destino.length() > 0);
+
+	}
 
 	@Test
 	public void limpiarCacheFotosTest() throws IOException {
